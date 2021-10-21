@@ -1,17 +1,16 @@
-import 'package:dartz/dartz.dart';
 import 'package:nfc_mobile_prototype/domain/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/domain/bloc/app_events.dart';
-import 'package:nfc_mobile_prototype/domain/models/failure.dart';
 import 'package:nfc_mobile_prototype/domain/models/usecase.dart';
+import 'package:nfc_mobile_prototype/domain/services/logger.dart';
 
-class UpdateIndex implements Usecase<Either<Failure, bool>, int> {
+class UpdateIndex implements Usecase<void, int> {
   final AppBloc bloc;
 
   UpdateIndex({required this.bloc});
 
   @override
-  Future<Either<Failure, bool>> call(int index) async {
+  Future<void> call(int index) async {
+    logDebug('UpdateIndex usecase -> call()');
     bloc.add(AppUpdateIndex(index: index));
-    return const Right(true);
   }
 }

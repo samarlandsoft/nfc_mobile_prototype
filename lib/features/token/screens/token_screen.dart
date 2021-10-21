@@ -1,6 +1,11 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile_prototype/domain/models/usecase.dart';
 import 'package:nfc_mobile_prototype/domain/services/logger.dart';
+import 'package:nfc_mobile_prototype/domain/usecases/read_nfc_tag.dart';
 import 'package:nfc_mobile_prototype/domain/usecases/update_index.dart';
+import 'package:nfc_mobile_prototype/domain/usecases/write_nfc_tag.dart';
 import 'package:nfc_mobile_prototype/features/content/screens/content_screen.dart';
 import 'package:nfc_mobile_prototype/features/shared/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/shared/neon_button.dart';
@@ -23,6 +28,8 @@ class _TokenScreenState extends State<TokenScreen>
   static const _iconSize = 45.0;
   late AnimationController _controller;
   bool _isDisabled = false;
+  bool _isScanning = false;
+  bool _isWriting = false;
 
   @override
   void initState() {
@@ -40,6 +47,27 @@ class _TokenScreenState extends State<TokenScreen>
     logDebug('TokenScreen: DISPOSE');
     _controller.dispose();
     super.dispose();
+  }
+
+  void _onReadNFCButtonHandler() async {
+    setState(() {
+      _isScanning = true;
+    });
+    await locator<ReadNFCTag>().call(NoParams());
+    setState(() {
+      _isScanning = false;
+    });
+  }
+
+  void _onWriteNFCButtonHandler() async {
+    setState(() {
+      _isWriting = true;
+    });
+    String message = math.Random().nextInt(100).toString();
+    await locator<WriteNFCTag>().call(message);
+    setState(() {
+      _isWriting = false;
+    });
   }
 
   void _onGoNextButtonHandler() {
@@ -94,20 +122,47 @@ class _TokenScreenState extends State<TokenScreen>
               ),
               Positioned(
                 bottom: textPosition,
-                child: const Text(
-                  'Scan NFC tag',
-                  style: TextStyle(
+                child: Text(
+                  _isScanning
+                      ? 'Scanning...'
+                      : _isWriting
+                          ? 'Writing...'
+                          : 'Scan NFC tag',
+                  style: const TextStyle(
                     fontSize: 24.0,
                   ),
                 ),
               ),
               Positioned(
                 bottom: 20.0,
-                child: NeonButton(
-                  label: 'Next',
-                  callback: _onGoNextButtonHandler,
+                right: 10.0,
+                child: Column(
+                  children: <Widget>[
+                    FloatingActionButton(
+                      heroTag: 'Read',
+                      onPressed: _onReadNFCButtonHandler,
+                      backgroundColor: _isScanning ? Colors.green : Colors.blue,
+                      child: const Icon(Icons.my_library_books_outlined),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'Write',
+                      onPressed: _onWriteNFCButtonHandler,
+                      backgroundColor: _isWriting ? Colors.green : Colors.blue,
+                      child: const Icon(Icons.edit),
+                    ),
+                  ],
                 ),
               ),
+              // Positioned(
+              //   bottom: 20.0,
+              //   child: NeonButton(
+              //     label: 'Next',
+              //     callback: _onGoNextButtonHandler,
+              //   ),
+              // ),
             ],
           ),
         ),

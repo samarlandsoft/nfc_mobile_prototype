@@ -33,20 +33,21 @@ class MyApp extends StatelessWidget {
       ),
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case DetailsScreen.routeName: {
-            return PageRouteBuilder(
-              transitionDuration: const Duration(milliseconds: 500),
-              reverseTransitionDuration: const Duration(milliseconds: 500),
-              pageBuilder: (context, first, second) {
-                return FadeTransition(
-                  opacity: first,
-                  child: DetailsScreen(
-                    detailsProduct: settings.arguments as DetailsProduct,
-                  ),
-                );
-              },
-            );
-          }
+          case DetailsScreen.routeName:
+            {
+              return PageRouteBuilder(
+                transitionDuration: const Duration(milliseconds: 500),
+                reverseTransitionDuration: const Duration(milliseconds: 500),
+                pageBuilder: (context, first, second) {
+                  return FadeTransition(
+                    opacity: first,
+                    child: DetailsScreen(
+                      detailsProduct: settings.arguments as DetailsProduct,
+                    ),
+                  );
+                },
+              );
+            }
         }
       },
       home: BlocProvider.value(
@@ -71,10 +72,23 @@ class _PageSwitcherState extends State<PageSwitcher> {
     const ContentScreen(),
   ];
 
+  SnackBar _buildSnackBar(String tag) {
+    return SnackBar(
+      content: Text('Read NFC: $tag'),
+      duration: const Duration(seconds: 5),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<AppBloc, AppState>(
+      body: BlocConsumer<AppBloc, AppState>(
+        listenWhen: (prevState, currentState) {
+          return prevState.tag != '' || currentState.tag != '';
+        },
+        listener: (context, state) {
+          ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(state.tag));
+        },
         builder: (context, state) {
           return Stack(
             alignment: Alignment.center,

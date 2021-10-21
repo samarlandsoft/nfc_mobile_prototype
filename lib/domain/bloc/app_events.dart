@@ -7,3 +7,9 @@ class AppUpdateIndex extends AppEvent {
 
   AppUpdateIndex({required this.index}) : super([index]);
 }
+
+class AppReadTag extends AppEvent {
+  final String tag;
+
+  AppReadTag({required this.tag}) : super([tag]);
+}

@@ -13,6 +13,12 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         yield state.update(index: snapshot.index);
         break;
       }
+
+      case AppReadTag: {
+        var snapshot = event as AppReadTag;
+        yield state.update(tag: snapshot.tag);
+        break;
+      }
     }
   }
 }
