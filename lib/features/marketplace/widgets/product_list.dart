@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/models/details_product.dart';
-import 'package:nfc_mobile_prototype/domain/models/product.dart';
-import 'package:nfc_mobile_prototype/features/content/widgets/product_card.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_card.dart';
 
 class ProductList extends StatelessWidget {
   ProductList({Key? key}) : super(key: key);

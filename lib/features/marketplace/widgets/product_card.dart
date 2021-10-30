@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/models/details_product.dart';
-import 'package:nfc_mobile_prototype/features/content/screens/details_screen.dart';
-import 'package:nfc_mobile_prototype/features/content/widgets/cart_button.dart';
-import 'package:nfc_mobile_prototype/features/content/widgets/gradient_image.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/cart_button.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_image.dart';
 
 class ProductCard extends StatelessWidget {
   final DetailsProduct detailsProduct;
@@ -16,7 +16,7 @@ class ProductCard extends StatelessWidget {
 
   void _onProductTapHandler(BuildContext context, DetailsProduct detailsProduct) {
     Navigator.of(context).pushNamed(
-      DetailsScreen.routeName,
+      ProductDetailsScreen.routeName,
       arguments: detailsProduct,
     );
   }

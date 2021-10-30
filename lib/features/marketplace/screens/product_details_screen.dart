@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/models/details_product.dart';
-import 'package:nfc_mobile_prototype/features/content/widgets/gradient_image.dart';
-import 'package:nfc_mobile_prototype/features/shared/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/features/shared/neon_button.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_image.dart';
+import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
 
-class DetailsScreen extends StatelessWidget {
+class ProductDetailsScreen extends StatelessWidget {
   static const routeName = '/details';
   final DetailsProduct detailsProduct;
 
-  const DetailsScreen({
+  const ProductDetailsScreen({
     Key? key,
     required this.detailsProduct,
   }) : super(key: key);

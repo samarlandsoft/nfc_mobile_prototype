@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/models/product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/product.dart';
 
 class DetailsProduct {
   final Product product;

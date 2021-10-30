@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/services/logger.dart';
-import 'package:nfc_mobile_prototype/domain/usecases/update_index.dart';
-import 'package:nfc_mobile_prototype/features/loader/widgets/animated_loader.dart';
-import 'package:nfc_mobile_prototype/features/shared/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/features/token/screens/token_screen.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
+import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/features/splash/widgets/animated_loader.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-class LoaderScreen extends StatefulWidget {
+class SplashScreen extends StatefulWidget {
   static const index = 0;
 
-  const LoaderScreen({Key? key}) : super(key: key);
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoaderScreen> createState() => _LoaderScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _LoaderScreenState extends State<LoaderScreen>
+class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   static const _disableDuration = 200;
   static const _logoSize = 150.0;
@@ -25,7 +24,6 @@ class _LoaderScreenState extends State<LoaderScreen>
   @override
   void initState() {
     super.initState();
-    logDebug('LoaderScreen: INIT');
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
@@ -37,22 +35,20 @@ class _LoaderScreenState extends State<LoaderScreen>
 
   @override
   void dispose() {
-    logDebug('LoaderScreen: DISPOSE');
     _controller.dispose();
     super.dispose();
   }
 
   void _futureRequestsImitation() {
-    Future.delayed(const Duration(seconds: 4)).then((_) {
+    Future.delayed(const Duration(seconds: 3)).then((_) {
       setState(() {
         _isDisabled = true;
       });
       Future.delayed(const Duration(milliseconds: _disableDuration ~/ 2))
           .then((_) {
-        logDebug('LoaderScreen: STOP');
         _controller.stop();
       });
-      locator<UpdateIndex>().call(TokenScreen.index);
+      locator<UpdateScreenIndex>().call(NfcScannerScreen.index);
     });
   }
 

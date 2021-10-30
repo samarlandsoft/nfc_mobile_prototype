@@ -1,43 +1,57 @@
 import 'package:dartz/dartz.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_mobile_prototype/domain/models/failures.dart';
-import 'package:nfc_mobile_prototype/domain/services/logger.dart';
+import 'package:nfc_mobile_prototype/core/models/failures.dart';
+import 'package:nfc_mobile_prototype/core/services/logger.dart';
 
 class NFCService {
   final NfcManager _nfcManager = NfcManager.instance;
+  bool _isBusy = false;
 
-  Future<Either<Failure, Map<String, dynamic>>> readTag() async {
+  Future<Either<Failure, Ndef>> readTag() async {
     logDebug('NFCService -> readTag()');
-    Map<String, dynamic> tagData = {};
+
+    if (await _checkAvailabilityNfcManager()) {
+      return Left(CommonFailure(''));
+    }
+
+    Ndef? ndef;
     var isScanned = false;
     var isAvailable = await _nfcManager.isAvailable();
 
     if (!isAvailable) {
       logDebug('Error: NfcManager isn\'t available');
+      _isBusy = false;
       return Left(CommonFailure(''));
     }
 
     _nfcManager.startSession(onDiscovered: (NfcTag tag) async {
-      tagData = tag.data;
+      ndef = Ndef.from(tag);
       isScanned = true;
-      logDebug('Tag data: $tagData');
-      _nfcManager.stopSession();
+      await _nfcManager.stopSession();
     });
 
     while (!isScanned) {
       await Future.delayed(const Duration(seconds: 1));
     }
-    return Right(tagData);
+
+    _isBusy = false;
+    return ndef != null ? Right(ndef!) : Left(CommonFailure(''));
   }
 
   Future<Either<Failure, bool>> writeTag(String text) async {
     logDebug('NFCService -> writeTag()');
+
+    if (await _checkAvailabilityNfcManager()) {
+      return Left(CommonFailure(''));
+    }
+
     var hasException = false;
     var isScanned = false;
     var isAvailable = await _nfcManager.isAvailable();
 
     if (!isAvailable) {
       logDebug('Error: NfcManager isn\'t available');
+      _isBusy = false;
       return Left(CommonFailure(''));
     }
 
@@ -52,7 +66,7 @@ class NFCService {
         }
         hasException = true;
         isScanned = true;
-        _nfcManager.stopSession();
+        await _nfcManager.stopSession();
         return;
       }
 
@@ -69,12 +83,26 @@ class NFCService {
       }
 
       isScanned = true;
-      _nfcManager.stopSession();
+      await _nfcManager.stopSession();
     });
 
     while (!isScanned) {
       await Future.delayed(const Duration(seconds: 1));
     }
+
+    _isBusy = false;
     return hasException ? Left(CommonFailure('')) : const Right(true);
+  }
+
+  Future<bool> _checkAvailabilityNfcManager() async {
+    if (_isBusy) {
+      logDebug('Error: NfcManager is busy right now');
+      _isBusy = false;
+      await _nfcManager.stopSession();
+      return true;
+    } else {
+      _isBusy = true;
+      return false;
+    }
   }
 }

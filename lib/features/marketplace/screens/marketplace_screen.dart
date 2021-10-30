@@ -1,36 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/domain/services/logger.dart';
-import 'package:nfc_mobile_prototype/domain/usecases/update_index.dart';
-import 'package:nfc_mobile_prototype/features/content/widgets/product_list.dart';
-import 'package:nfc_mobile_prototype/features/shared/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/features/shared/neon_button.dart';
-import 'package:nfc_mobile_prototype/features/token/screens/token_screen.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_list.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
+import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-class ContentScreen extends StatefulWidget {
+class MarketplaceScreen extends StatefulWidget {
   static const index = 2;
 
-  const ContentScreen({Key? key}) : super(key: key);
+  const MarketplaceScreen({Key? key}) : super(key: key);
 
   @override
-  State<ContentScreen> createState() => _ContentScreenState();
+  State<MarketplaceScreen> createState() => _MarketplaceScreenState();
 }
 
-class _ContentScreenState extends State<ContentScreen> {
+class _MarketplaceScreenState extends State<MarketplaceScreen> {
   static const _disableDuration = 200;
   bool _isDisabled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    logDebug('ContentScreen: INIT');
-  }
-
-  @override
-  void dispose() {
-    logDebug('ContentScreen: DISPOSE');
-    super.dispose();
-  }
 
   void _onGoBackButtonHandler() {
     setState(() {
@@ -38,9 +25,8 @@ class _ContentScreenState extends State<ContentScreen> {
     });
     Future.delayed(const Duration(milliseconds: _disableDuration ~/ 2))
         .then((_) {
-      logDebug('ContentScreen: STOP');
     });
-    locator<UpdateIndex>().call(TokenScreen.index);
+    locator<UpdateScreenIndex>().call(NfcScannerScreen.index);
   }
 
   @override

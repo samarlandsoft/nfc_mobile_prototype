@@ -2,13 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nfc_mobile_prototype/domain/bloc/app_bloc.dart';
-import 'package:nfc_mobile_prototype/domain/bloc/app_state.dart';
-import 'package:nfc_mobile_prototype/domain/models/details_product.dart';
-import 'package:nfc_mobile_prototype/features/content/screens/content_screen.dart';
-import 'package:nfc_mobile_prototype/features/content/screens/details_screen.dart';
-import 'package:nfc_mobile_prototype/features/loader/screens/loader_screen.dart';
-import 'package:nfc_mobile_prototype/features/token/screens/token_screen.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
+import 'package:nfc_mobile_prototype/features/splash/screens/splash_screen.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
 void main() {
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       ),
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case DetailsScreen.routeName:
+          case ProductDetailsScreen.routeName:
             {
               return PageRouteBuilder(
                 transitionDuration: const Duration(milliseconds: 500),
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
                 pageBuilder: (context, first, second) {
                   return FadeTransition(
                     opacity: first,
-                    child: DetailsScreen(
+                    child: ProductDetailsScreen(
                       detailsProduct: settings.arguments as DetailsProduct,
                     ),
                   );
@@ -50,52 +51,42 @@ class MyApp extends StatelessWidget {
             }
         }
       },
-      home: BlocProvider.value(
-        value: locator<AppBloc>(),
-        child: const PageSwitcher(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: locator<AppBloc>()),
+          BlocProvider.value(value: locator<NFCBloc>()),
+        ],
+        child: const ScreenNavigator(),
       ),
     );
   }
 }
 
-class PageSwitcher extends StatefulWidget {
-  const PageSwitcher({Key? key}) : super(key: key);
+class ScreenNavigator extends StatefulWidget {
+  const ScreenNavigator({Key? key}) : super(key: key);
 
   @override
-  State<PageSwitcher> createState() => _PageSwitcherState();
+  State<ScreenNavigator> createState() => _ScreenNavigatorState();
 }
 
-class _PageSwitcherState extends State<PageSwitcher> {
+class _ScreenNavigatorState extends State<ScreenNavigator> {
   final List<Widget> _screens = [
-    const LoaderScreen(),
-    const TokenScreen(),
-    const ContentScreen(),
+    const SplashScreen(),
+    const NfcScannerScreen(),
+    const MarketplaceScreen(),
   ];
-
-  SnackBar _buildSnackBar(String tag) {
-    return SnackBar(
-      content: Text('Read NFC: $tag'),
-      duration: const Duration(seconds: 5),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocConsumer<AppBloc, AppState>(
-        listenWhen: (prevState, currentState) {
-          return prevState.tag != '' || currentState.tag != '';
-        },
-        listener: (context, state) {
-          ScaffoldMessenger.of(context).showSnackBar(_buildSnackBar(state.tag));
-        },
+      body: BlocBuilder<AppBloc, AppBlocState>(
         builder: (context, state) {
           return Stack(
             alignment: Alignment.center,
             children: <Widget>[
               AnimatedSwitcher(
                 duration: const Duration(seconds: 1),
-                child: _screens[state.index],
+                child: _screens[state.currentScreenIndex],
               ),
             ],
           );
