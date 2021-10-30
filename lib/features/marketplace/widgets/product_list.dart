@@ -4,9 +4,9 @@ import 'package:nfc_mobile_prototype/features/marketplace/domain/models/product.
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_card.dart';
 
 class ProductList extends StatelessWidget {
-  ProductList({Key? key}) : super(key: key);
+  const ProductList({Key? key}) : super(key: key);
 
-  final List<DetailsProduct> _demoProducts = [
+  final List<DetailsProduct> _demoProducts = const [
     DetailsProduct(
       product: Product(
         title: 'Season 1 Can\'t Be Stopped - Bitcoin Edition',
@@ -20,7 +20,7 @@ class ProductList extends StatelessWidget {
         amount: 20,
         sold: 16,
       ),
-      gradient: const [
+      gradient: [
         Color(0xFF083d77),
         Color(0xFFF7931A),
       ],
@@ -38,7 +38,7 @@ class ProductList extends StatelessWidget {
         amount: 20,
         sold: 16,
       ),
-      gradient: const [
+      gradient: [
         Color(0xFF4CC9F0),
         Color(0xFFF72585),
       ],

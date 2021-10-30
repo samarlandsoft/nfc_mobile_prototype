@@ -2,8 +2,13 @@ import 'package:get_it/get_it.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/services/license_service.dart';
+import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_user_role.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/services/blockchain_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc_state.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/read_nfc_data.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
@@ -14,23 +19,67 @@ GetIt locator = GetIt.instance;
 void initLocator() {
   _initCore();
   _initNFCScanner();
+  _initMarketplace();
 }
 
 void _initCore() {
+  /// Blocs
   locator.registerLazySingleton(() => AppBloc(AppBlocState()));
+
+  /// Services
   locator.registerLazySingleton(() => LicenseService());
-  locator.registerLazySingleton(() => UpdateScreenIndex(bloc: locator<AppBloc>()));
+  locator.registerLazySingleton(() => LocalStorageService());
+
+  /// Usecases
+  locator.registerLazySingleton(() => UpdateScreenIndex(
+        bloc: locator<AppBloc>(),
+      ));
+  locator.registerLazySingleton(() => UpdateUserRole(
+        bloc: locator<AppBloc>(),
+      ));
+  locator.registerLazySingleton(() => UpdateAppTheme(
+        bloc: locator<AppBloc>(),
+        storageService: locator<LocalStorageService>(),
+      ));
 }
 
 void _initNFCScanner() {
+  /// Blocs
   locator.registerLazySingleton(() => NFCBloc(NFCBlocState()));
+
+  /// Services
   locator.registerLazySingleton(() => NFCService());
+  locator.registerLazySingleton(() => JWTService());
+
+  /// Usecases
   locator.registerLazySingleton(() => ReadNFCData(
         bloc: locator<NFCBloc>(),
         nfcService: locator<NFCService>(),
+        jwtService: locator<JWTService>(),
       ));
   locator.registerLazySingleton(() => WriteNFCData(
         bloc: locator<NFCBloc>(),
         nfcService: locator<NFCService>(),
+        jwtService: locator<JWTService>(),
       ));
+}
+
+void _initMarketplace() {
+  /// Blocs
+  // locator.registerLazySingleton(() => NFCBloc(NFCBlocState()));
+
+  /// Services
+  locator.registerLazySingleton(() => BlockchainService());
+
+  /// Usecases
+  // locator.registerLazySingleton(() => ReadNFCData(
+  //   bloc: locator<NFCBloc>(),
+  //   nfcService: locator<NFCService>(),
+  //   jwtService: locator<JWTService>(),
+  // ));
+  // locator.registerLazySingleton(() => WriteNFCData(
+  //   bloc: locator<NFCBloc>(),
+  //   nfcService: locator<NFCService>(),
+  //   jwtService: locator<JWTService>(),
+  // ));
 }

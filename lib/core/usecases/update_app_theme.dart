@@ -1,0 +1,26 @@
+import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_events.dart';
+import 'package:nfc_mobile_prototype/core/models/usecase.dart';
+import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/services/logger.dart';
+
+class UpdateAppTheme implements Usecase<void, bool?> {
+  final AppBloc bloc;
+  final LocalStorageService storageService;
+
+  UpdateAppTheme({
+    required this.bloc,
+    required this.storageService,
+  });
+
+  @override
+  Future<void> call(bool? isCustomTheme,
+      {bool updateLocalStorage = true}) async {
+    logDebug('UpdateAppTheme usecase -> call()');
+    var isCustomThemeActive = !bloc.state.isCustomTheme;
+    bloc.add(AppUpdateTheme(isCustomTheme: isCustomTheme ?? isCustomThemeActive));
+    if (updateLocalStorage) {
+      storageService.updateAppTheme(isCustomTheme ?? isCustomThemeActive);
+    }
+  }
+}

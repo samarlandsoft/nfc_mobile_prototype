@@ -24,43 +24,35 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       _isDisabled = true;
     });
     Future.delayed(const Duration(milliseconds: _disableDuration ~/ 2))
-        .then((_) {
-    });
+        .then((_) {});
     locator<UpdateScreenIndex>().call(NfcScannerScreen.index);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/icons/background_3.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: ContentWrapper(
-        widget: AnimatedOpacity(
-          duration: const Duration(milliseconds: _disableDuration),
-          opacity: _isDisabled ? 0.0 : 1.0,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                top: 0.0,
-                left: 0.0,
-                right: 0.0,
-                bottom: 90.0,
-                child: ProductList(),
+    return ContentWrapper(
+      backgroundSrc: 'assets/icons/background_3.png',
+      widget: AnimatedOpacity(
+        duration: const Duration(milliseconds: _disableDuration),
+        opacity: _isDisabled ? 0.0 : 1.0,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            const Positioned(
+              top: 0.0,
+              left: 0.0,
+              right: 0.0,
+              bottom: 90.0,
+              child: ProductList(),
+            ),
+            Positioned(
+              bottom: 20.0,
+              child: NeonButton(
+                label: 'Back',
+                callback: _onGoBackButtonHandler,
               ),
-              Positioned(
-                bottom: 20.0,
-                child: NeonButton(
-                  label: 'Back',
-                  callback: _onGoBackButtonHandler,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

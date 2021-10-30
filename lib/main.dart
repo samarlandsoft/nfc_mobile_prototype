@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
+import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
@@ -12,9 +14,10 @@ import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_sc
 import 'package:nfc_mobile_prototype/features/splash/screens/splash_screen.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initLocator();
+  await locator<LocalStorageService>().init();
   runApp(const MyApp());
 }
 
@@ -28,9 +31,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Poppins',
-        textTheme: Theme.of(context).textTheme.apply(
-              bodyColor: Colors.white,
-            ),
+        textTheme: const TextTheme(
+          bodyText2: TextStyle(
+            color: Colors.white,
+            fontSize: 16.0,
+          ),
+        ),
       ),
       onGenerateRoute: (settings) {
         switch (settings.name) {
@@ -70,6 +76,13 @@ class ScreenNavigator extends StatefulWidget {
 }
 
 class _ScreenNavigatorState extends State<ScreenNavigator> {
+  @override
+  void initState() {
+    super.initState();
+    var isCustomTheme = locator<LocalStorageService>().getAppTheme();
+    locator<UpdateAppTheme>().call(isCustomTheme, updateLocalStorage: false);
+  }
+
   final List<Widget> _screens = [
     const SplashScreen(),
     const NfcScannerScreen(),

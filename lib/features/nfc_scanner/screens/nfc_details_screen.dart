@@ -1,7 +1,9 @@
-import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/dialogs_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 
 class NFCDetailsScreen extends StatelessWidget {
   final Ndef ndef;
@@ -13,89 +15,53 @@ class NFCDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: <Widget>[
-          const Text(
-            'NDEF',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
+    return DefaultTextStyle.merge(
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 16.0,
+      ),
+      child: DialogsWrapper(
+        widget: ScrollableWrapper(
+          widgets: <Widget>[
+            const Text(
+              'Result:',
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Text(
-            ndef.isWritable.toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
+            Text(
+              'Max size - ${ndef.maxSize.toString()}Kb',
             ),
-          ),
-          Text(
-            ndef.maxSize.toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
+            Text(
+              'Writable - ${ndef.isWritable.toString()}',
             ),
-          ),
-          Text(
-            ndef.additionalData['identifier'].toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
+            Text(
+              'Chip ID - ${ndef.additionalData['identifier'].toString()}',
             ),
-          ),
-          Text(
-            ndef.additionalData['canMakeReadOnly'].toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
+            Text(
+              'Type - ${ndef.additionalData['type'].toString()}',
             ),
-          ),
-          Text(
-            ndef.additionalData['type'].toString(),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 16.0,
-            ),
-          ),
-          if (ndef.cachedMessage != null)
-            Column(
-              children: ndef.cachedMessage!.records
-                  .map((record) => Column(
-                        children: <Widget>[
-                          Text(
-                            '${record.identifier.toString()} - ${String.fromCharCodes(record.identifier)}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
+            if (ndef.cachedMessage != null)
+              Column(
+                children: ndef.cachedMessage!.records
+                    .map((record) => Column(
+                          children: <Widget>[
+                            const Text(
+                              'Data(in JWT):',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            '${record.type.toString()} - ${String.fromCharCodes(record.type)}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
+                            Text(
+                              String.fromCharCodes(record.payload),
                             ),
-                          ),
-                          Text(
-                            record.typeNameFormat.toString(),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                          Text(
-                            '${record.payload.toString()} - ${String.fromCharCodes(record.payload)}',
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
-                      ))
-                  .toList(),
-            ),
-        ],
+                          ],
+                        ))
+                    .toList(),
+              ),
+          ],
+        ),
       ),
     );
   }

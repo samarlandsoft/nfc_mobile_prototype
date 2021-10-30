@@ -57,30 +57,23 @@ class _SplashScreenState extends State<SplashScreen>
     final mq = MediaQuery.of(context);
     final logoPosition = (mq.size.height / 2.0) - (_logoSize / 2.0) - mq.viewPadding.top;
 
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/icons/background_1.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: ContentWrapper(
-        widget: AnimatedOpacity(
-          duration: const Duration(milliseconds: _disableDuration),
-          opacity: _isDisabled ? 0.0 : 1.0,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                bottom: logoPosition,
-                child: AnimatedLoader(
-                  height: _logoSize,
-                  width: _logoSize,
-                  animation: _controller,
-                ),
+    return ContentWrapper(
+      backgroundSrc: 'assets/icons/background_1.png',
+      widget: AnimatedOpacity(
+        duration: const Duration(milliseconds: _disableDuration),
+        opacity: _isDisabled ? 0.0 : 1.0,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Positioned(
+              bottom: logoPosition,
+              child: AnimatedLoader(
+                height: _logoSize,
+                width: _logoSize,
+                animation: _controller,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -5,7 +5,7 @@ class Product {
   final double price, priceStep;
   final int amount, sold;
 
-  Product({
+  const Product({
     required this.title,
     required this.edition,
     required this.description,

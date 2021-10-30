@@ -1,10 +1,11 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc_state.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/read_nfc_data.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
@@ -67,11 +68,20 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
     setState(() {
       _isWriting = true;
     });
-    String message = math.Random().nextInt(100).toString();
-    await locator<WriteNFCData>().call(message);
+
+    var payload = const JWTPayloadModel(
+      tokenID: '1',
+      data: 'test',
+    );
+    await locator<WriteNFCData>().call(payload.toJson());
+
     setState(() {
       _isWriting = false;
     });
+  }
+
+  void _onToggleAppThemeButtonHandler() {
+    locator<UpdateAppTheme>().call(null);
   }
 
   void _onGoNextButtonHandler() {
@@ -85,6 +95,20 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
     locator<UpdateScreenIndex>().call(MarketplaceScreen.index);
   }
 
+  void _showNFCDetails(Ndef ndef) {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+      ),
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return NFCDetailsScreen(ndef: ndef);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -96,96 +120,99 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
     return BlocListener<NFCBloc, NFCBlocState>(
       listener: (context, state) {
         if (state.ndef != null) {
-          showModalBottomSheet(
-            backgroundColor: Colors.white,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
-            ),
-            enableDrag: false,
-            context: context,
-            builder: (context) {
-              return NFCDetailsScreen(ndef: state.ndef!);
-            },
-          );
+          _showNFCDetails(state.ndef!);
         }
       },
-      child: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/icons/background_2.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: ContentWrapper(
-          widget: AnimatedOpacity(
-            duration: const Duration(milliseconds: _disableDuration),
-            opacity: _isDisabled ? 0.0 : 1.0,
-            child: Stack(
-              alignment: Alignment.center,
-              children: <Widget>[
-                Positioned(
-                  bottom: logoPosition,
-                  child: AnimatedPulse(
-                    height: _logoSize,
-                    width: _logoSize,
-                    animation: _controller,
+      child: ContentWrapper(
+        backgroundSrc: 'assets/icons/background_2.png',
+        widget: AnimatedOpacity(
+          duration: const Duration(milliseconds: _disableDuration),
+          opacity: _isDisabled ? 0.0 : 1.0,
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(
+                bottom: logoPosition,
+                child: AnimatedPulse(
+                  height: _logoSize,
+                  width: _logoSize,
+                  animation: _controller,
+                ),
+              ),
+              Positioned(
+                bottom: iconPosition,
+                child: SizedBox(
+                  height: _iconSize,
+                  width: _iconSize,
+                  child: Image.asset('assets/icons/icon.png'),
+                ),
+              ),
+              Positioned(
+                bottom: textPosition,
+                child: Text(
+                  _isScanning
+                      ? 'Scanning...'
+                      : _isWriting
+                      ? 'Writing...'
+                      : 'Scan NFC tag',
+                  style: const TextStyle(
+                    fontSize: 24.0,
                   ),
                 ),
-                Positioned(
-                  bottom: iconPosition,
-                  child: SizedBox(
-                    height: _iconSize,
-                    width: _iconSize,
-                    child: Image.asset('assets/icons/icon.png'),
-                  ),
-                ),
-                Positioned(
-                  bottom: textPosition,
-                  child: Text(
-                    _isScanning
-                        ? 'Scanning...'
-                        : _isWriting
-                            ? 'Writing...'
-                            : 'Scan NFC tag',
-                    style: const TextStyle(
-                      fontSize: 24.0,
+              ),
+              Positioned(
+                bottom: 20.0,
+                right: 10.0,
+                child: Column(
+                  children: <Widget>[
+                    FloatingActionButton(
+                      heroTag: 'Toggle theme',
+                      onPressed: _onToggleAppThemeButtonHandler,
+                      backgroundColor:
+                      false ? Colors.green : Colors.orange,
+                      child: const Icon(Icons.local_fire_department),
                     ),
-                  ),
+                    const SizedBox(
+                      height: 25.0,
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'Blockchain',
+                      onPressed: () {},
+                      backgroundColor:
+                      false ? Colors.green : Colors.purple,
+                      child: const Icon(Icons.network_check),
+                    ),
+                    const SizedBox(
+                      height: 25.0,
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'Read NFC',
+                      onPressed: _onReadNFCButtonHandler,
+                      backgroundColor:
+                      _isScanning ? Colors.green : Colors.blue,
+                      child: const Icon(Icons.my_library_books_outlined),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    FloatingActionButton(
+                      heroTag: 'Write NFC',
+                      onPressed: _onWriteNFCButtonHandler,
+                      backgroundColor:
+                      _isWriting ? Colors.green : Colors.blue,
+                      child: const Icon(Icons.edit),
+                    ),
+                  ],
                 ),
-                Positioned(
-                  bottom: 20.0,
-                  right: 10.0,
-                  child: Column(
-                    children: <Widget>[
-                      FloatingActionButton(
-                        heroTag: 'Read',
-                        onPressed: _onReadNFCButtonHandler,
-                        backgroundColor:
-                            _isScanning ? Colors.green : Colors.blue,
-                        child: const Icon(Icons.my_library_books_outlined),
-                      ),
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-                      FloatingActionButton(
-                        heroTag: 'Write',
-                        onPressed: _onWriteNFCButtonHandler,
-                        backgroundColor:
-                            _isWriting ? Colors.green : Colors.blue,
-                        child: const Icon(Icons.edit),
-                      ),
-                    ],
-                  ),
-                ),
-                // Positioned(
-                //   bottom: 20.0,
-                //   child: NeonButton(
-                //     label: 'Next',
-                //     callback: _onGoNextButtonHandler,
-                //   ),
-                // ),
-              ],
-            ),
+              ),
+              // Positioned(
+              //   bottom: 20.0,
+              //   child: NeonButton(
+              //     label: 'Next',
+              //     callback: _onGoNextButtonHandler,
+              //   ),
+              // ),
+            ],
           ),
         ),
       ),

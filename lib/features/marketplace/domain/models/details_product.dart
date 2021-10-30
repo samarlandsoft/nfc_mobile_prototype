@@ -5,7 +5,7 @@ class DetailsProduct {
   final Product product;
   final List<Color> gradient;
 
-  DetailsProduct({
+  const DetailsProduct({
     required this.product,
     required this.gradient,
   });
