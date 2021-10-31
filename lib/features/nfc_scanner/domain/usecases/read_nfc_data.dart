@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
@@ -12,7 +10,7 @@ class ReadNFCData implements Usecase<void, NoParams> {
   final NFCService nfcService;
   final JWTService jwtService;
 
-  ReadNFCData({
+  const ReadNFCData({
     required this.bloc,
     required this.nfcService,
     required this.jwtService,

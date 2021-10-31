@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
+import 'package:nfc_mobile_prototype/core/widgets/rounded_button.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc_state.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/read_nfc_data.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/write_nfc_data.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_details_screen.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/widgets/animated_loader.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/widgets/animated_pulse.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
@@ -24,31 +23,9 @@ class NfcScannerScreen extends StatefulWidget {
   State<NfcScannerScreen> createState() => _NfcScannerScreenState();
 }
 
-class _NfcScannerScreenState extends State<NfcScannerScreen>
-    with SingleTickerProviderStateMixin {
-  static const _disableDuration = 200;
-  static const _logoSize = 150.0;
-  static const _iconSize = 45.0;
-  late AnimationController _controller;
-  bool _isDisabled = false;
+class _NfcScannerScreenState extends State<NfcScannerScreen> {
   bool _isScanning = false;
   bool _isWriting = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    );
-    _controller.repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   void _onReadNFCButtonHandler() async {
     if (_isWriting) return;
@@ -80,21 +57,6 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
     });
   }
 
-  void _onToggleAppThemeButtonHandler() {
-    locator<UpdateAppTheme>().call(null);
-  }
-
-  void _onGoNextButtonHandler() {
-    setState(() {
-      _isDisabled = true;
-    });
-    Future.delayed(const Duration(milliseconds: _disableDuration ~/ 2))
-        .then((_) {
-      _controller.stop();
-    });
-    locator<UpdateScreenIndex>().call(MarketplaceScreen.index);
-  }
-
   void _showNFCDetails(Ndef ndef) {
     showModalBottomSheet(
       backgroundColor: Colors.white,
@@ -112,10 +74,12 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final logoPosition =
-        (mq.size.height / 2.0) - (_logoSize / 2.0) - mq.viewPadding.top;
-    final iconPosition = logoPosition + (_logoSize / 2.0) - (_iconSize / 2.0);
-    final textPosition = logoPosition - (_logoSize / 2.0) - 10.0;
+    final loaderSize = mq.size.width * 0.5;
+    final descriptionWidth = mq.size.width * 0.7;
+
+    final scannerPosition =
+        (mq.size.height / 2.0) - (loaderSize / 2.0) - mq.viewPadding.top - 56.0;
+    final descriptionPosition = scannerPosition - (loaderSize / 2.0);
 
     return BlocListener<NFCBloc, NFCBlocState>(
       listener: (context, state) {
@@ -124,96 +88,65 @@ class _NfcScannerScreenState extends State<NfcScannerScreen>
         }
       },
       child: ContentWrapper(
-        backgroundSrc: 'assets/icons/background_2.png',
-        widget: AnimatedOpacity(
-          duration: const Duration(milliseconds: _disableDuration),
-          opacity: _isDisabled ? 0.0 : 1.0,
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
+        backgroundSrc: 'assets/images/background_2.png',
+        widget: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            if (!_isScanning && !_isWriting)
               Positioned(
-                bottom: logoPosition,
+                bottom: scannerPosition,
+                child: AnimatedLoader(
+                  height: loaderSize,
+                  width: loaderSize,
+                ),
+              ),
+            if (_isScanning || _isWriting)
+              Positioned(
+                bottom: scannerPosition,
                 child: AnimatedPulse(
-                  height: _logoSize,
-                  width: _logoSize,
-                  animation: _controller,
+                  height: loaderSize,
+                  width: loaderSize,
                 ),
               ),
-              Positioned(
-                bottom: iconPosition,
-                child: SizedBox(
-                  height: _iconSize,
-                  width: _iconSize,
-                  child: Image.asset('assets/icons/icon.png'),
-                ),
-              ),
-              Positioned(
-                bottom: textPosition,
+            Positioned(
+              bottom: descriptionPosition,
+              child: SizedBox(
+                width: descriptionWidth,
                 child: Text(
                   _isScanning
                       ? 'Scanning...'
                       : _isWriting
-                      ? 'Writing...'
-                      : 'Scan NFC tag',
+                          ? 'Writing...'
+                          : 'Pull your phone close to NFC tag',
                   style: const TextStyle(
                     fontSize: 24.0,
                   ),
+                  textAlign: TextAlign.center,
                 ),
               ),
-              Positioned(
-                bottom: 20.0,
-                right: 10.0,
-                child: Column(
-                  children: <Widget>[
-                    FloatingActionButton(
-                      heroTag: 'Toggle theme',
-                      onPressed: _onToggleAppThemeButtonHandler,
-                      backgroundColor:
-                      false ? Colors.green : Colors.orange,
-                      child: const Icon(Icons.local_fire_department),
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-                    FloatingActionButton(
-                      heroTag: 'Blockchain',
-                      onPressed: () {},
-                      backgroundColor:
-                      false ? Colors.green : Colors.purple,
-                      child: const Icon(Icons.network_check),
-                    ),
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-                    FloatingActionButton(
-                      heroTag: 'Read NFC',
-                      onPressed: _onReadNFCButtonHandler,
-                      backgroundColor:
-                      _isScanning ? Colors.green : Colors.blue,
-                      child: const Icon(Icons.my_library_books_outlined),
-                    ),
-                    const SizedBox(
-                      height: 10.0,
-                    ),
-                    FloatingActionButton(
-                      heroTag: 'Write NFC',
-                      onPressed: _onWriteNFCButtonHandler,
-                      backgroundColor:
-                      _isWriting ? Colors.green : Colors.blue,
-                      child: const Icon(Icons.edit),
-                    ),
-                  ],
-                ),
+            ),
+            Positioned(
+              bottom: 10.0,
+              left: 10.0,
+              child: Row(
+                children: <Widget>[
+                  RoundedButton(
+                    icon: Icons.my_library_books_outlined,
+                    isTapped: _isScanning,
+                    callback: _onReadNFCButtonHandler,
+                  ),
+                  const SizedBox(
+                    width: 10.0,
+                  ),
+                  RoundedButton(
+                    icon: Icons.edit,
+                    isTapped: _isWriting,
+                    callback: _onWriteNFCButtonHandler,
+                  ),
+                ],
               ),
-              // Positioned(
-              //   bottom: 20.0,
-              //   child: NeonButton(
-              //     label: 'Next',
-              //     callback: _onGoNextButtonHandler,
-              //   ),
-              // ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

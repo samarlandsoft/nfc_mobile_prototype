@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/dialogs_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 
@@ -47,11 +46,17 @@ class NFCDetailsScreen extends StatelessWidget {
                 children: ndef.cachedMessage!.records
                     .map((record) => Column(
                           children: <Widget>[
+                            const SizedBox(
+                              height: 10.0,
+                            ),
                             const Text(
-                              'Data(in JWT):',
+                              'Data (JWT format):',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            const SizedBox(
+                              height: 5.0,
                             ),
                             Text(
                               String.fromCharCodes(record.payload),

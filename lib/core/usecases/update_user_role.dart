@@ -6,7 +6,7 @@ import 'package:nfc_mobile_prototype/core/services/logger.dart';
 class UpdateUserRole implements Usecase<void, bool> {
   final AppBloc bloc;
 
-  UpdateUserRole({required this.bloc});
+  const UpdateUserRole({required this.bloc});
 
   @override
   Future<void> call(bool isAdmin) async {

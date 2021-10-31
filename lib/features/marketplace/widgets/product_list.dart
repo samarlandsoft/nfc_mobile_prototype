@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/product.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_card.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/grid_product_card.dart';
 
 class ProductList extends StatelessWidget {
   const ProductList({Key? key}) : super(key: key);
@@ -13,8 +13,10 @@ class ProductList extends StatelessWidget {
         edition: 'Bitcoin Edition',
         description:
             'NFC-enabled Apparel + Artwork NFT + Digital Wearable + \$SALTY',
-        tags: ['Genesis, NFT, ERC721, NFC'],
-        imageSrc: 'assets/icons/bitcoin.gif',
+        tags: ['Genesis', 'NFT', 'ERC721', 'NFC'],
+        currency: CryptoCurrency.btc,
+        imageSrc: 'assets/images/bitcoin_sweater.gif',
+        chipSrc: 'assets/images/bitcoin_chip.gif',
         price: 6.05,
         priceStep: 0.28,
         amount: 20,
@@ -31,8 +33,10 @@ class ProductList extends StatelessWidget {
         edition: 'Ethereum Edition',
         description:
         'NFC-enabled Apparel + Artwork NFT + Digital Wearable + \$SALTY',
-        tags: ['Genesis, NFT, ERC721, NFC'],
-        imageSrc: 'assets/icons/ethereum.gif',
+        tags: ['Genesis', 'NFT', 'ERC721', 'NFC'],
+        currency: CryptoCurrency.eth,
+        imageSrc: 'assets/images/ethereum_sweater.gif',
+        chipSrc: 'assets/images/ethereum_chip.gif',
         price: 6.05,
         priceStep: 0.28,
         amount: 20,
@@ -59,7 +63,7 @@ class ProductList extends StatelessWidget {
         crossAxisSpacing: 10.0,
       ),
       itemBuilder: (context, index) {
-        return ProductCard(
+        return GridProductCard(
           detailsProduct: _demoProducts[index],
         );
       },

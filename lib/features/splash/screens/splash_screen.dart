@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
-import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/features/splash/widgets/animated_loader.dart';
-import 'package:nfc_mobile_prototype/locator.dart';
+import 'package:nfc_mobile_prototype/features/splash/widgets/animated_app_icon.dart';
+import 'package:nfc_mobile_prototype/features/splash/widgets/animated_description.dart';
+import 'package:nfc_mobile_prototype/features/splash/widgets/animated_logo.dart';
+import 'package:nfc_mobile_prototype/main.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const index = 0;
+  static const routeName = '/splash';
 
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -14,64 +13,59 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  static const _disableDuration = 200;
-  static const _logoSize = 150.0;
-  late AnimationController _controller;
-  bool _isDisabled = false;
+class _SplashScreenState extends State<SplashScreen> {
+  bool _isInit = false;
+  bool _isLogoVisible = false;
+  bool _isFinish = false;
 
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-    _controller.repeat();
-
-    _futureRequestsImitation();
+  void didChangeDependencies() {
+    if (!_isInit) {
+      _playAnimation(2000);
+    }
+    super.didChangeDependencies();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _futureRequestsImitation() {
-    Future.delayed(const Duration(seconds: 3)).then((_) {
+  void _playAnimation(int duration) {
+    Future.delayed(Duration(milliseconds: duration)).then((_) {
       setState(() {
-        _isDisabled = true;
+        _isInit = true;
       });
-      Future.delayed(const Duration(milliseconds: _disableDuration ~/ 2))
-          .then((_) {
-        _controller.stop();
+    });
+    Future.delayed(Duration(milliseconds: duration + 1000)).then((_) {
+      setState(() {
+        _isLogoVisible = true;
       });
-      locator<UpdateScreenIndex>().call(NfcScannerScreen.index);
+    });
+    Future.delayed(Duration(milliseconds: duration + 5000)).then((_) {
+      setState(() {
+        _isFinish = true;
+      });
+    });
+    Future.delayed(Duration(milliseconds: duration + 6500)).then((_) {
+      Navigator.of(context).pushReplacementNamed(ScreenNavigator.routeName);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
-    final logoPosition = (mq.size.height / 2.0) - (_logoSize / 2.0) - mq.viewPadding.top;
+    final topPadding = MediaQuery.of(context).viewPadding.top + 10.0;
 
-    return ContentWrapper(
-      backgroundSrc: 'assets/icons/background_1.png',
-      widget: AnimatedOpacity(
-        duration: const Duration(milliseconds: _disableDuration),
-        opacity: _isDisabled ? 0.0 : 1.0,
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.fromLTRB(10.0, topPadding, 10.0, 10.0),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            Positioned(
-              bottom: logoPosition,
-              child: AnimatedLoader(
-                height: _logoSize,
-                width: _logoSize,
-                animation: _controller,
-              ),
+            AnimatedAppIcon(
+              isVisible: _isInit,
+            ),
+            AnimatedLogo(
+              isVisible: _isLogoVisible,
+              isEndAnimation: _isFinish,
+            ),
+            AnimatedDescription(
+              isVisible: _isFinish ? !_isFinish : _isLogoVisible,
             ),
           ],
         ),

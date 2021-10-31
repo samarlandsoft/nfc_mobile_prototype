@@ -9,7 +9,7 @@ class WriteNFCData implements Usecase<void, Map<String, dynamic>> {
   final NFCService nfcService;
   final JWTService jwtService;
 
-  WriteNFCData({
+  const WriteNFCData({
     required this.bloc,
     required this.nfcService,
     required this.jwtService,

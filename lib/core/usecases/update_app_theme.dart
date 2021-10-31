@@ -8,7 +8,7 @@ class UpdateAppTheme implements Usecase<void, bool?> {
   final AppBloc bloc;
   final LocalStorageService storageService;
 
-  UpdateAppTheme({
+  const UpdateAppTheme({
     required this.bloc,
     required this.storageService,
   });

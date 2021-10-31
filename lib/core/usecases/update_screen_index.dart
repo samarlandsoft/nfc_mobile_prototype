@@ -6,7 +6,7 @@ import 'package:nfc_mobile_prototype/core/services/logger.dart';
 class UpdateScreenIndex implements Usecase<void, int> {
   final AppBloc bloc;
 
-  UpdateScreenIndex({required this.bloc});
+  const UpdateScreenIndex({required this.bloc});
 
   @override
   Future<void> call(int index) async {
