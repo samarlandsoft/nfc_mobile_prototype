@@ -1,19 +1,21 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
-import 'package:nfc_mobile_prototype/core/widgets/animated_bottom_bar.dart';
+import 'package:nfc_mobile_prototype/core/widgets/custom_bottom_bar.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_bloc.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_data_props.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
-import 'package:nfc_mobile_prototype/features/settings/screens/settings_scrren.dart';
 import 'package:nfc_mobile_prototype/features/splash/screens/splash_screen.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: locator<AppBloc>()),
+        BlocProvider.value(value: locator<MarketBloc>()),
         BlocProvider.value(value: locator<NFCBloc>()),
       ],
       child: MaterialApp(
@@ -39,11 +42,18 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.dark,
           fontFamily: 'Montserrat',
-          scaffoldBackgroundColor: const Color(0xFF141414),
-          textTheme: const TextTheme(
+          scaffoldBackgroundColor: StyleConstants.kBackgroundColor,
+          textTheme: TextTheme(
             bodyText2: TextStyle(
-              color: Colors.white,
               fontSize: 16.0,
+              color: StyleConstants.kGetLightColor(),
+            ),
+          ),
+          snackBarTheme: SnackBarThemeData(
+            contentTextStyle: TextStyle(
+              fontFamily: 'Montserrat',
+              fontSize: 16.0,
+              color: StyleConstants.kGetDarkColor(),
             ),
           ),
         ),
@@ -58,7 +68,8 @@ class MyApp extends StatelessWidget {
                     return FadeTransition(
                       opacity: first,
                       child: ProductDetailsScreen(
-                        detailsProduct: settings.arguments as DetailsProduct,
+                        sweater: (settings.arguments as NFCDataProps).sweater,
+                        fromToken: (settings.arguments as NFCDataProps).fromToken,
                       ),
                     );
                   },
@@ -99,7 +110,6 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
     MarketplaceScreen(),
     NfcScannerScreen(),
     AboutScreen(),
-    SettingsScreen(),
   ];
 
   @override
@@ -117,7 +127,7 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
               child: _screens[state.currentScreenIndex],
             ),
           ),
-          bottomNavigationBar: const AnimatedBottomBar(),
+          bottomNavigationBar: const CustomBottomBar(),
         );
       },
     );

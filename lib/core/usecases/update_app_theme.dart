@@ -16,7 +16,7 @@ class UpdateAppTheme implements Usecase<void, bool?> {
   @override
   Future<void> call(bool? isCustomTheme,
       {bool updateLocalStorage = true}) async {
-    logDebug('UpdateAppTheme usecase -> call()');
+    logDebug('UpdateAppTheme usecase -> call($isCustomTheme, $updateLocalStorage)');
     var isCustomThemeActive = !bloc.state.isCustomTheme;
     bloc.add(AppUpdateTheme(isCustomTheme: isCustomTheme ?? isCustomThemeActive));
     if (updateLocalStorage) {

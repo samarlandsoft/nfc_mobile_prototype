@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/product.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/card_tags.dart';
 
 class ProductDescription extends StatelessWidget {
-  final Product product;
+  final NFCSweater product;
   final double? width;
 
   const ProductDescription({
@@ -41,8 +42,8 @@ class ProductDescription extends StatelessWidget {
   Widget _buildDetailedItemDescription() {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        vertical: 30.0,
-        horizontal: 15.0,
+        vertical: StyleConstants.kDefaultPadding * 3.0,
+        horizontal: StyleConstants.kDefaultPadding * 1.5,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,24 +58,28 @@ class ProductDescription extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 10.0,
+            height: StyleConstants.kDefaultPadding,
           ),
           CardTags(tags: product.tags),
           const SizedBox(
-            height: 10.0,
+            height: StyleConstants.kDefaultPadding,
           ),
-          Text(
-            'Current price: ${product.price.toString()}',
-          ),
-          Text(
-            'Price step: ${product.priceStep.toString()}',
-          ),
-          Text(
-            'Sold: ${product.sold.toString()}',
-          ),
-          Text(
-            'Edition of: ${product.amount.toString()}',
-          ),
+          if (product.price != null)
+            Text(
+              'Current price: ${product.price.toString()}',
+            ),
+          if (product.priceStep != null)
+            Text(
+              'Price step: ${product.priceStep.toString()}',
+            ),
+          if (product.sold != null)
+            Text(
+              'Sold: ${product.sold.toString()}',
+            ),
+          if (product.amount != null)
+            Text(
+              'Edition of: ${product.amount.toString()}',
+            ),
         ],
       ),
     );

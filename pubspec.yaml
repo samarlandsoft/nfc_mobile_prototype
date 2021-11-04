@@ -16,6 +16,7 @@ dependencies:
   google_fonts: ^2.1.0
   carousel_slider: ^4.0.0
   flutter_switch: ^0.3.2
+  cached_network_image: ^3.1.0+1
 
   flutter_bloc: ^7.3.1
   get_it: ^7.2.0
@@ -26,6 +27,7 @@ dependencies:
   web3dart: ^2.3.1
 
   shared_preferences: ^2.0.8
+  permission_handler: ^8.2.5
 
 dev_dependencies:
   flutter_test:
@@ -54,5 +56,7 @@ flutter_icons:
   image_path: "assets/icons/icon.png"
 
 flutter_native_splash:
-  background_image: assets/images/splash.png
-  android_gravity: clip_vertical
+  color: "#0e0e0e"
+  color_dark: "#0e0e0e"
+  image: assets/icons/icon_large.png
+  fullscreen: true

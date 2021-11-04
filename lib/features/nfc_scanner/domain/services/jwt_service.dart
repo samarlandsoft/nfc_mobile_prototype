@@ -1,4 +1,6 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:dartz/dartz.dart';
+import 'package:nfc_mobile_prototype/core/models/failures.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
 
 class JWTService {
@@ -22,12 +24,12 @@ class JWTService {
     return token;
   }
 
-  bool verifyToken(String token) {
-    logDebug('JWTService -> verifyToken()');
+  Either<Failure, dynamic> verifyToken(String token) {
+    logDebug('JWTService -> verifyToken($token)');
     try {
       final jwt = JWT.verify(token, SecretKey(_salt));
       logDebug('Token verified, payload: ${jwt.payload}');
-      return true;
+      return Right(jwt.payload);
     } on JWTExpiredError {
       logDebug('Exception: JWT expired');
     } on JWTError catch (ex) {
@@ -35,6 +37,6 @@ class JWTService {
       logDebug(ex.message);
     }
 
-    return false;
+    return Left(CommonFailure(''));
   }
 }

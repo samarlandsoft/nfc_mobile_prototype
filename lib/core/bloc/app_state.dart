@@ -1,22 +1,25 @@
 class AppBlocState {
   final int currentScreenIndex;
-  final bool isUserAdmin;
   final bool isCustomTheme;
 
-  AppBlocState({
-    this.currentScreenIndex = 0,
-    this.isUserAdmin = true,
-    this.isCustomTheme = false,
+  const AppBlocState({
+    required this.currentScreenIndex,
+    required this.isCustomTheme,
   });
+
+  factory AppBlocState.initial() {
+    return const AppBlocState(
+      currentScreenIndex: 0,
+      isCustomTheme: false,
+    );
+  }
 
   AppBlocState update({
     int? currentScreenIndex,
-    bool? isUserAdmin,
     bool? isCustomTheme,
   }) {
     return AppBlocState(
       currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
-      isUserAdmin: isUserAdmin ?? this.isUserAdmin,
       isCustomTheme: isCustomTheme ?? this.isCustomTheme,
     );
   }

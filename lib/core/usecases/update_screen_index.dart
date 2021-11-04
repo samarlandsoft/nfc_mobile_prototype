@@ -10,7 +10,7 @@ class UpdateScreenIndex implements Usecase<void, int> {
 
   @override
   Future<void> call(int index) async {
-    logDebug('UpdateScreenIndex usecase -> call()');
+    logDebug('UpdateScreenIndex usecase -> call($index)');
     bloc.add(AppUpdateScreenIndex(index: index));
   }
 }

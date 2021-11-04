@@ -22,10 +22,11 @@ class ContentWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final topPadding = withLabel ? mq.viewPadding.top + 10.0 : 10.0;
-    final logoSize = StyleConstraints.getLogoHeight(context);
-    final bottomBarSize =
-        withBottomBar ? StyleConstraints.bottomBarHeight : 0.0;
+    final topPadding = withLabel
+        ? mq.viewPadding.top + StyleConstants.kDefaultPadding
+        : StyleConstants.kDefaultPadding;
+    final logoSize = StyleConstants.kGetLogoHeight(context);
+    final bottomBarSize = withBottomBar ? StyleConstants.kBottomBarHeight : 0.0;
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
@@ -46,7 +47,12 @@ class ContentWrapper extends StatelessWidget {
                 ),
               ),
             Padding(
-              padding: EdgeInsets.fromLTRB(10.0, topPadding, 10.0, 10.0),
+              padding: EdgeInsets.fromLTRB(
+                StyleConstants.kDefaultPadding,
+                topPadding,
+                StyleConstants.kDefaultPadding,
+                StyleConstants.kDefaultPadding,
+              ),
               child: Column(
                 children: <Widget>[
                   if (withLabel)
@@ -55,11 +61,11 @@ class ContentWrapper extends StatelessWidget {
                     ),
                   if (withLabel)
                     const SizedBox(
-                      height: 10.0,
+                      height: StyleConstants.kDefaultPadding,
                     ),
                   Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: StyleConstants.kDefaultPadding),
                       child: SizedBox(
                         height: withLabel
                             ? mq.size.height -

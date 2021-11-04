@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc_evets.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc_state.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_evets.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_state.dart';
 
 class NFCBloc extends Bloc<NFCBlocEvent, NFCBlocState> {
   NFCBloc(NFCBlocState initialState) : super(initialState);

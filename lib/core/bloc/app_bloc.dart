@@ -15,13 +15,6 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
           break;
         }
 
-      case AppUpdateUserRole:
-        {
-          var snapshot = event as AppUpdateUserRole;
-          yield state.update(isUserAdmin: snapshot.isUserAdmin);
-          break;
-        }
-
       case AppUpdateTheme:
         {
           var snapshot = event as AppUpdateTheme;

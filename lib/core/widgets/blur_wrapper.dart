@@ -15,26 +15,29 @@ class BlurWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AppBloc, AppBlocState>(buildWhen: (prev, current) {
-      return prev.isCustomTheme != current.isCustomTheme;
-    }, builder: (context, state) {
-      return ClipRRect(
-        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: state.isCustomTheme
-                ? Colors.grey.withOpacity(0.3)
-                : Colors.grey.withOpacity(0.1),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: 5.0,
-              sigmaY: 5.0,
+    return BlocBuilder<AppBloc, AppBlocState>(
+      buildWhen: (prev, current) {
+        return prev.isCustomTheme != current.isCustomTheme;
+      },
+      builder: (context, state) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: state.isCustomTheme
+                  ? Colors.grey.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.1),
             ),
-            child: widget,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(
+                sigmaX: 5.0,
+                sigmaY: 5.0,
+              ),
+              child: widget,
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

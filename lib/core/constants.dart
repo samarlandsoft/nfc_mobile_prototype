@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 
-class StyleConstraints {
-  static const bottomBarHeight = 56.0;
+class StyleConstants {
+  static const kDefaultPadding = 10.0;
+  static const kBottomBarHeight = 56.0;
 
-  static double getLogoHeight(BuildContext context) {
+  static const kBackgroundColor = Color(0xFF141414);
+
+  static Color kGetLightColor() {
+    return Colors.grey[50]!;
+  }
+
+  static Color kGetDarkColor() {
+    return Colors.grey[850]!;
+  }
+
+  static double kGetLogoHeight(BuildContext context) {
     return MediaQuery.of(context).size.width * 0.2;
   }
 }

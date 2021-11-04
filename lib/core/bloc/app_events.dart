@@ -8,12 +8,6 @@ class AppUpdateScreenIndex extends AppBlocEvent {
   AppUpdateScreenIndex({required this.index}) : super([index]);
 }
 
-class AppUpdateUserRole extends AppBlocEvent {
-  final bool isUserAdmin;
-
-  AppUpdateUserRole({required this.isUserAdmin}) : super([isUserAdmin]);
-}
-
 class AppUpdateTheme extends AppBlocEvent {
   final bool isCustomTheme;
 

@@ -1,11 +1,18 @@
+import 'dart:typed_data';
+
 import 'package:dartz/dartz.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/models/failures.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';
 
 class NFCService {
   final NfcManager _nfcManager = NfcManager.instance;
+  final JWTService jwtService;
   bool _isBusy = false;
+
+  NFCService({required this.jwtService});
 
   Future<Either<Failure, Ndef>> readTag() async {
     logDebug('NFCService -> readTag()');
@@ -16,13 +23,6 @@ class NFCService {
 
     Ndef? ndef;
     var isScanned = false;
-    var isAvailable = await _nfcManager.isAvailable();
-
-    if (!isAvailable) {
-      logDebug('Error: NfcManager isn\'t available');
-      _isBusy = false;
-      return Left(CommonFailure(''));
-    }
 
     _nfcManager.startSession(onDiscovered: (NfcTag tag) async {
       ndef = Ndef.from(tag);
@@ -38,8 +38,8 @@ class NFCService {
     return ndef != null ? Right(ndef!) : Left(CommonFailure(''));
   }
 
-  Future<Either<Failure, bool>> writeTag(String text) async {
-    logDebug('NFCService -> writeTag()');
+  Future<Either<Failure, bool>> writeTag(String tokenID) async {
+    logDebug('NFCService -> writeTag($tokenID)');
 
     if (await _checkAvailabilityNfcManager()) {
       return Left(CommonFailure(''));
@@ -47,13 +47,6 @@ class NFCService {
 
     var hasException = false;
     var isScanned = false;
-    var isAvailable = await _nfcManager.isAvailable();
-
-    if (!isAvailable) {
-      logDebug('Error: NfcManager isn\'t available');
-      _isBusy = false;
-      return Left(CommonFailure(''));
-    }
 
     _nfcManager.startSession(onDiscovered: (NfcTag tag) async {
       var ndef = Ndef.from(tag);
@@ -70,13 +63,19 @@ class NFCService {
         return;
       }
 
+      var payload = JWTPayloadModel(
+        tokenID: tokenID,
+        chipID: getChipID(ndef.additionalData['identifier'] as Uint8List),
+      );
+      var jwt = jwtService.generateToken(payload.toJson());
+
       var message = NdefMessage([
-        NdefRecord.createText(text),
+        NdefRecord.createText(jwt),
       ]);
 
       try {
         await ndef.write(message);
-        logDebug('Success: Message "$text" was recorded');
+        logDebug('Success: Message "$jwt" was recorded');
       } catch (e) {
         hasException = true;
         logDebug('Exception: Error when trying to record a message');
@@ -96,7 +95,7 @@ class NFCService {
 
   Future<bool> _checkAvailabilityNfcManager() async {
     if (_isBusy) {
-      logDebug('Error: NfcManager is busy right now');
+      logDebug('Error: NFCService is busy right now');
       _isBusy = false;
       await _nfcManager.stopSession();
       return true;
@@ -104,5 +103,20 @@ class NFCService {
       _isBusy = true;
       return false;
     }
+  }
+
+  Future<bool> checkNFCAvailable() async {
+    var isAvailable = await _nfcManager.isAvailable();
+    if (!isAvailable) {
+      logDebug('Error: NFCService isn\'t available');
+    }
+    return isAvailable;
+  }
+
+  String getChipID(Uint8List bytes) {
+    logDebug('NFCService -> getChipID()');
+    return bytes.fold<String>('', (previousValue, element) {
+      return previousValue += element.toRadixString(16);
+    });
   }
 }

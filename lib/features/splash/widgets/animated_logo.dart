@@ -37,10 +37,10 @@ class _AnimatedLogoState extends State<AnimatedLogo> {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final logoSize = StyleConstraints.getLogoHeight(context);
+    final logoSize = StyleConstants.kGetLogoHeight(context);
 
     final logoFinishPosition =
-        (mq.size.height / 2.0) - logoSize - mq.viewPadding.top - 10.0;
+        (mq.size.height / 2.0) - logoSize - mq.viewPadding.top - StyleConstants.kDefaultPadding;
     final logoStartPosition = logoFinishPosition - (mq.size.height * 0.12);
 
     return AnimatedPositioned(

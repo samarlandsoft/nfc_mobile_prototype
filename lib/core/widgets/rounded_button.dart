@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class RoundedButton extends StatelessWidget {
+  static const size = 60.0;
+
   final IconData icon;
   final bool isTapped;
   final VoidCallback callback;
@@ -14,8 +16,6 @@ class RoundedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const buttonSize = 60.0;
-
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         backgroundColor: isTapped
@@ -25,13 +25,13 @@ class RoundedButton extends StatelessWidget {
           color: isTapped ? Colors.orange : Colors.grey,
           width: 4.0,
         ),
-        fixedSize: const Size(buttonSize, buttonSize),
+        fixedSize: const Size(size, size),
         shape: const CircleBorder(),
       ),
       onPressed: callback,
       child: Icon(
         icon,
-        size: buttonSize * 0.5,
+        size: size * 0.5,
         color: isTapped ? Colors.orange : Colors.grey,
       ),
     );

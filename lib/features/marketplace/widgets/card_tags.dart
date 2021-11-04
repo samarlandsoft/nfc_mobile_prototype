@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 
 class CardTags extends StatelessWidget {
@@ -15,10 +16,13 @@ class CardTags extends StatelessWidget {
       direction: Axis.horizontal,
       widgets: tags.map((tag) {
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-          margin: const EdgeInsets.only(right: 5.0),
+          padding: const EdgeInsets.symmetric(
+            vertical: StyleConstants.kDefaultPadding * 0.5,
+            horizontal: StyleConstants.kDefaultPadding,
+          ),
+          margin: const EdgeInsets.only(right: StyleConstants.kDefaultPadding * 0.5),
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(StyleConstants.kDefaultPadding * 0.5)),
             border: Border.all(color: Colors.grey),
           ),
           child: Text(

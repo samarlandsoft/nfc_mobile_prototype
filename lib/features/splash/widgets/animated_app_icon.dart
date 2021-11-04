@@ -15,7 +15,7 @@ class AnimatedAppIcon extends StatelessWidget {
     final iconSize = mq.size.width * 0.25;
     final iconPosition = (mq.size.height / 2.0) -
         (iconSize / 2.0) -
-        mq.viewPadding.top;
+        (mq.viewPadding.top * 0.5);
 
     return Positioned(
       bottom: iconPosition,

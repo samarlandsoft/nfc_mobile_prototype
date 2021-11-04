@@ -5,8 +5,8 @@ import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-class AnimatedBottomBar extends StatelessWidget {
-  const AnimatedBottomBar({Key? key}) : super(key: key);
+class CustomBottomBar extends StatelessWidget {
+  const CustomBottomBar({Key? key}) : super(key: key);
 
   void _onChangeScreenButtonHandler(int index) {
     locator<UpdateScreenIndex>().call(index);
@@ -34,10 +34,6 @@ class AnimatedBottomBar extends StatelessWidget {
             BottomNavigationBarItem(
               label: 'About',
               icon: Icon(Icons.description_outlined),
-            ),
-            BottomNavigationBarItem(
-              label: 'Settings',
-              icon: Icon(Icons.settings),
             ),
           ],
           currentIndex: state.currentScreenIndex,

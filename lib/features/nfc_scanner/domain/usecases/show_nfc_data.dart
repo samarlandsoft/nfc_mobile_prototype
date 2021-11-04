@@ -1,26 +1,25 @@
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_evets.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/nfc_service.dart';
 
-class ReadNFCData implements Usecase<bool, NoParams> {
+class ShowNFCData implements Usecase<dynamic, NoParams> {
   final NFCBloc bloc;
   final NFCService nfcService;
   final JWTService jwtService;
 
-  const ReadNFCData({
+  const ShowNFCData({
     required this.bloc,
     required this.nfcService,
     required this.jwtService,
   });
 
   @override
-  Future<bool> call(NoParams params) async {
-    logDebug('ReadNFCData usecase -> call()');
+  Future<dynamic> call(NoParams params) async {
+    logDebug('ShowNFCData usecase -> call()');
 
-    var isSuccess = false;
+    dynamic tokenData;
     var nfcResult = await nfcService.readTag();
 
     nfcResult.fold(
@@ -38,14 +37,13 @@ class ReadNFCData implements Usecase<bool, NoParams> {
           data.fold(
             (failure) => null,
             (result) {
-              isSuccess = true;
-              bloc.add(NFCReadChipEvent(ndef: token));
+              tokenData = result;
             },
           );
         }
       },
     );
 
-    return isSuccess;
+    return tokenData;
   }
 }

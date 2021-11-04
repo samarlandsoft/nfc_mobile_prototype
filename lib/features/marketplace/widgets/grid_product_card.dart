@@ -1,23 +1,28 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/details_product.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_data_props.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_description.dart';
 
 class GridProductCard extends StatelessWidget {
-  final DetailsProduct detailsProduct;
+  final NFCSweater sweater;
 
   const GridProductCard({
     Key? key,
-    required this.detailsProduct,
+    required this.sweater,
   }) : super(key: key);
 
-  void _onProductTapHandler(BuildContext context, DetailsProduct detailsProduct) {
+  void _onProductTapHandler(BuildContext context, NFCSweater sweater) {
     Navigator.of(context).pushNamed(
       ProductDetailsScreen.routeName,
-      arguments: detailsProduct,
+      arguments: NFCDataProps(
+        sweater: sweater,
+        fromToken: false,
+      ),
     );
   }
 
@@ -28,25 +33,27 @@ class GridProductCard extends StatelessWidget {
         return Container(
           decoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.5),
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: const BorderRadius.all(
+                Radius.circular(StyleConstants.kDefaultPadding)),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               GestureDetector(
-                onTap: () => _onProductTapHandler(context, detailsProduct),
+                onTap: () => _onProductTapHandler(context, sweater),
                 child: GradientWrapper(
                   height: constraints.maxWidth,
                   width: constraints.maxWidth,
-                  gradient: detailsProduct.gradient,
-                  imageSrc: detailsProduct.product.imageSrc,
+                  imageSrc: sweater.imageSrc,
+                  currency: sweater.currency,
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding:
+                    const EdgeInsets.all(StyleConstants.kDefaultPadding * 0.5),
                 child: ProductDescription(
                   width: constraints.maxWidth,
-                  product: detailsProduct.product,
+                  product: sweater,
                 ),
               ),
             ],
