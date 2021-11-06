@@ -6,7 +6,8 @@ import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_list.d
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 
 class MarketplaceScreen extends StatefulWidget {
-  static const index = 0;
+  static const String titleName = 'Marketplace';
+  static const int screenIndex = 1;
 
   const MarketplaceScreen({Key? key}) : super(key: key);
 
@@ -18,7 +19,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
     return ContentWrapper(
-      backgroundSrc: 'assets/images/background_1.png',
+      title: MarketplaceScreen.titleName,
+      backgroundSrc: 'assets/images/background_2.png',
+      withNavigation: true,
       widget: BlocBuilder<MarketBloc, MarketBlocState>(
         buildWhen: (prev, current) {
           return prev.sweaters != current.sweaters;

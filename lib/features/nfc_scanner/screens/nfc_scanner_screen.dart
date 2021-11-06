@@ -3,14 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/widgets/rounded_button.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_data_props.dart';
+import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater_props.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_state.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_mock_database.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_mock_database.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/read_nfc_data.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/show_nfc_data.dart';
@@ -21,18 +21,20 @@ import 'package:nfc_mobile_prototype/features/nfc_scanner/widgets/animated_pulse
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-class NfcScannerScreen extends StatefulWidget {
-  static const index = 1;
+class NFCScannerScreen extends StatefulWidget {
+  static const String titleName = 'Scanner';
+  static const int screenIndex = 2;
 
-  const NfcScannerScreen({Key? key}) : super(key: key);
+  const NFCScannerScreen({Key? key}) : super(key: key);
 
   @override
-  State<NfcScannerScreen> createState() => _NfcScannerScreenState();
+  State<NFCScannerScreen> createState() => _NFCScannerScreenState();
 }
 
-class _NfcScannerScreenState extends State<NfcScannerScreen> {
+class _NFCScannerScreenState extends State<NFCScannerScreen> {
   bool _isInit = false;
   bool _isScanning = false;
+  bool _isReading = false;
   bool _isWriting = false;
   bool _isNFCAvailable = false;
 
@@ -49,8 +51,22 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
     }
   }
 
-  void _onShowNFCButtonHandler() async {
-    if (_isScanning || _isWriting) return;
+  void _onScanNFCButtonHandler() async {
+    if (_isScanning) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isScanning = false;
+      });
+      return;
+    }
+
+    if (_isReading || _isWriting) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isReading = false;
+        _isWriting = false;
+      });
+    }
 
     setState(() {
       _isScanning = true;
@@ -60,19 +76,26 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
       _isScanning = false;
     });
 
-    if (tokenData != null) {
-      var jwt = JWTPayloadModel.fromJson(tokenData);
+    if (tokenData.error != null && tokenData.error != '') {
+      _buildSnackBar(tokenData.error!);
+    } else if (tokenData.data != null) {
+      var jwt = JWTPayloadModel.fromJson(tokenData.data);
+      var chipUrl = JWTMockDatabase.sweaterTokenURLs[jwt.tokenID]!;
+      var amountSoldSweaters = locator<JWTMockDatabase>()
+          .getAmountSoldSweaters(chipUrl, int.parse(jwt.tokenID) > 22);
 
       Navigator.of(context).pushNamed(
         ProductDetailsScreen.routeName,
-        arguments: NFCDataProps(
+        arguments: NFCSweaterProps(
           sweater: NFCSweater(
             title: 'TEST TITLE',
             edition: 'TEST EDITION',
             description: 'TEST DESCRIPTION',
             tags: ['Genesis', 'NFT', 'ERC721', 'NFC'],
             currency: CryptoCurrency.none,
-            chipSrc: JWTMockDatabase.sweaterURLs[jwt.tokenID],
+            chipSrc: chipUrl,
+            amount: 20,
+            sold: amountSoldSweaters,
           ),
           fromToken: true,
         ),
@@ -81,32 +104,64 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
   }
 
   void _onReadNFCButtonHandler() async {
-    if (_isScanning || _isWriting) return;
+    if (_isReading) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isReading = false;
+      });
+      return;
+    }
+
+    if (_isScanning || _isWriting) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isScanning = false;
+        _isWriting = false;
+      });
+    }
 
     setState(() {
-      _isScanning = true;
+      _isReading = true;
     });
     await locator<ReadNFCData>().call(NoParams());
     setState(() {
-      _isScanning = false;
+      _isReading = false;
     });
   }
 
   void _onWriteNFCButtonHandler() async {
-    if (_isScanning || _isWriting) return;
+    if (_isWriting) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isWriting = false;
+      });
+      return;
+    }
+
+    if (_isScanning || _isReading) {
+      await locator<NFCService>().cancelScanning();
+      setState(() {
+        _isScanning = false;
+        _isReading = false;
+      });
+    }
 
     setState(() {
       _isWriting = true;
     });
 
-    var isSuccess = await locator<WriteNFCData>().call('2');
+    var tokenData = await locator<WriteNFCData>().call('2');
 
     setState(() {
       _isWriting = false;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-        _buildSnackBar(isSuccess ? 'Token is recorded!' : 'Failed to record!'));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(_buildSnackBar(tokenData.isSuccess
+            ? 'Token is recorded!'
+            : (tokenData.error != null && tokenData.error != '')
+                ? tokenData.error!
+                : 'Failed to record!'));
   }
 
   SnackBar _buildSnackBar(String message) {
@@ -132,6 +187,10 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
         description = 'Scanning...';
       }
 
+      if (_isReading) {
+        description = 'Reading...';
+      }
+
       if (_isWriting) {
         description = 'Writing...';
       }
@@ -149,7 +208,7 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
 
   void _showNFCDetails(Ndef ndef) {
     showModalBottomSheet(
-      backgroundColor: Colors.white,
+      backgroundColor: StyleConstants.kBackgroundColor,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
             top: Radius.circular(StyleConstants.kDefaultPadding)),
@@ -168,10 +227,8 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
     final loaderSize = mq.size.width * 0.5;
     final descriptionWidth = mq.size.width * 0.7;
 
-    final scannerPosition = (mq.size.height / 2.0) -
-        (loaderSize / 2.0) -
-        mq.viewPadding.top -
-        StyleConstants.kBottomBarHeight;
+    final scannerPosition =
+        (mq.size.height / 2.0) - (loaderSize / 2.0) - mq.viewPadding.top;
     final descriptionPosition = scannerPosition - (loaderSize / 2.0);
 
     return BlocListener<NFCBloc, NFCBlocState>(
@@ -181,11 +238,13 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
         }
       },
       child: ContentWrapper(
-        backgroundSrc: 'assets/images/background_2.png',
+        title: NFCScannerScreen.titleName,
+        backgroundSrc: 'assets/images/background_3.png',
+        withNavigation: true,
         widget: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            if (!_isScanning && !_isWriting)
+            if (!_isScanning && !_isReading && !_isWriting)
               Positioned(
                 bottom: scannerPosition,
                 child: AnimatedLoader(
@@ -193,7 +252,7 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
                   width: loaderSize,
                 ),
               ),
-            if (_isScanning || _isWriting)
+            if (_isScanning || _isReading || _isWriting)
               Positioned(
                 bottom: scannerPosition,
                 child: AnimatedPulse(
@@ -215,26 +274,29 @@ class _NfcScannerScreenState extends State<NfcScannerScreen> {
                 absorbing: !_isNFCAvailable,
                 child: Row(
                   children: <Widget>[
-                    RoundedButton(
+                    NeonButton(
                       icon: Icons.remove_red_eye,
+                      callback: _onScanNFCButtonHandler,
+                      isRounded: true,
                       isTapped: _isScanning,
-                      callback: _onShowNFCButtonHandler,
                     ),
                     const SizedBox(
                       width: StyleConstants.kDefaultPadding,
                     ),
-                    RoundedButton(
+                    NeonButton(
                       icon: Icons.my_library_books_outlined,
-                      isTapped: _isScanning,
                       callback: _onReadNFCButtonHandler,
+                      isRounded: true,
+                      isTapped: _isReading,
                     ),
                     const SizedBox(
                       width: StyleConstants.kDefaultPadding,
                     ),
-                    RoundedButton(
+                    NeonButton(
                       icon: Icons.edit,
-                      isTapped: _isWriting,
                       callback: _onWriteNFCButtonHandler,
+                      isRounded: true,
+                      isTapped: _isWriting,
                     ),
                   ],
                 ),

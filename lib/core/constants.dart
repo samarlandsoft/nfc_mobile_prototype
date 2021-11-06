@@ -5,6 +5,8 @@ class StyleConstants {
   static const kBottomBarHeight = 56.0;
 
   static const kBackgroundColor = Color(0xFF141414);
+  static const kSelectedTextColor = Colors.pink;
+  static const kHyperlinkTextColor = Colors.blue;
 
   static Color kGetLightColor() {
     return Colors.grey[50]!;

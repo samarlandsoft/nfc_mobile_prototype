@@ -1,4 +1,5 @@
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/services/blockchain_service.dart';
 
 class MarketBlocState {
   final List<NFCSweater> sweaters;
@@ -8,7 +9,7 @@ class MarketBlocState {
   });
 
   factory MarketBlocState.initial() {
-    return const MarketBlocState(
+    return MarketBlocState(
       sweaters: [
         NFCSweater(
           title: 'Season 1 Can\'t Be Stopped - Bitcoin Edition',
@@ -18,11 +19,8 @@ class MarketBlocState {
           tags: ['Genesis', 'NFT', 'ERC721', 'NFC'],
           currency: CryptoCurrency.btc,
           imageSrc: 'assets/images/bitcoin_sweater.gif',
-          chipSrc: 'assets/images/bitcoin_chip.gif',
-          price: 6.05,
-          priceStep: 0.28,
+          priceStep: double.parse(BlockchainService.priceStep.toStringAsFixed(2)),
           amount: 20,
-          sold: 16,
         ),
         NFCSweater(
           title: 'Season 1 Can\'t Be Stopped - Ethereum Edition',
@@ -32,11 +30,8 @@ class MarketBlocState {
           tags: ['Genesis', 'NFT', 'ERC721', 'NFC'],
           currency: CryptoCurrency.eth,
           imageSrc: 'assets/images/ethereum_sweater.gif',
-          chipSrc: 'assets/images/ethereum_chip.gif',
-          price: 6.05,
-          priceStep: 0.28,
+          priceStep: double.parse(BlockchainService.priceStep.toStringAsFixed(2)),
           amount: 20,
-          sold: 16,
         ),
       ],
     );

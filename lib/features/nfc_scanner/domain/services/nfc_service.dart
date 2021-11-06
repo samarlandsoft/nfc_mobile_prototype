@@ -5,6 +5,7 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/models/failures.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/nfc_failures.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';
 
 class NFCService {
@@ -18,7 +19,7 @@ class NFCService {
     logDebug('NFCService -> readTag()');
 
     if (await _checkAvailabilityNfcManager()) {
-      return Left(CommonFailure(''));
+      return Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
     }
 
     Ndef? ndef;
@@ -35,14 +36,14 @@ class NFCService {
     }
 
     _isBusy = false;
-    return ndef != null ? Right(ndef!) : Left(CommonFailure(''));
+    return ndef != null ? Right(ndef!) : Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.notValidNDEF]!));
   }
 
   Future<Either<Failure, bool>> writeTag(String tokenID) async {
     logDebug('NFCService -> writeTag($tokenID)');
 
     if (await _checkAvailabilityNfcManager()) {
-      return Left(CommonFailure(''));
+      return Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
     }
 
     var hasException = false;
@@ -79,6 +80,7 @@ class NFCService {
       } catch (e) {
         hasException = true;
         logDebug('Exception: Error when trying to record a message');
+        logDebug('Exception: $e');
       }
 
       isScanned = true;
@@ -118,5 +120,11 @@ class NFCService {
     return bytes.fold<String>('', (previousValue, element) {
       return previousValue += element.toRadixString(16);
     });
+  }
+
+  Future<void> cancelScanning() async {
+    logDebug('NFCService -> cancelScanning()');
+    _isBusy = false;
+    await _nfcManager.stopSession();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:http/http.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:web3dart/web3dart.dart';
 
 class BlockchainService {
@@ -14,10 +15,18 @@ class BlockchainService {
   static const _saltandsatoshiSellerContractETH =
       "0x400a31ba7e9d428040b20eabdb329e54124f4013";
 
+  static const Map<CryptoCurrency, String> _contracts = {
+    CryptoCurrency.btc: _saltandsatoshiSellerContractBTC,
+    CryptoCurrency.eth: _saltandsatoshiSellerContractETH,
+  };
+
+  static const priceStep = 0.2815789473685;
+  static const _initialPrice = 1.55;
+
   final _httpClient = HttpClientWithCustomHeaders(headers: {});
 
-  Future<void> getCurrentPrice() async {
-    logDebug('BlockchainService -> getBalance()');
+  Future<double> getCurrentPrice(CryptoCurrency currency) async {
+    logDebug('BlockchainService -> getBalance($currency)');
 
     // INIT WEB3
     // var web3 = new WEB3_DART.Web3Client(INFURA_RPC_URL, new HttpClientWithCustomHeaders({
@@ -31,7 +40,7 @@ class BlockchainService {
 
     final web3 = Web3Client(_infuraRpcUrl, _httpClient);
     final sellerContractAddress =
-        EthereumAddress.fromHex(_saltandsatoshiSellerContractBTC);
+        EthereumAddress.fromHex(_contracts[currency]!);
     final sellerContract = DeployedContract(
       ContractAbi.fromJson(_saltandsatoshiSellerContractABI, 'Seller'),
       sellerContractAddress,
@@ -44,9 +53,16 @@ class BlockchainService {
     BigInt currentPriceAsBigInt = currentPriceResult[0];
     EtherAmount currentPrice = EtherAmount.inWei(currentPriceAsBigInt);
 
-    logDebug('Current price: ${currentPrice.getValueInUnit(EtherUnit.ether)}');
+    logDebug('Current price [$currency]: ${currentPrice.getValueInUnit(EtherUnit.ether)}');
+    var formattedPrice = currentPrice.getValueInUnit(EtherUnit.ether).toDouble();
 
     await web3.dispose();
+    return formattedPrice;
+  }
+
+  int getAmountSoldSweaters(double currentPrice) {
+    logDebug('BlockchainService -> getAmountSoldSweaters($currentPrice)');
+    return (currentPrice - _initialPrice) ~/ priceStep;
   }
 }
 

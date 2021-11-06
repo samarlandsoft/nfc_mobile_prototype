@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/widgets/grid_product_card.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_card.dart';
 
 class ProductList extends StatelessWidget {
   final List<NFCSweater> sweaters;
@@ -13,21 +13,27 @@ class ProductList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const BouncingScrollPhysics(),
-      itemCount: sweaters.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.68,
-        mainAxisSpacing: StyleConstants.kDefaultPadding,
-        crossAxisSpacing: StyleConstants.kDefaultPadding,
+    final mq = MediaQuery.of(context);
+    final listPadding = mq.size.width * 0.1;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: listPadding),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        itemCount: sweaters.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          childAspectRatio: 0.8,
+          mainAxisSpacing: StyleConstants.kDefaultPadding * 6.0,
+          crossAxisSpacing: StyleConstants.kDefaultPadding,
+        ),
+        itemBuilder: (context, index) {
+          return ProductCard(
+            sweater: sweaters[index],
+          );
+        },
       ),
-      itemBuilder: (context, index) {
-        return GridProductCard(
-          sweater: sweaters[index],
-        );
-      },
     );
   }
 }

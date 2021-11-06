@@ -2,16 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_data_props.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater_props.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/product_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_description.dart';
 
-class GridProductCard extends StatelessWidget {
+class ProductCard extends StatelessWidget {
   final NFCSweater sweater;
 
-  const GridProductCard({
+  const ProductCard({
     Key? key,
     required this.sweater,
   }) : super(key: key);
@@ -19,7 +19,7 @@ class GridProductCard extends StatelessWidget {
   void _onProductTapHandler(BuildContext context, NFCSweater sweater) {
     Navigator.of(context).pushNamed(
       ProductDetailsScreen.routeName,
-      arguments: NFCDataProps(
+      arguments: NFCSweaterProps(
         sweater: sweater,
         fromToken: false,
       ),
@@ -46,6 +46,7 @@ class GridProductCard extends StatelessWidget {
                   width: constraints.maxWidth,
                   imageSrc: sweater.imageSrc,
                   currency: sweater.currency,
+                  wrapperPadding: StyleConstants.kDefaultPadding,
                 ),
               ),
               Padding(

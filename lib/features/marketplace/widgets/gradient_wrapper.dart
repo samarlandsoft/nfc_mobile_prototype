@@ -38,9 +38,14 @@ class GradientWrapper extends StatelessWidget {
   };
 
   Widget _buildImageContainer() {
+    var contentHeight = height - (wrapperPadding * 2);
+    var contentWidth = width - (wrapperPadding * 2);
+
     if (imageSrc != null && chipSrc != null) {
       return _ImageSlider(
         imagesSrc: [imageSrc!, chipSrc!],
+        contentHeight: contentHeight,
+        contentWidth: contentWidth,
       );
     }
 
@@ -57,20 +62,10 @@ class GradientWrapper extends StatelessWidget {
               chipSrc!,
               fit: BoxFit.cover,
             )
-          : CachedNetworkImage(
+          : _NetworkImage(
               imageUrl: chipSrc!,
-              fit: BoxFit.cover,
-              placeholder: (context, url) {
-                return AnimatedLoader(
-                  height: height - (wrapperPadding * 2),
-                  width: width - (wrapperPadding * 2),
-                );
-              },
-              errorWidget: (context, url, error) {
-                return Center(
-                  child: Text('Error: ${error.runtimeType}'),
-                );
-              },
+              height: contentHeight,
+              width: contentWidth,
             );
     }
 
@@ -110,10 +105,13 @@ class GradientWrapper extends StatelessWidget {
 
 class _ImageSlider extends StatefulWidget {
   final List<String> imagesSrc;
+  final double contentHeight, contentWidth;
 
   const _ImageSlider({
     Key? key,
     required this.imagesSrc,
+    required this.contentHeight,
+    required this.contentWidth,
   }) : super(key: key);
 
   @override
@@ -149,10 +147,16 @@ class _ImageSliderState extends State<_ImageSlider> {
                 autoPlayInterval: const Duration(seconds: 10),
                 onPageChanged: _onChangeImageHandler),
             items: widget.imagesSrc.map((image) {
-              return Image.asset(
-                image,
-                fit: BoxFit.cover,
-              );
+              return image.contains('assets')
+                  ? Image.asset(
+                      image,
+                      fit: BoxFit.cover,
+                    )
+                  : _NetworkImage(
+                      imageUrl: image,
+                      height: widget.contentHeight,
+                      width: widget.contentWidth,
+                    );
             }).toList(),
           );
         }),
@@ -180,6 +184,37 @@ class _ImageSliderState extends State<_ImageSlider> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NetworkImage extends StatelessWidget {
+  final String imageUrl;
+  final double height, width;
+
+  const _NetworkImage({
+    Key? key,
+    required this.imageUrl,
+    required this.height,
+    required this.width,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      placeholder: (context, url) {
+        return AnimatedLoader(
+          height: height,
+          width: width,
+        );
+      },
+      errorWidget: (context, url, error) {
+        return Center(
+          child: Text('Error: ${error.runtimeType}'),
+        );
+      },
     );
   }
 }

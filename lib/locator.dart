@@ -7,8 +7,10 @@ import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_state.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/services/blockchain_service.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/init_marketplace.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_bloc.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/bloc/nfc_state.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_mock_database.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/read_nfc_data.dart';
@@ -51,6 +53,7 @@ void _initNFCScanner() {
         jwtService: locator<JWTService>(),
       ));
   locator.registerLazySingleton(() => JWTService());
+  locator.registerLazySingleton(() => JWTMockDatabase());
 
   /// Usecases
   locator.registerLazySingleton(() => ShowNFCData(
@@ -77,14 +80,8 @@ void _initMarketplace() {
   locator.registerLazySingleton(() => BlockchainService());
 
   /// Usecases
-  // locator.registerLazySingleton(() => ReadNFCData(
-  //   bloc: locator<NFCBloc>(),
-  //   nfcService: locator<NFCService>(),
-  //   jwtService: locator<JWTService>(),
-  // ));
-  // locator.registerLazySingleton(() => WriteNFCData(
-  //   bloc: locator<NFCBloc>(),
-  //   nfcService: locator<NFCService>(),
-  //   jwtService: locator<JWTService>(),
-  // ));
+  locator.registerLazySingleton(() => InitMarketplace(
+        bloc: locator<MarketBloc>(),
+        blockchainService: locator<BlockchainService>(),
+      ));
 }

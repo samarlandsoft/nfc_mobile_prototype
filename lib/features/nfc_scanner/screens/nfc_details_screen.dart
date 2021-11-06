@@ -21,12 +21,11 @@ class NFCDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var chipID = locator<NFCService>().getChipID(
-        ndef.additionalData['identifier'] as Uint8List);
+    var chipID = locator<NFCService>()
+        .getChipID(ndef.additionalData['identifier'] as Uint8List);
 
     return DefaultTextStyle.merge(
       style: const TextStyle(
-        color: Colors.black,
         fontSize: 16.0,
       ),
       child: DialogsWrapper(
@@ -53,13 +52,15 @@ class NFCDetailsScreen extends StatelessWidget {
             ),
             if (ndef.cachedMessage != null)
               Column(
-                children: ndef.cachedMessage!.records
-                    .map((record) {
-                  var jwtResult = locator<JWTService>().verifyToken(
-                      String.fromCharCodes(record.payload).substring(3));
+                children: ndef.cachedMessage!.records.map((record) {
+                  var chipID = locator<NFCService>()
+                      .getChipID(ndef.additionalData['identifier'] as Uint8List);
+                  var jwtPayload =
+                      String.fromCharCodes(record.payload).substring(3);
+                  var jwtResult = locator<JWTService>().verifyToken(jwtPayload, chipID);
                   var data = jwtResult.fold(
-                        (failure) => 'Error',
-                        (result) => JWTPayloadModel.fromJson(result),
+                    (failure) => jwtPayload,
+                    (result) => JWTPayloadModel.fromJson(result),
                   );
 
                   return Column(
@@ -67,9 +68,11 @@ class NFCDetailsScreen extends StatelessWidget {
                       const SizedBox(
                         height: StyleConstants.kDefaultPadding,
                       ),
-                      const Text(
-                        'Data (JWT format):',
-                        style: TextStyle(
+                      Text(
+                        data is JWTPayloadModel
+                            ? 'Data (JWT format):'
+                            : 'Data (JWT not valid):',
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -80,14 +83,13 @@ class NFCDetailsScreen extends StatelessWidget {
                         Text(
                           data.toJson().toString(),
                         ),
-                      if (data is !JWTPayloadModel)
+                      if (data is! JWTPayloadModel)
                         Text(
                           data.toString(),
                         ),
                     ],
                   );
-                })
-                    .toList(),
+                }).toList(),
               ),
           ],
         ),
