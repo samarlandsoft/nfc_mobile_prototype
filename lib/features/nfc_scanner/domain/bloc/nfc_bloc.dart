@@ -10,7 +10,7 @@ class NFCBloc extends Bloc<NFCBlocEvent, NFCBlocState> {
     switch (event.runtimeType) {
       case NFCReadChipEvent: {
         var snapshot = event as NFCReadChipEvent;
-        yield state.update(ndef: snapshot.ndef);
+        yield state.update(token: snapshot.token);
         break;
       }
     }

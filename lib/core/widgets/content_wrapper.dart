@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
@@ -33,16 +32,21 @@ class ContentWrapper extends StatelessWidget {
   double _getContentAvailableSize(
     double logoSize,
     double titleSize,
+    double navigationSize,
     double topPadding,
     double screenSize,
   ) {
     var labelHeight =
         withLabel ? (logoSize + StyleConstants.kDefaultPadding * 0.5) : 0.0;
     var titleHeight = (title != null && title != '') ? titleSize : 0.0;
+    var navigationHeight =
+        withNavigation ? navigationSize + StyleConstants.kDefaultPadding : 0.0;
+
     return screenSize -
         topPadding -
         labelHeight -
         titleHeight -
+        navigationHeight -
         (StyleConstants.kDefaultPadding * 2.0);
   }
 
@@ -52,17 +56,21 @@ class ContentWrapper extends StatelessWidget {
     final topPadding = withLabel
         ? mq.viewPadding.top + StyleConstants.kDefaultPadding
         : StyleConstants.kDefaultPadding;
+
     final logoSize = StyleConstants.kGetLogoHeight(context);
     final titleTextSize = TextPainter(
       text: TextSpan(
         text: title ?? 'none',
         style: const TextStyle(
-          fontSize: 24.0,
+          fontSize: 30.0,
         ),
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: mq.size.width);
+
+    final buttonWidth = mq.size.width * 0.7;
+    final buttonHeight = NeonButton.getButtonHeight(context);
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
@@ -84,7 +92,9 @@ class ContentWrapper extends StatelessWidget {
               ),
             Positioned(
               top: topPadding,
-              bottom: StyleConstants.kDefaultPadding,
+              bottom: withNavigation
+                  ? buttonHeight + StyleConstants.kDefaultPadding * 2.0
+                  : StyleConstants.kDefaultPadding,
               left: StyleConstants.kDefaultPadding,
               right: StyleConstants.kDefaultPadding,
               child: Column(
@@ -103,7 +113,7 @@ class ContentWrapper extends StatelessWidget {
                       child: Text(
                         title!,
                         style: const TextStyle(
-                          fontSize: 24.0,
+                          fontSize: 30.0,
                         ),
                       ),
                     ),
@@ -115,6 +125,7 @@ class ContentWrapper extends StatelessWidget {
                         height: _getContentAvailableSize(
                           logoSize,
                           titleTextSize.height,
+                          buttonHeight,
                           topPadding,
                           mq.size.height,
                         ),
@@ -127,16 +138,15 @@ class ContentWrapper extends StatelessWidget {
             ),
             if (withNavigation)
               Positioned(
-                bottom: StyleConstants.kDefaultPadding * 2.0,
-                right: StyleConstants.kDefaultPadding * 2.0,
-                child: NeonButton(
-                  icon: Icons.home,
-                  callback: _onGoToMainScreenButtonHandler,
-                  isRounded: true,
-                  isTapped: true,
-                  activeColor: state.isCustomTheme
-                      ? Colors.green
-                      : StyleConstants.kSelectedTextColor,
+                bottom: StyleConstants.kDefaultPadding,
+                left: StyleConstants.kDefaultPadding,
+                right: StyleConstants.kDefaultPadding,
+                child: Center(
+                  child: NeonButton(
+                    label: 'Home',
+                    callback: _onGoToMainScreenButtonHandler,
+                    width: buttonWidth,
+                  ),
                 ),
               ),
           ],

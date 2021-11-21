@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class NeonButton extends StatelessWidget {
   final String? label;
   final IconData? icon;
+  final String? imageSrc;
   final VoidCallback callback;
   final bool isRounded, isTapped;
   final double? width, radius;
@@ -12,10 +13,26 @@ class NeonButton extends StatelessWidget {
 
   static const roundedSize = 60.0;
 
+  static double getButtonHeight(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final textSize = TextPainter(
+      text: const TextSpan(
+        text: 'none',
+        style: TextStyle(
+          fontSize: 22.0,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: mq.size.width);
+    return textSize.height + 12.0 * 2;
+  }
+
   const NeonButton({
     Key? key,
     this.label,
     this.icon,
+    this.imageSrc,
     required this.callback,
     this.isRounded = false,
     this.isTapped = false,
@@ -38,13 +55,15 @@ class NeonButton extends StatelessWidget {
       ),
       onPressed: callback,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 10.0),
         child: Text(
           label != null ? label! : '',
           style: TextStyle(
-            fontSize: 24.0,
+            fontSize: 22.0,
             color: activeColor,
           ),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
         ),
       ),
     );
@@ -70,7 +89,9 @@ class NeonButton extends StatelessWidget {
               size: roundedSize * 0.5,
               color: isTapped ? activeColor : disabledColor,
             )
-          : Container(),
+          : imageSrc != null
+              ? Image.asset(imageSrc!)
+              : Container(),
     );
   }
 

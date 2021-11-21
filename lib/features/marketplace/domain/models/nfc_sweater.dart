@@ -5,6 +5,7 @@ enum CryptoCurrency {
 }
 
 class NFCSweater {
+  final int tokenID;
   final String title, edition, description;
   final List<String> tags;
   final CryptoCurrency currency;
@@ -13,6 +14,7 @@ class NFCSweater {
   final int? amount, sold;
 
   const NFCSweater({
+    required this.tokenID,
     required this.title,
     required this.edition,
     required this.description,
@@ -27,6 +29,7 @@ class NFCSweater {
   });
 
   NFCSweater update({
+    int? tokenID,
     String? title,
     String? edition,
     String? description,
@@ -40,6 +43,7 @@ class NFCSweater {
     int? sold,
   }) {
     return NFCSweater(
+      tokenID: tokenID ?? this.tokenID,
       title: title ?? this.title,
       edition: edition ?? this.edition,
       description: description ?? this.description,

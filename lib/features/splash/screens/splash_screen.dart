@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_splash_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animated_app_icon.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
+import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/init_marketplace.dart';
 import 'package:nfc_mobile_prototype/features/splash/widgets/animated_description.dart';
 import 'package:nfc_mobile_prototype/features/splash/widgets/animated_logo.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
-import 'package:nfc_mobile_prototype/main.dart';
 
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/splash';
+  static const String titleName = '';
+  static const int screenIndex = 0;
 
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -28,9 +31,8 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     var isCustomTheme = locator<LocalStorageService>().getAppTheme();
-    locator<UpdateAppTheme>().call(isCustomTheme, updateLocalStorage: false);
-    locator<InitMarketplace>().call(CryptoCurrency.btc);
-    locator<InitMarketplace>().call(CryptoCurrency.eth);
+    locator<UpdateThemeMode>().call(isCustomTheme, updateLocalStorage: false);
+    locator<InitMarketplace>().call(NoParams());
   }
 
   @override
@@ -41,24 +43,33 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
   }
 
+  @override
+  void dispose() {
+    locator<UpdateSplashMode>().call(true);
+    super.dispose();
+  }
+
   void _playAnimation(int duration) {
     Future.delayed(Duration(milliseconds: duration)).then((_) {
       setState(() {
         _isInit = true;
       });
     });
+
     Future.delayed(Duration(milliseconds: duration + 1000)).then((_) {
       setState(() {
         _isLogoVisible = true;
       });
     });
+
     Future.delayed(Duration(milliseconds: duration + 5000)).then((_) {
       setState(() {
         _isFinish = true;
       });
     });
+
     Future.delayed(Duration(milliseconds: duration + 6100)).then((_) {
-      Navigator.of(context).pushReplacementNamed(ScreenNavigator.routeName);
+      locator<UpdateScreenIndex>().call(HomeScreen.screenIndex);
     });
   }
 

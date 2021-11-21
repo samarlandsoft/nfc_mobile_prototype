@@ -1,15 +1,15 @@
-import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/nfc_token.dart';
 
 class NFCBlocState {
-  final Ndef? ndef;
+  final NFCToken? token;
 
-  NFCBlocState({
-    this.ndef,
+  const NFCBlocState({
+    this.token,
   });
 
-  NFCBlocState update({Ndef? ndef}) {
+  NFCBlocState update({NFCToken? token}) {
     return NFCBlocState(
-      ndef: ndef ?? this.ndef,
+      token: token ?? this.token,
     );
   }
 }

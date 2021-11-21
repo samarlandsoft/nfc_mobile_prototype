@@ -7,7 +7,7 @@ import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   static const String titleName = 'Marketplace';
-  static const int screenIndex = 1;
+  static const int screenIndex = 2;
 
   const MarketplaceScreen({Key? key}) : super(key: key);
 

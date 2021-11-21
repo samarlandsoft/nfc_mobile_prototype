@@ -1,49 +1,28 @@
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/logger.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_bloc.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_events.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/models/blockchain_response_data.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/domain/services/blockchain_service.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_mock_database.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/get_blockchain_memberships.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/get_blockchain_prices.dart';
 
-class InitMarketplace
-    implements Usecase<BlockchainResponseData, CryptoCurrency> {
+class InitMarketplace implements Usecase<void, NoParams> {
   final MarketBloc bloc;
-  final BlockchainService blockchainService;
+  final GetBlockchainPrices getBlockchainData;
+  final GetBlockchainMemberships getBlockchainMemberships;
 
   const InitMarketplace({
     required this.bloc,
-    required this.blockchainService,
+    required this.getBlockchainData,
+    required this.getBlockchainMemberships,
   });
 
   @override
-  Future<BlockchainResponseData> call(CryptoCurrency currency) async {
-    logDebug('InitMarketplace usecase -> call($currency)');
-    var currentPrice = await blockchainService.getCurrentPrice(currency);
-    var amountSoldSweaters =
-        blockchainService.getAmountSoldSweaters(currentPrice);
-    var chipSrc = currency == CryptoCurrency.btc
-        ? JWTMockDatabase.btcIDSweaterURLs[amountSoldSweaters + 1]
-        : JWTMockDatabase.ethIDSweaterURLs[amountSoldSweaters + 1];
-
-    List<NFCSweater> sweaters = bloc.state.sweaters.map((sweater) {
-      if (sweater.currency == currency) {
-        return sweater.update(
-          chipSrc: chipSrc,
-          price: double.parse(currentPrice.toStringAsFixed(2)),
-          sold: amountSoldSweaters,
-        );
-      } else {
-        return sweater;
-      }
-    }).toList();
-
-    bloc.add(MarketUpdateSweaters(sweaters: sweaters));
-
-    return BlockchainResponseData(
-      price: currentPrice,
-      sold: amountSoldSweaters,
-    );
+  Future<void> call(NoParams params) async {
+    logDebug('InitMarketplace usecase -> call()');
+    for (var currency in CryptoCurrency.values
+        .where((currency) => currency != CryptoCurrency.none)) {
+      getBlockchainData.call(currency);
+      getBlockchainMemberships.call(currency);
+    }
   }
 }

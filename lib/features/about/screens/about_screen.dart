@@ -4,19 +4,24 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_app_theme.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_debug_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
 class AboutScreen extends StatelessWidget {
   static const String titleName = 'About';
-  static const int screenIndex = 3;
+  static const int screenIndex = 4;
 
   const AboutScreen({Key? key}) : super(key: key);
 
-  void _onToggleThemeHandler(bool value) {
-    locator<UpdateAppTheme>().call(value);
+  void _onToggleThemeModeHandler(bool value) {
+    locator<UpdateThemeMode>().call(value);
+  }
+
+  void _onToggleDebugModeHandler(bool value) {
+    locator<UpdateDebugMode>().call(value);
   }
 
   @override
@@ -36,7 +41,8 @@ class AboutScreen extends StatelessWidget {
               padding: const EdgeInsets.all(StyleConstants.kDefaultPadding),
               child: BlocBuilder<AppBloc, AppBlocState>(
                 buildWhen: (prev, current) {
-                  return prev.isCustomTheme != current.isCustomTheme;
+                  return (prev.isDebugEnabled != current.isDebugEnabled) ||
+                      (prev.isCustomTheme != current.isCustomTheme);
                 },
                 builder: (context, state) {
                   return Column(
@@ -105,7 +111,25 @@ class AboutScreen extends StatelessWidget {
                               activeColor: Colors.orange,
                               inactiveColor: Colors.orange.withOpacity(0.3),
                               value: state.isCustomTheme,
-                              onToggle: _onToggleThemeHandler,
+                              onToggle: _onToggleThemeModeHandler,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: StyleConstants.kDefaultPadding * 0.5,
+                      ),
+                      SizedBox(
+                        height: 40.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            const Text('Enable debug mode'),
+                            FlutterSwitch(
+                              activeColor: Colors.orange,
+                              inactiveColor: Colors.orange.withOpacity(0.3),
+                              value: state.isDebugEnabled,
+                              onToggle: _onToggleDebugModeHandler,
                             ),
                           ],
                         ),

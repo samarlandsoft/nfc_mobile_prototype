@@ -18,9 +18,9 @@ class AnimatedAppIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final iconSize = mq.size.width * 0.25;
+    final iconSize = mq.size.width * 0.24;
     final iconPosition =
-        (mq.size.height / 2.0) - (iconSize / 2.0) - (mq.viewPadding.top * 0.5);
+        (mq.size.height / 2.0) - (iconSize / 2.0) - (mq.viewPadding.vertical * 0.3);
 
     return withPosition
         ? Positioned(

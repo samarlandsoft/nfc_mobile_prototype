@@ -12,7 +12,7 @@ class QRCodeScreen extends StatelessWidget {
       text: const TextSpan(
         text: 'QR code',
         style: TextStyle(
-          fontSize: 20.0,
+          fontSize: 24.0,
         ),
       ),
       maxLines: 1,
@@ -20,24 +20,32 @@ class QRCodeScreen extends StatelessWidget {
     )..layout(maxWidth: mq.size.width);
 
     final double imageSize = mq.size.width * 0.7;
-    final double dialogSize = imageSize + titleTextSize.height + (StyleConstants.kDefaultPadding * 6.0);
+    final double dialogSize = imageSize + titleTextSize.height + (StyleConstants.kDefaultPadding * 7.0);
 
     return SizedBox(
       height: dialogSize,
       child: DialogsWrapper(
         widget: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
+            const SizedBox(
+              height: StyleConstants.kDefaultPadding,
+            ),
             const Text(
               'QR code',
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
+            ),
+            const SizedBox(
+              height: StyleConstants.kDefaultPadding * 2.0,
             ),
             Image.asset(
               'assets/images/qr_code_to_marketplace.png',
               height: imageSize,
+            ),
+            const SizedBox(
+              height: StyleConstants.kDefaultPadding,
             ),
           ],
         ),

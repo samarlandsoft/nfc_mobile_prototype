@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animated_app_icon.dart';
@@ -13,7 +16,7 @@ import 'package:nfc_mobile_prototype/locator.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String titleName = '';
-  static const int screenIndex = 0;
+  static const int screenIndex = 1;
 
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -22,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _animationDuration = 1000;
+  final int _animationDuration = 1000;
   late Timer _timer;
   bool _isInit = false;
   bool _isPulsed = false;
@@ -66,83 +69,90 @@ class _HomeScreenState extends State<HomeScreen> {
     final descriptionWidth = mq.size.width * 0.7;
     final buttonWidth = mq.size.width * 0.7;
 
-    return ContentWrapper(
-      title: HomeScreen.titleName,
-      backgroundSrc: 'assets/images/background_1.png',
-      widget: Padding(
-        padding: const EdgeInsets.fromLTRB(
-          StyleConstants.kDefaultPadding,
-          0.0,
-          StyleConstants.kDefaultPadding,
-          StyleConstants.kDefaultPadding,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(
-              width: descriptionWidth,
-              child: const Text(
-                'Connection physical to metaverse',
-                style: TextStyle(
-                  fontSize: 24.0,
+    return BlocBuilder<AppBloc, AppBlocState>(buildWhen: (prev, current) {
+      return prev.isSplashPlayed != current.isSplashPlayed;
+    }, builder: (context, state) {
+      return ContentWrapper(
+        title: HomeScreen.titleName,
+        backgroundSrc: 'assets/images/background_1.png',
+        widget: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            StyleConstants.kDefaultPadding,
+            0.0,
+            StyleConstants.kDefaultPadding,
+            StyleConstants.kDefaultPadding,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: descriptionWidth,
+                child: const Text(
+                  'Connection physical to metaverse',
+                  style: TextStyle(
+                    fontSize: 24.0,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
               ),
-            ),
-            SizedBox(
-              height: iconPadding * 1.5,
-            ),
-            AnimatedAppIcon(
-              isVisible: _isInit,
-              isPulsed: _isPulsed,
-              withPosition: false,
-              duration: _animationDuration,
-            ),
-            SizedBox(
-              height: iconPadding,
-            ),
-            Expanded(
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: _animationDuration),
-                opacity: _isInit ? 1.0 : 0.0,
-                child: AbsorbPointer(
-                  absorbing: !_isInit,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      NeonButton(
-                        label: 'Marketplace',
-                        callback: () => _onNavigationButtonHandler(MarketplaceScreen.screenIndex),
-                        width: buttonWidth,
-                      ),
-                      const SizedBox(
-                        height: StyleConstants.kDefaultPadding,
-                      ),
-                      NeonButton(
-                        label: 'NFC scanner',
-                        callback: () => _onNavigationButtonHandler(NFCScannerScreen.screenIndex),
-                        width: buttonWidth,
-                      ),
-                      const SizedBox(
-                        height: StyleConstants.kDefaultPadding,
-                      ),
-                      NeonButton(
-                        label: 'About',
-                        callback: () => _onNavigationButtonHandler(AboutScreen.screenIndex),
-                        width: buttonWidth,
-                      ),
-                      const SizedBox(
-                        height: StyleConstants.kDefaultPadding,
-                      ),
-                    ],
+              SizedBox(
+                height: iconPadding * 1.5,
+              ),
+              AnimatedAppIcon(
+                isVisible: (_isInit || state.isSplashPlayed),
+                isPulsed: _isPulsed,
+                withPosition: false,
+                duration: _animationDuration,
+              ),
+              SizedBox(
+                height: iconPadding,
+              ),
+              Expanded(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: _animationDuration),
+                  opacity: (_isInit || state.isSplashPlayed) ? 1.0 : 0.0,
+                  child: AbsorbPointer(
+                    absorbing: !(_isInit || state.isSplashPlayed),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        NeonButton(
+                          label: 'Marketplace',
+                          callback: () => _onNavigationButtonHandler(
+                              MarketplaceScreen.screenIndex),
+                          width: buttonWidth,
+                        ),
+                        const SizedBox(
+                          height: StyleConstants.kDefaultPadding,
+                        ),
+                        NeonButton(
+                          label: 'Scan NFC',
+                          callback: () => _onNavigationButtonHandler(
+                              NFCScannerScreen.screenIndex),
+                          width: buttonWidth,
+                        ),
+                        const SizedBox(
+                          height: StyleConstants.kDefaultPadding,
+                        ),
+                        NeonButton(
+                          label: 'About',
+                          callback: () => _onNavigationButtonHandler(
+                              AboutScreen.screenIndex),
+                          width: buttonWidth,
+                        ),
+                        const SizedBox(
+                          height: StyleConstants.kDefaultPadding,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

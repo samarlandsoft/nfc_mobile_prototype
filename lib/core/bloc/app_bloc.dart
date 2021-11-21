@@ -21,6 +21,20 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
           yield state.update(isCustomTheme: snapshot.isCustomTheme);
           break;
         }
+
+      case AppUpdateDebugMode:
+        {
+          var snapshot = event as AppUpdateDebugMode;
+          yield state.update(isDebugEnabled: snapshot.isDebugEnabled);
+          break;
+        }
+
+      case AppUpdateSplashMode:
+        {
+          var snapshot = event as AppUpdateSplashMode;
+          yield state.update(isSplashPlayed: snapshot.isSplashPlayed);
+          break;
+        }
     }
   }
 }

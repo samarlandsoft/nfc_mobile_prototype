@@ -14,6 +14,13 @@ class MarketBloc extends Bloc<MarketBlocEvent, MarketBlocState> {
           yield state.update(sweaters: snapshot.sweaters);
           break;
         }
+
+      case MarketUpdateMemberships:
+        {
+          var snapshot = event as MarketUpdateMemberships;
+          yield state.update(memberships: snapshot.memberships);
+          break;
+        }
     }
   }
 }

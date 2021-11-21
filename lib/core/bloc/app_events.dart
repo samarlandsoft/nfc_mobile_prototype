@@ -13,3 +13,15 @@ class AppUpdateTheme extends AppBlocEvent {
 
   AppUpdateTheme({required this.isCustomTheme}) : super([isCustomTheme]);
 }
+
+class AppUpdateDebugMode extends AppBlocEvent {
+  final bool isDebugEnabled;
+
+  AppUpdateDebugMode({required this.isDebugEnabled}) : super([isDebugEnabled]);
+}
+
+class AppUpdateSplashMode extends AppBlocEvent {
+  final bool isSplashPlayed;
+
+  AppUpdateSplashMode({required this.isSplashPlayed}) : super([isSplashPlayed]);
+}

@@ -72,7 +72,8 @@ class MyApp extends StatelessWidget {
                     return FadeTransition(
                       opacity: first,
                       child: ProductDetailsScreen(
-                        sweater: (settings.arguments as NFCSweaterProps).sweater,
+                        product:
+                            (settings.arguments as NFCSweaterProps).sweater,
                         fromToken:
                             (settings.arguments as NFCSweaterProps).fromToken,
                       ),
@@ -82,11 +83,7 @@ class MyApp extends StatelessWidget {
               }
           }
         },
-        routes: {
-          SplashScreen.routeName: (context) => const SplashScreen(),
-          ScreenNavigator.routeName: (context) => const ScreenNavigator(),
-        },
-        home: const SplashScreen(),
+        home: const ScreenNavigator(),
       ),
     );
   }
@@ -104,6 +101,7 @@ class ScreenNavigator extends StatefulWidget {
 class _ScreenNavigatorState extends State<ScreenNavigator> {
   final PageStorageBucket _bucket = PageStorageBucket();
   final List<Widget> _screens = const [
+    SplashScreen(),
     HomeScreen(),
     MarketplaceScreen(),
     NFCScannerScreen(),
@@ -121,7 +119,7 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
           body: PageStorage(
             bucket: _bucket,
             child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
+              duration: Duration(milliseconds: state.isSplashPlayed ? 500 : 0),
               child: _screens[state.currentScreenIndex],
             ),
           ),

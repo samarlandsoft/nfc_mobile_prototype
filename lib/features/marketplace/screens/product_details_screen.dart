@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/ownersheep_history_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/qr_code_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
@@ -11,12 +12,12 @@ import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_descri
 
 class ProductDetailsScreen extends StatelessWidget {
   static const routeName = '/details';
-  final NFCSweater sweater;
+  final NFCSweater product;
   final bool fromToken;
 
   const ProductDetailsScreen({
     Key? key,
-    required this.sweater,
+    required this.product,
     this.fromToken = false,
   }) : super(key: key);
 
@@ -31,6 +32,21 @@ class ProductDetailsScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return const QRCodeScreen();
+      },
+    );
+  }
+
+  void _onOwnershipHistoryHandler(BuildContext context, int tokenID) {
+    showModalBottomSheet(
+      backgroundColor: StyleConstants.kBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(StyleConstants.kDefaultPadding)),
+      ),
+      enableDrag: false,
+      context: context,
+      builder: (context) {
+        return OwnerHistoryScreen(token: tokenID);
       },
     );
   }
@@ -52,15 +68,24 @@ class ProductDetailsScreen extends StatelessWidget {
             GradientWrapper(
               height: imageSize,
               width: imageSize,
-              imageSrc: sweater.imageSrc,
-              chipSrc: sweater.chipSrc,
-              currency: sweater.currency,
+              imageSrc: product.imageSrc,
+              chipSrc: product.chipSrc,
+              currency: product.currency,
               wrapperPadding: StyleConstants.kDefaultPadding * 1.5,
               cardPadding: StyleConstants.kDefaultPadding * 1.5,
             ),
             ProductDescription(
-              product: sweater,
+              product: product,
               fromToken: fromToken,
+            ),
+            const SizedBox(
+              height: StyleConstants.kDefaultPadding,
+            ),
+            NeonButton(
+              label: 'Salt & Satoshi',
+              activeColor: StyleConstants.kHyperlinkTextColor,
+              callback: () {},
+              width: buttonWidth,
             ),
             const SizedBox(
               height: StyleConstants.kDefaultPadding,
@@ -72,6 +97,14 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             const SizedBox(
               height: StyleConstants.kDefaultPadding,
+            ),
+            NeonButton(
+              label: 'Ownership history',
+              callback: () => _onOwnershipHistoryHandler(context, product.tokenID),
+              width: buttonWidth,
+            ),
+            const SizedBox(
+              height: StyleConstants.kDefaultPadding * 2.5,
             ),
             NeonButton(
               label: 'Go back',

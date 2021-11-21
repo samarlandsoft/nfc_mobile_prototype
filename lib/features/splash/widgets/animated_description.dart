@@ -16,23 +16,6 @@ class AnimatedDescription extends StatefulWidget {
 }
 
 class _AnimatedDescriptionState extends State<AnimatedDescription> {
-  bool _isPulseStarted = false;
-
-  @override
-  void didUpdateWidget(covariant AnimatedDescription oldWidget) {
-    if (widget.isEndAnimation) {
-      setState(() {
-        _isPulseStarted = true;
-      });
-      Future.delayed(const Duration(milliseconds: 500)).then((_) {
-        setState(() {
-          _isPulseStarted = false;
-        });
-      });
-    }
-    super.didUpdateWidget(oldWidget);
-  }
-
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -47,18 +30,15 @@ class _AnimatedDescriptionState extends State<AnimatedDescription> {
 
     return AnimatedPositioned(
       duration: const Duration(seconds: 1),
+      curve: Curves.easeIn,
       top: widget.isEndAnimation
           ? logoSize + (StyleConstants.kDefaultPadding * 1.5)
           : widget.isVisible
               ? descriptionFinishPosition
               : descriptionStartPosition,
       child: AnimatedOpacity(
-        duration: Duration(milliseconds: _isPulseStarted ? 500 : 1000),
-        opacity: _isPulseStarted
-            ? 0.2
-            : widget.isVisible
-                ? 1.0
-                : 0.0,
+        duration: const Duration(milliseconds: 1000),
+        opacity: widget.isVisible ? 1.0 : 0.0,
         child: SizedBox(
           width: descriptionWidth,
           child: const Text(

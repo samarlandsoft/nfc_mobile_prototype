@@ -1,11 +1,11 @@
-import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/nfc_token.dart';
 
 abstract class NFCBlocEvent {
   const NFCBlocEvent([List props = const []]) : super();
 }
 
 class NFCReadChipEvent extends NFCBlocEvent {
-  final Ndef? ndef;
+  final NFCToken? token;
 
-  NFCReadChipEvent({required this.ndef}) : super([ndef]);
+  NFCReadChipEvent({required this.token}) : super([token]);
 }
