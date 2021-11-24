@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/widgets/animated_loader.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/card_tags.dart';
 
@@ -33,6 +34,16 @@ class ProductDescription extends StatelessWidget {
 
   Widget _buildDetailedItemDescription(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final textSize = TextPainter(
+      text: const TextSpan(
+        text: 'none',
+        style: TextStyle(
+          fontSize: 22.0,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: mq.size.width);
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
@@ -65,7 +76,7 @@ class ProductDescription extends StatelessWidget {
               const SizedBox(
                 height: StyleConstants.kDefaultPadding * 2.0,
               ),
-              if (product.sold != null && product.amount != null)
+              if (product.sold != null)
                 SizedBox(
                   width: mq.size.width,
                   child: Text(
@@ -83,25 +94,78 @@ class ProductDescription extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              if (product.sold != null && product.amount != null)
-                const SizedBox(
-                  height: StyleConstants.kDefaultPadding,
+              if (product.sold == null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Edition ',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: state.isCustomTheme
+                            ? product.currency == CryptoCurrency.btc
+                                ? StyleConstants.kBTCColor
+                                : StyleConstants.kETHColor
+                            : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    AnimatedLoader(
+                      height: textSize.height,
+                      width: textSize.height,
+                    ),
+                    Text(
+                      ' of 20',
+                      style: TextStyle(
+                        fontSize: 24.0,
+                        color: state.isCustomTheme
+                            ? product.currency == CryptoCurrency.btc
+                                ? StyleConstants.kBTCColor
+                                : StyleConstants.kETHColor
+                            : Colors.white,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
+              const SizedBox(
+                height: StyleConstants.kDefaultPadding,
+              ),
               CardTags(tags: product.tags),
               const SizedBox(
                 height: StyleConstants.kDefaultPadding,
               ),
-              if (product.price != null)
-                Text(
-                  'Current price: ${product.price.toString()}',
-                  style: const TextStyle(
-                    color: StyleConstants.kSelectedTextColor,
+              Row(
+                children: <Widget>[
+                  Text(
+                    product.price != null
+                        ? 'Current price: ${product.price.toString()}'
+                        : 'Current price: ',
+                    style: const TextStyle(
+                      color: StyleConstants.kSelectedTextColor,
+                    ),
                   ),
-                ),
-              if (product.priceStep != null)
-                Text(
-                  'Price step: ${product.priceStep.toString()}',
-                ),
+                  if (product.price == null)
+                    AnimatedLoader(
+                      height: textSize.height,
+                      width: textSize.height,
+                    ),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    product.priceStep != null
+                        ? 'Price step: ${product.priceStep.toString()}'
+                        : 'Price step: ',
+                  ),
+                  if (product.priceStep == null)
+                    AnimatedLoader(
+                      height: textSize.height,
+                      width: textSize.height,
+                    ),
+                ],
+              ),
             ],
           ),
         );

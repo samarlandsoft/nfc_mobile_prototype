@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:nfc_mobile_prototype/core/models/failures.dart';
-import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/jwt_payload.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/nfc_failures.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/services/jwt_service.dart';

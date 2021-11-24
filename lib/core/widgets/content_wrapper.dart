@@ -15,6 +15,7 @@ class ContentWrapper extends StatelessWidget {
   final String? backgroundSrc;
   final bool withLabel;
   final bool withNavigation;
+  final bool withNetworkBar;
 
   const ContentWrapper({
     Key? key,
@@ -23,7 +24,10 @@ class ContentWrapper extends StatelessWidget {
     this.backgroundSrc,
     this.withLabel = true,
     this.withNavigation = false,
+    this.withNetworkBar = true,
   }) : super(key: key);
+
+  static const _animationDuration = 500;
 
   void _onGoToMainScreenButtonHandler() {
     locator<UpdateScreenIndex>().call(HomeScreen.screenIndex);
@@ -35,18 +39,22 @@ class ContentWrapper extends StatelessWidget {
     double navigationSize,
     double topPadding,
     double screenSize,
+    double networkBarSize,
+    bool isNetworkEnabled,
   ) {
     var labelHeight =
         withLabel ? (logoSize + StyleConstants.kDefaultPadding * 0.5) : 0.0;
     var titleHeight = (title != null && title != '') ? titleSize : 0.0;
     var navigationHeight =
         withNavigation ? navigationSize + StyleConstants.kDefaultPadding : 0.0;
+    var networkBarHeight = isNetworkEnabled ? 0.0 : networkBarSize;
 
     return screenSize -
         topPadding -
         labelHeight -
         titleHeight -
         navigationHeight -
+        networkBarHeight -
         (StyleConstants.kDefaultPadding * 2.0);
   }
 
@@ -57,7 +65,6 @@ class ContentWrapper extends StatelessWidget {
         ? mq.viewPadding.top + StyleConstants.kDefaultPadding
         : StyleConstants.kDefaultPadding;
 
-    final logoSize = StyleConstants.kGetLogoHeight(context);
     final titleTextSize = TextPainter(
       text: TextSpan(
         text: title ?? 'none',
@@ -69,12 +76,27 @@ class ContentWrapper extends StatelessWidget {
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: mq.size.width);
 
+    final networkTextSize = TextPainter(
+      text: const TextSpan(
+        text: 'none',
+        style: TextStyle(
+          fontSize: 16.0,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: mq.size.width);
+
+    final logoSize = StyleConstants.kGetLogoHeight(context);
+    final networkBarSize =
+        networkTextSize.height + StyleConstants.kDefaultPadding * 2.0;
     final buttonWidth = mq.size.width * 0.7;
     final buttonHeight = NeonButton.getButtonHeight(context);
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
-        return prev.isCustomTheme != current.isCustomTheme;
+        return (prev.isCustomTheme != current.isCustomTheme) ||
+            (prev.isNetworkEnabled != current.isNetworkEnabled);
       },
       builder: (context, state) {
         return Stack(
@@ -90,8 +112,11 @@ class ContentWrapper extends StatelessWidget {
                   ),
                 ),
               ),
-            Positioned(
-              top: topPadding,
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: _animationDuration),
+              top: state.isNetworkEnabled
+                  ? topPadding
+                  : (topPadding + networkBarSize),
               bottom: withNavigation
                   ? buttonHeight + StyleConstants.kDefaultPadding * 2.0
                   : StyleConstants.kDefaultPadding,
@@ -121,13 +146,16 @@ class ContentWrapper extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(
                           top: StyleConstants.kDefaultPadding),
-                      child: SizedBox(
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: _animationDuration),
                         height: _getContentAvailableSize(
                           logoSize,
                           titleTextSize.height,
                           buttonHeight,
                           topPadding,
                           mq.size.height,
+                          networkBarSize,
+                          state.isNetworkEnabled,
                         ),
                         child: widget,
                       ),
@@ -149,9 +177,62 @@ class ContentWrapper extends StatelessWidget {
                   ),
                 ),
               ),
+            if (withNetworkBar)
+              Positioned(
+                top: mq.viewPadding.top,
+                left: StyleConstants.kDefaultPadding,
+                right: StyleConstants.kDefaultPadding,
+                child: _NetworkConnectionBar(
+                  isNetworkEnabled: state.isNetworkEnabled,
+                  size: networkBarSize,
+                  duration: _animationDuration,
+                ),
+              ),
           ],
         );
       },
+    );
+  }
+}
+
+class _NetworkConnectionBar extends StatelessWidget {
+  final bool isNetworkEnabled;
+  final double size;
+  final int duration;
+
+  const _NetworkConnectionBar({
+    Key? key,
+    required this.isNetworkEnabled,
+    required this.size,
+    this.duration = 500,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+
+    return AnimatedContainer(
+      duration: Duration(milliseconds: duration),
+      height: isNetworkEnabled ? 0.0 : size,
+      width: mq.size.width,
+      decoration: BoxDecoration(
+        color: Colors.grey.withOpacity(0.5),
+        borderRadius: const BorderRadius.all(
+            Radius.circular(StyleConstants.kDefaultPadding)),
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(StyleConstants.kDefaultPadding),
+        child: Center(
+          child: Text(
+            'Network connection is disabled',
+            style: TextStyle(
+              fontSize: 16.0,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
     );
   }
 }

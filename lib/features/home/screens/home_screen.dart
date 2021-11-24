@@ -26,36 +26,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final int _animationDuration = 1000;
-  late Timer _timer;
   bool _isInit = false;
-  bool _isPulsed = false;
 
   @override
   void didChangeDependencies() {
     if (!_isInit) {
-      _playAnimation(_animationDuration);
-    }
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  void _playAnimation(int duration) {
-    Future.delayed(Duration(milliseconds: duration)).then((_) {
-      setState(() {
-        _isInit = true;
-      });
-
-      _timer = Timer.periodic(Duration(milliseconds: duration), (_) {
+      Future.delayed(Duration(milliseconds: _animationDuration)).then((_) {
         setState(() {
-          _isPulsed = !_isPulsed;
+          _isInit = true;
         });
       });
-    });
+    }
+    super.didChangeDependencies();
   }
 
   void _onNavigationButtonHandler(int screen) {
@@ -69,90 +51,93 @@ class _HomeScreenState extends State<HomeScreen> {
     final descriptionWidth = mq.size.width * 0.7;
     final buttonWidth = mq.size.width * 0.7;
 
-    return BlocBuilder<AppBloc, AppBlocState>(buildWhen: (prev, current) {
-      return prev.isSplashPlayed != current.isSplashPlayed;
-    }, builder: (context, state) {
-      return ContentWrapper(
-        title: HomeScreen.titleName,
-        backgroundSrc: 'assets/images/background_1.png',
-        widget: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            StyleConstants.kDefaultPadding,
-            0.0,
-            StyleConstants.kDefaultPadding,
-            StyleConstants.kDefaultPadding,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(
-                width: descriptionWidth,
-                child: const Text(
-                  'Connection physical to metaverse',
-                  style: TextStyle(
-                    fontSize: 24.0,
+    return BlocBuilder<AppBloc, AppBlocState>(
+      buildWhen: (prev, current) {
+        return prev.isSplashPlayed != current.isSplashPlayed;
+      },
+      builder: (context, state) {
+        return ContentWrapper(
+          title: HomeScreen.titleName,
+          backgroundSrc: 'assets/images/background_1.png',
+          widget: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              StyleConstants.kDefaultPadding,
+              0.0,
+              StyleConstants.kDefaultPadding,
+              StyleConstants.kDefaultPadding,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  width: descriptionWidth,
+                  child: const Text(
+                    'Connection physical to metaverse',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
                   ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
                 ),
-              ),
-              SizedBox(
-                height: iconPadding * 1.5,
-              ),
-              AnimatedAppIcon(
-                isVisible: (_isInit || state.isSplashPlayed),
-                isPulsed: _isPulsed,
-                withPosition: false,
-                duration: _animationDuration,
-              ),
-              SizedBox(
-                height: iconPadding,
-              ),
-              Expanded(
-                child: AnimatedOpacity(
-                  duration: Duration(milliseconds: _animationDuration),
-                  opacity: (_isInit || state.isSplashPlayed) ? 1.0 : 0.0,
-                  child: AbsorbPointer(
-                    absorbing: !(_isInit || state.isSplashPlayed),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        NeonButton(
-                          label: 'Marketplace',
-                          callback: () => _onNavigationButtonHandler(
-                              MarketplaceScreen.screenIndex),
-                          width: buttonWidth,
-                        ),
-                        const SizedBox(
-                          height: StyleConstants.kDefaultPadding,
-                        ),
-                        NeonButton(
-                          label: 'Scan NFC',
-                          callback: () => _onNavigationButtonHandler(
-                              NFCScannerScreen.screenIndex),
-                          width: buttonWidth,
-                        ),
-                        const SizedBox(
-                          height: StyleConstants.kDefaultPadding,
-                        ),
-                        NeonButton(
-                          label: 'About',
-                          callback: () => _onNavigationButtonHandler(
-                              AboutScreen.screenIndex),
-                          width: buttonWidth,
-                        ),
-                        const SizedBox(
-                          height: StyleConstants.kDefaultPadding,
-                        ),
-                      ],
+                SizedBox(
+                  height: iconPadding * 1.5,
+                ),
+                AnimatedAppIcon(
+                  isVisible: (_isInit || state.isSplashPlayed),
+                  isPulsed: true,
+                  withPosition: false,
+                  duration: _animationDuration,
+                ),
+                SizedBox(
+                  height: iconPadding,
+                ),
+                Expanded(
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: _animationDuration),
+                    opacity: (_isInit || state.isSplashPlayed) ? 1.0 : 0.0,
+                    child: AbsorbPointer(
+                      absorbing: !(_isInit || state.isSplashPlayed),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          NeonButton(
+                            label: 'Marketplace',
+                            callback: () => _onNavigationButtonHandler(
+                                MarketplaceScreen.screenIndex),
+                            width: buttonWidth,
+                          ),
+                          const SizedBox(
+                            height: StyleConstants.kDefaultPadding,
+                          ),
+                          NeonButton(
+                            label: 'Scan NFC',
+                            callback: () => _onNavigationButtonHandler(
+                                NFCScannerScreen.screenIndex),
+                            width: buttonWidth,
+                          ),
+                          const SizedBox(
+                            height: StyleConstants.kDefaultPadding,
+                          ),
+                          NeonButton(
+                            label: 'About',
+                            callback: () => _onNavigationButtonHandler(
+                                AboutScreen.screenIndex),
+                            width: buttonWidth,
+                          ),
+                          const SizedBox(
+                            height: StyleConstants.kDefaultPadding,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

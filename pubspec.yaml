@@ -27,6 +27,9 @@ dependencies:
   nfc_manager: ^3.1.0
   web3dart: ^2.3.1
 
+  url_launcher: ^6.0.15
+  connectivity_plus: ^2.0.3
+
   shared_preferences: ^2.0.8
   permission_handler: ^8.2.5
 

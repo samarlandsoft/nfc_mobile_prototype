@@ -1,7 +1,7 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:dartz/dartz.dart';
 import 'package:nfc_mobile_prototype/core/models/failures.dart';
-import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/models/nfc_failures.dart';
 
 class JWTService {

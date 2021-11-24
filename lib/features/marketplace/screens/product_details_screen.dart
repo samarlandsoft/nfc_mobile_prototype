@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/screens/ownersheep_history_screen.dart';
@@ -9,6 +10,7 @@ import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_wrapp
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/product_description.dart';
+import 'package:nfc_mobile_prototype/locator.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
   static const routeName = '/details';
@@ -20,6 +22,10 @@ class ProductDetailsScreen extends StatelessWidget {
     required this.product,
     this.fromToken = false,
   }) : super(key: key);
+
+  void _onOpenWebViewHandler() {
+    locator<WebViewService>().openInWebView('https://www.saltandsatoshi.com');
+  }
 
   void _onShowQWButtonHandler(BuildContext context) {
     showModalBottomSheet(
@@ -46,7 +52,10 @@ class ProductDetailsScreen extends StatelessWidget {
       enableDrag: false,
       context: context,
       builder: (context) {
-        return OwnerHistoryScreen(token: tokenID);
+        return OwnerHistoryScreen(
+          token: tokenID,
+          currency: product.currency,
+        );
       },
     );
   }
@@ -84,7 +93,7 @@ class ProductDetailsScreen extends StatelessWidget {
             NeonButton(
               label: 'Salt & Satoshi',
               activeColor: StyleConstants.kHyperlinkTextColor,
-              callback: () {},
+              callback: _onOpenWebViewHandler,
               width: buttonWidth,
             ),
             const SizedBox(
@@ -100,7 +109,8 @@ class ProductDetailsScreen extends StatelessWidget {
             ),
             NeonButton(
               label: 'Ownership history',
-              callback: () => _onOwnershipHistoryHandler(context, product.tokenID),
+              callback: () =>
+                  _onOwnershipHistoryHandler(context, product.tokenID),
               width: buttonWidth,
             ),
             const SizedBox(

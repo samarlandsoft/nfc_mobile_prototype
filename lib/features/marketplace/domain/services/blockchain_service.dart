@@ -1,5 +1,5 @@
 import 'package:http/http.dart';
-import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/blockchain_memberships.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
 import 'package:web3dart/web3dart.dart';

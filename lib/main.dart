@@ -8,6 +8,7 @@ import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
 import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_bloc.dart';
@@ -26,7 +27,10 @@ void main() async {
     systemNavigationBarColor: StyleConstants.kGetDarkColor(),
   ));
   initLocator();
+
   await locator<LocalStorageService>().init();
+  locator<NetworkService>().listenNetworkChanges();
+
   runApp(const MyApp());
 }
 

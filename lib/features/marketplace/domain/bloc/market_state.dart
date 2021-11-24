@@ -6,9 +6,14 @@ class MarketBlocState {
   final List<NFCSweater> sweaters;
   final List<BlockchainOwnerships> memberships;
 
+  final bool isMarketSweatersInit;
+  final bool isMarketMembershipsInit;
+
   const MarketBlocState({
     required this.sweaters,
     this.memberships = const [],
+    this.isMarketSweatersInit = false,
+    this.isMarketMembershipsInit = false,
   });
 
   factory MarketBlocState.initial() {
@@ -45,10 +50,14 @@ class MarketBlocState {
   MarketBlocState update({
     List<NFCSweater>? sweaters,
     List<BlockchainOwnerships>? memberships,
+    bool? isMarketSweatersInit,
+    bool? isMarketMembershipsInit,
   }) {
     return MarketBlocState(
       sweaters: sweaters ?? this.sweaters,
       memberships: memberships ?? this.memberships,
+      isMarketSweatersInit: isMarketSweatersInit ?? this.isMarketSweatersInit,
+      isMarketMembershipsInit: isMarketMembershipsInit ?? this.isMarketMembershipsInit,
     );
   }
 }

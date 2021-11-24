@@ -20,6 +20,12 @@ class AppUpdateDebugMode extends AppBlocEvent {
   AppUpdateDebugMode({required this.isDebugEnabled}) : super([isDebugEnabled]);
 }
 
+class AppUpdateNetworkConnectionMode extends AppBlocEvent {
+  final bool isNetworkEnabled;
+
+  AppUpdateNetworkConnectionMode({required this.isNetworkEnabled}) : super([isNetworkEnabled]);
+}
+
 class AppUpdateSplashMode extends AppBlocEvent {
   final bool isSplashPlayed;
 

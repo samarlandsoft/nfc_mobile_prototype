@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/services/network_service.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_network_connection_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_splash_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
@@ -31,6 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     var isCustomTheme = locator<LocalStorageService>().getAppTheme();
+    locator<NetworkService>().checkNetworkConnection().then((isNetworkEnabled) {
+      locator<UpdateNetworkConnectionMode>().call(isNetworkEnabled);
+    });
+
     locator<UpdateThemeMode>().call(isCustomTheme, updateLocalStorage: false);
     locator<InitMarketplace>().call(NoParams());
   }

@@ -4,6 +4,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_debug_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
@@ -22,6 +23,10 @@ class AboutScreen extends StatelessWidget {
 
   void _onToggleDebugModeHandler(bool value) {
     locator<UpdateDebugMode>().call(value);
+  }
+
+  void _onOpenWebViewHandler(String url) {
+    locator<WebViewService>().openInWebView(url);
   }
 
   @override
@@ -63,10 +68,14 @@ class AboutScreen extends StatelessWidget {
                       const SizedBox(
                         height: StyleConstants.kDefaultPadding,
                       ),
-                      const Text(
-                        'https://snapshot.org/#/saltdao.eth',
-                        style: TextStyle(
-                          color: StyleConstants.kHyperlinkTextColor,
+                      GestureDetector(
+                        onTap: () => _onOpenWebViewHandler(
+                            'https://snapshot.org/#/saltdao.eth'),
+                        child: const Text(
+                          'https://snapshot.org/#/saltdao.eth',
+                          style: TextStyle(
+                            color: StyleConstants.kHyperlinkTextColor,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -82,10 +91,14 @@ class AboutScreen extends StatelessWidget {
                       const SizedBox(
                         height: StyleConstants.kDefaultPadding,
                       ),
-                      const Text(
-                        'https://discord.com/invite/Zj7PnT5EEw',
-                        style: TextStyle(
-                          color: StyleConstants.kHyperlinkTextColor,
+                      GestureDetector(
+                        onTap: () => _onOpenWebViewHandler(
+                            'https://discord.com/invite/Zj7PnT5EEw'),
+                        child: const Text(
+                          'https://discord.com/invite/Zj7PnT5EEw',
+                          style: TextStyle(
+                            color: StyleConstants.kHyperlinkTextColor,
+                          ),
                         ),
                       ),
                       const SizedBox(

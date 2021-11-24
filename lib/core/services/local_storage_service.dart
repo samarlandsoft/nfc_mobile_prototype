@@ -1,4 +1,4 @@
-import 'package:nfc_mobile_prototype/core/services/logger.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {

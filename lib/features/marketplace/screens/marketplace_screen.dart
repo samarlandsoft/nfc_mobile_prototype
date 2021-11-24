@@ -15,6 +15,7 @@ class MarketplaceScreen extends StatefulWidget {
   State<MarketplaceScreen> createState() => _MarketplaceScreenState();
 }
 
+/// TODO add builderWhen
 class _MarketplaceScreenState extends State<MarketplaceScreen> {
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       backgroundSrc: 'assets/images/background_2.png',
       withNavigation: true,
       widget: BlocBuilder<MarketBloc, MarketBlocState>(
-        buildWhen: (prev, current) {
-          return prev.sweaters != current.sweaters;
-        },
         builder: (context, state) {
           return ProductList(sweaters: state.sweaters);
         },
