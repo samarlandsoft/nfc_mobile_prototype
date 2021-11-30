@@ -118,7 +118,7 @@ class ContentWrapper extends StatelessWidget {
                   ? topPadding
                   : (topPadding + networkBarSize),
               bottom: withNavigation
-                  ? buttonHeight + StyleConstants.kDefaultPadding * 2.0
+                  ? buttonHeight + (StyleConstants.kDefaultPadding * 2.0)
                   : StyleConstants.kDefaultPadding,
               left: StyleConstants.kDefaultPadding,
               right: StyleConstants.kDefaultPadding,

@@ -8,7 +8,9 @@ import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_debug_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
+import 'package:nfc_mobile_prototype/features/about/screens/report_dialog.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -29,8 +31,27 @@ class AboutScreen extends StatelessWidget {
     locator<WebViewService>().openInWebView(url);
   }
 
+  void _onOpenReportDialogHandler(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: StyleConstants.kBackgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(StyleConstants.kDefaultPadding)),
+      ),
+      enableDrag: false,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return const ReportDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final buttonWidth = mq.size.width * 0.7;
+
     return DefaultTextStyle(
       style: const TextStyle(
         fontSize: 18.0,
@@ -121,8 +142,9 @@ class AboutScreen extends StatelessWidget {
                           children: <Widget>[
                             const Text('Enable custom theme'),
                             FlutterSwitch(
-                              activeColor: Colors.orange,
-                              inactiveColor: Colors.orange.withOpacity(0.3),
+                              activeColor: StyleConstants.kPrimaryColor,
+                              inactiveColor:
+                                  StyleConstants.kPrimaryColor.withOpacity(0.3),
                               value: state.isCustomTheme,
                               onToggle: _onToggleThemeModeHandler,
                             ),
@@ -139,12 +161,23 @@ class AboutScreen extends StatelessWidget {
                           children: <Widget>[
                             const Text('Enable debug mode'),
                             FlutterSwitch(
-                              activeColor: Colors.orange,
-                              inactiveColor: Colors.orange.withOpacity(0.3),
+                              activeColor: StyleConstants.kPrimaryColor,
+                              inactiveColor:
+                                  StyleConstants.kPrimaryColor.withOpacity(0.3),
                               value: state.isDebugEnabled,
                               onToggle: _onToggleDebugModeHandler,
                             ),
                           ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: StyleConstants.kDefaultPadding * 0.5,
+                      ),
+                      Center(
+                        child: NeonButton(
+                          label: 'Send report',
+                          callback: () => _onOpenReportDialogHandler(context),
+                          width: buttonWidth,
                         ),
                       ),
                       const SizedBox(

@@ -4,8 +4,8 @@ import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/models/nfc_sweater.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/screens/ownersheep_history_screen.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/screens/qr_code_screen.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/ownersheep_history_dialog.dart';
+import 'package:nfc_mobile_prototype/features/marketplace/screens/qr_code_dialog.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/widgets/gradient_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
@@ -37,7 +37,7 @@ class ProductDetailsScreen extends StatelessWidget {
       enableDrag: false,
       context: context,
       builder: (context) {
-        return const QRCodeScreen();
+        return const QRCodeDialog();
       },
     );
   }
@@ -52,7 +52,7 @@ class ProductDetailsScreen extends StatelessWidget {
       enableDrag: false,
       context: context,
       builder: (context) {
-        return OwnerHistoryScreen(
+        return OwnerHistoryDialog(
           token: tokenID,
           currency: product.currency,
         );

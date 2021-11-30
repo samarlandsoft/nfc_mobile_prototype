@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class ScrollableWrapper extends StatelessWidget {
   final List<Widget> widgets;
   final Axis direction;
+  final bool isReversed;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
 
@@ -11,6 +12,7 @@ class ScrollableWrapper extends StatelessWidget {
     Key? key,
     required this.widgets,
     this.direction = Axis.vertical,
+    this.isReversed = false,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
   }) : super(key: key);
@@ -19,6 +21,7 @@ class ScrollableWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: direction,
+      reverse: isReversed,
       physics: const BouncingScrollPhysics(),
       child: Flex(
         direction: direction,

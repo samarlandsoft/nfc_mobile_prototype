@@ -16,11 +16,11 @@ import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/get_bl
 import 'package:nfc_mobile_prototype/features/marketplace/domain/usecases/get_blockchain_prices.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-class OwnerHistoryScreen extends StatefulWidget {
+class OwnerHistoryDialog extends StatefulWidget {
   final int token;
   final CryptoCurrency currency;
 
-  const OwnerHistoryScreen({
+  const OwnerHistoryDialog({
     Key? key,
     required this.token,
     required this.currency,
@@ -30,10 +30,10 @@ class OwnerHistoryScreen extends StatefulWidget {
   static const _senderAddress = '0xd362db73b59a824558ffebdfc83073f9e364dbc6';
 
   @override
-  State<OwnerHistoryScreen> createState() => _OwnerHistoryScreenState();
+  State<OwnerHistoryDialog> createState() => _OwnerHistoryDialogState();
 }
 
-class _OwnerHistoryScreenState extends State<OwnerHistoryScreen> {
+class _OwnerHistoryDialogState extends State<OwnerHistoryDialog> {
   Timer? _errorTimer;
   bool _isErrorShowed = false;
 
@@ -92,10 +92,10 @@ class _OwnerHistoryScreenState extends State<OwnerHistoryScreen> {
       child: ScrollableWrapper(
         crossAxisAlignment: CrossAxisAlignment.start,
         widgets: history.map((element) {
-          if (element.payer.toString() == OwnerHistoryScreen._initialAddress) {
+          if (element.payer.toString() == OwnerHistoryDialog._initialAddress) {
             return const Text('Token created');
           }
-          if (element.payer.toString() == OwnerHistoryScreen._senderAddress) {
+          if (element.payer.toString() == OwnerHistoryDialog._senderAddress) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

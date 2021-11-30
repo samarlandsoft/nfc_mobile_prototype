@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
 import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
@@ -26,10 +28,12 @@ void main() async {
     statusBarColor: Colors.transparent,
     systemNavigationBarColor: StyleConstants.kGetDarkColor(),
   ));
-  initLocator();
 
+  initLocator();
   await locator<LocalStorageService>().init();
+  await locator<LoggerService>().init();
   locator<NetworkService>().listenNetworkChanges();
+  locator<FirebaseService>().init();
 
   runApp(const MyApp());
 }
@@ -120,6 +124,7 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
       },
       builder: (context, state) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: PageStorage(
             bucket: _bucket,
             child: AnimatedSwitcher(

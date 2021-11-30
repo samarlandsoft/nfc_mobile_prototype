@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/dialogs_wrapper.dart';
 
-class QRCodeScreen extends StatelessWidget {
-  const QRCodeScreen({Key? key}) : super(key: key);
+class QRCodeDialog extends StatelessWidget {
+  const QRCodeDialog({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -35,7 +35,7 @@ class NeonButton extends StatelessWidget {
     this.imageSrc,
     required this.callback,
     this.isRounded = false,
-    this.isTapped = false,
+    this.isTapped = true,
     this.width,
     this.radius,
     this.activeColor = Colors.orange,
@@ -46,7 +46,7 @@ class NeonButton extends StatelessWidget {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
         side: BorderSide(
-          color: activeColor,
+          color: isTapped ? activeColor : disabledColor,
           width: 4.0,
         ),
         shape: const RoundedRectangleBorder(
@@ -60,7 +60,7 @@ class NeonButton extends StatelessWidget {
           label != null ? label! : '',
           style: TextStyle(
             fontSize: 22.0,
-            color: activeColor,
+            color: isTapped ? activeColor : disabledColor,
           ),
           textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,

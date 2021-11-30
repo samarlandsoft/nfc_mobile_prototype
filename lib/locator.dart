@@ -1,14 +1,17 @@
 import 'package:get_it/get_it.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
+import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
 import 'package:nfc_mobile_prototype/core/services/license_service.dart';
 import 'package:nfc_mobile_prototype/core/services/local_storage_service.dart';
+import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_debug_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_network_connection_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_splash_mode.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_theme_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/upload_logs.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/bloc/market_state.dart';
 import 'package:nfc_mobile_prototype/features/marketplace/domain/services/blockchain_service.dart';
@@ -25,7 +28,7 @@ import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/show_nfc_data.dart';
 import 'package:nfc_mobile_prototype/features/nfc_scanner/domain/usecases/write_nfc_data.dart';
 
-GetIt locator = GetIt.instance;
+final locator = GetIt.instance;
 
 void initLocator() {
   _initCore();
@@ -39,6 +42,8 @@ void _initCore() {
 
   /// Services
   locator.registerLazySingleton(() => LicenseService());
+  locator.registerLazySingleton(() => LoggerService());
+  locator.registerLazySingleton(() => FirebaseService());
   locator.registerLazySingleton(() => LocalStorageService());
   locator.registerLazySingleton(() => WebViewService(
         networkService: locator<NetworkService>(),
@@ -63,6 +68,10 @@ void _initCore() {
       ));
   locator.registerLazySingleton(() => UpdateSplashMode(
         bloc: locator<AppBloc>(),
+      ));
+  locator.registerLazySingleton(() => UploadLogs(
+        loggerService: locator<LoggerService>(),
+        firebaseService: locator<FirebaseService>(),
       ));
 }
 

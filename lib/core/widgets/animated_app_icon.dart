@@ -43,9 +43,11 @@ class _AnimatedAppIconState extends State<AnimatedAppIcon> {
   void _playAnimation(int duration) {
     Future.delayed(Duration(milliseconds: duration)).then((_) {
       _timer = Timer.periodic(Duration(milliseconds: duration), (_) {
-        setState(() {
-          _isPulsed = !_isPulsed;
-        });
+        if (mounted) {
+          setState(() {
+            _isPulsed = !_isPulsed;
+          });
+        }
       });
     });
   }
