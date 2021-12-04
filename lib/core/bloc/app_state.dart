@@ -1,41 +1,41 @@
 class AppBlocState {
   final int currentScreenIndex;
-  final bool isCustomTheme;
-  final bool isDebugEnabled;
+  final bool isTopCurtainEnabled;
+  final bool isBottomCurtainEnabled;
+  final bool isCurtainOpacityEnabled;
   final bool isNetworkEnabled;
-  final bool isSplashPlayed;
 
   const AppBlocState({
     required this.currentScreenIndex,
-    required this.isCustomTheme,
-    required this.isDebugEnabled,
+    required this.isTopCurtainEnabled,
+    required this.isBottomCurtainEnabled,
+    required this.isCurtainOpacityEnabled,
     required this.isNetworkEnabled,
-    required this.isSplashPlayed,
   });
 
   factory AppBlocState.initial() {
     return const AppBlocState(
       currentScreenIndex: 0,
-      isCustomTheme: false,
-      isDebugEnabled: false,
+      isTopCurtainEnabled: false,
+      isBottomCurtainEnabled: false,
+      isCurtainOpacityEnabled: false,
       isNetworkEnabled: true,
-      isSplashPlayed: false,
     );
   }
 
   AppBlocState update({
     int? currentScreenIndex,
-    bool? isCustomTheme,
-    bool? isDebugEnabled,
+    bool? isTopCurtainEnabled,
+    bool? isBottomCurtainEnabled,
+    bool? isCurtainOpacityEnabled,
     bool? isNetworkEnabled,
-    bool? isSplashPlayed,
   }) {
     return AppBlocState(
       currentScreenIndex: currentScreenIndex ?? this.currentScreenIndex,
-      isCustomTheme: isCustomTheme ?? this.isCustomTheme,
-      isDebugEnabled: isDebugEnabled ?? this.isDebugEnabled,
+      isTopCurtainEnabled: isTopCurtainEnabled ?? this.isTopCurtainEnabled,
+      isBottomCurtainEnabled: isBottomCurtainEnabled ?? this.isBottomCurtainEnabled,
+      isCurtainOpacityEnabled: isCurtainOpacityEnabled ?? this.isCurtainOpacityEnabled,
       isNetworkEnabled: isNetworkEnabled ?? this.isNetworkEnabled,
-      isSplashPlayed: isSplashPlayed ?? this.isSplashPlayed,
     );
   }
 }

@@ -37,7 +37,7 @@ class TextInputField extends StatelessWidget {
           errorMaxLines: 1,
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(
-              color: StyleConstants.kHyperlinkTextColor,
+              color: StyleConstants.kHyperLinkColor,
               width: 2.0,
               style: BorderStyle.solid,
             ),

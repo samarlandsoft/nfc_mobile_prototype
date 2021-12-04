@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:nfc_mobile_prototype/core/models/app_service_data.dart';
+import 'package:nfc_mobile_prototype/core/models/logger_service_data.dart';
 import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 
 class FirebaseService {
@@ -25,7 +25,7 @@ class FirebaseService {
   }
 
   Future<void> sendReport(
-    AppServiceData serviceData,
+    LoggerServiceData serviceData,
     String message,
     String logFileName,
   ) async {

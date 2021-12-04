@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_logs/flutter_logs.dart';
-import 'package:nfc_mobile_prototype/core/models/app_service_data.dart';
 import 'package:nfc_mobile_prototype/core/models/failures.dart';
+import 'package:nfc_mobile_prototype/core/models/logger_service_data.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -40,13 +40,13 @@ class LoggerService {
   }
 
   /// Get app version and other app parameters
-  Future<AppServiceData> getAppMetaData() async {
+  Future<LoggerServiceData> getAppMetaData() async {
     final packageInfo = await PackageInfo.fromPlatform();
     final deviceInfo = Platform.isAndroid
         ? await DeviceInfoPlugin().androidInfo
         : await DeviceInfoPlugin().iosInfo;
 
-    return AppServiceData(
+    return LoggerServiceData(
       appName: packageInfo.appName,
       appVersion: packageInfo.version,
       environmentId: packageInfo.buildNumber,
@@ -81,7 +81,7 @@ class LoggerService {
     return Right(currentLogFile);
   }
 
-  String _getAppMetaMessage(AppServiceData metaData) {
+  String _getAppMetaMessage(LoggerServiceData metaData) {
     var metaMessage = '=========================\n';
     metaMessage += 'META INFO:\n';
     metaMessage += metaData.toString();

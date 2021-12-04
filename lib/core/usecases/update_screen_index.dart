@@ -12,6 +12,6 @@ class UpdateScreenIndex implements Usecase<void, int> {
   Future<void> call(int index) async {
     logDebug('UpdateScreenIndex usecase -> call($index)');
     if (bloc.state.currentScreenIndex == index) return;
-    bloc.add(AppUpdateScreenIndex(index: index));
+    bloc.add(AppUpdateScreenIndex(screenIndex: index));
   }
 }

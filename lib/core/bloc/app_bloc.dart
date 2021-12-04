@@ -8,27 +8,24 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
 
   @override
   Stream<AppBlocState> mapEventToState(AppBlocEvent event) async* {
-    logDebug('AppBloc -> mapEventToState(${event.runtimeType})');
+    logDebug('AppBlocTemp -> mapEventToState(${event.runtimeType})');
 
     switch (event.runtimeType) {
       case AppUpdateScreenIndex:
         {
           var snapshot = event as AppUpdateScreenIndex;
-          yield state.update(currentScreenIndex: snapshot.index);
+          yield state.update(currentScreenIndex: snapshot.screenIndex);
           break;
         }
 
-      case AppUpdateTheme:
+      case AppUpdateWrapperCurtainMode:
         {
-          var snapshot = event as AppUpdateTheme;
-          yield state.update(isCustomTheme: snapshot.isCustomTheme);
-          break;
-        }
-
-      case AppUpdateDebugMode:
-        {
-          var snapshot = event as AppUpdateDebugMode;
-          yield state.update(isDebugEnabled: snapshot.isDebugEnabled);
+          var snapshot = event as AppUpdateWrapperCurtainMode;
+          yield state.update(
+            isTopCurtainEnabled: snapshot.isTopCurtainEnabled,
+            isBottomCurtainEnabled: snapshot.isBottomCurtainEnabled,
+            isCurtainOpacityEnabled: snapshot.isCurtainOpacityEnabled,
+          );
           break;
         }
 
@@ -36,13 +33,6 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
         {
           var snapshot = event as AppUpdateNetworkConnectionMode;
           yield state.update(isNetworkEnabled: snapshot.isNetworkEnabled);
-          break;
-        }
-
-      case AppUpdateSplashMode:
-        {
-          var snapshot = event as AppUpdateSplashMode;
-          yield state.update(isSplashPlayed: snapshot.isSplashPlayed);
           break;
         }
     }

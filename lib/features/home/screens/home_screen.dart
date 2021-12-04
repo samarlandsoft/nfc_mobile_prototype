@@ -1,143 +1,92 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/core/widgets/animated_app_icon.dart';
+import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/core/widgets/neon_button.dart';
-import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
-import 'package:nfc_mobile_prototype/features/marketplace/screens/marketplace_screen.dart';
-import 'package:nfc_mobile_prototype/features/nfc_scanner/screens/nfc_scanner_screen.dart';
+import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
+import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
+import 'package:nfc_mobile_prototype/features/home/widgets/salt_circular_text.dart';
+import 'package:nfc_mobile_prototype/features/home/widgets/salt_logo.dart';
+import 'package:nfc_mobile_prototype/features/market/screens/market_screen.dart';
+import 'package:nfc_mobile_prototype/features/scanner/screens/scanner_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  static const String titleName = '';
-  static const int screenIndex = 1;
+class HomeScreen extends StatelessWidget {
+  static const screenIndex = 0;
 
   const HomeScreen({Key? key}) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final int _animationDuration = 1000;
-  bool _isInit = false;
-
-  @override
-  void didChangeDependencies() {
-    if (!_isInit) {
-      Future.delayed(Duration(milliseconds: _animationDuration)).then((_) {
-        setState(() {
-          _isInit = true;
-        });
-      });
-    }
-    super.didChangeDependencies();
+  void _onScanTappedHandler() {
+    locator<UpdateScreenIndex>().call(ScannerScreen.screenIndex);
+    locator<UpdateWrapperCurtainMode>().call(
+      NoParams(),
+      isTopCurtainEnabled: true,
+      isBottomCurtainEnabled: true,
+    );
   }
 
-  void _onNavigationButtonHandler(int screen) {
-    locator<UpdateScreenIndex>().call(screen);
+  void _onMarketTappedHandler() {
+    locator<UpdateScreenIndex>().call(MarketScreen.screenIndex);
+    locator<UpdateWrapperCurtainMode>().call(
+      NoParams(),
+      isTopCurtainEnabled: false,
+      isBottomCurtainEnabled: true,
+      isCurtainOpacityEnabled: true,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final iconPadding = mq.size.height * 0.1;
-    final descriptionWidth = mq.size.width * 0.7;
-    final buttonWidth = mq.size.width * 0.7;
+    final screenCenter = (mq.size.height - mq.viewPadding.top) * 0.5;
 
-    return BlocBuilder<AppBloc, AppBlocState>(
-      buildWhen: (prev, current) {
-        return prev.isSplashPlayed != current.isSplashPlayed;
-      },
-      builder: (context, state) {
-        return ContentWrapper(
-          title: HomeScreen.titleName,
-          backgroundSrc: 'assets/images/background_1.png',
-          widget: Padding(
-            padding: const EdgeInsets.fromLTRB(
-              StyleConstants.kDefaultPadding,
-              0.0,
-              StyleConstants.kDefaultPadding,
-              StyleConstants.kDefaultPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: descriptionWidth,
-                  child: const Text(
-                    'Connection physical to metaverse',
-                    style: TextStyle(
-                      fontSize: 24.0,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                  ),
-                ),
-                SizedBox(
-                  height: iconPadding * 1.5,
-                ),
-                AnimatedAppIcon(
-                  isVisible: (_isInit || state.isSplashPlayed),
-                  isPulsed: true,
-                  withPosition: false,
-                  duration: _animationDuration,
-                ),
-                SizedBox(
-                  height: iconPadding,
-                ),
-                Expanded(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: _animationDuration),
-                    opacity: (_isInit || state.isSplashPlayed) ? 1.0 : 0.0,
-                    child: AbsorbPointer(
-                      absorbing: !(_isInit || state.isSplashPlayed),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          NeonButton(
-                            label: 'Marketplace',
-                            callback: () => _onNavigationButtonHandler(
-                                MarketplaceScreen.screenIndex),
-                            width: buttonWidth,
-                          ),
-                          const SizedBox(
-                            height: StyleConstants.kDefaultPadding,
-                          ),
-                          NeonButton(
-                            label: 'Scan NFC',
-                            callback: () => _onNavigationButtonHandler(
-                                NFCScannerScreen.screenIndex),
-                            width: buttonWidth,
-                          ),
-                          const SizedBox(
-                            height: StyleConstants.kDefaultPadding,
-                          ),
-                          NeonButton(
-                            label: 'About',
-                            callback: () => _onNavigationButtonHandler(
-                                AboutScreen.screenIndex),
-                            width: buttonWidth,
-                          ),
-                          const SizedBox(
-                            height: StyleConstants.kDefaultPadding,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    final wrapperVerticalPadding = mq.viewPadding.top +
+        StyleConstants.kDefaultPadding +
+        ScaffoldWrapper.getLabelSize(context);
+    final gestureSize = mq.size.width * 0.75;
+
+    return ContentWrapper(
+      widget: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            top: screenCenter -
+                wrapperVerticalPadding -
+                SaltLogo.getLogoSize(context) * 0.5,
+            child: const SaltLogo(),
+          ),
+          Positioned(
+            top: screenCenter -
+                wrapperVerticalPadding -
+                SaltCircularText.getTextRadius(context),
+            child: const SaltCircularText(),
+          ),
+          Positioned(
+            top: screenCenter -
+                wrapperVerticalPadding -
+                SaltCircularText.getTextRadius(context),
+            child: const SaltCircularText(),
+          ),
+          Positioned(
+            top: screenCenter - wrapperVerticalPadding - gestureSize * 0.5,
+            child: SizedBox(
+              height: gestureSize,
+              width: gestureSize,
+              child: GestureDetector(
+                onTap: _onScanTappedHandler,
+              ),
             ),
           ),
-        );
-      },
+          Positioned(
+            bottom: StyleConstants.kDefaultPadding * 2.0,
+            child: SaltTextButton(
+              label: 'VIEW COLLECTION',
+              callback: _onMarketTappedHandler,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

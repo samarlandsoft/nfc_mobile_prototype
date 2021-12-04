@@ -3,31 +3,30 @@ abstract class AppBlocEvent {
 }
 
 class AppUpdateScreenIndex extends AppBlocEvent {
-  final int index;
+  final int screenIndex;
 
-  AppUpdateScreenIndex({required this.index}) : super([index]);
+  AppUpdateScreenIndex({required this.screenIndex}) : super([screenIndex]);
 }
 
-class AppUpdateTheme extends AppBlocEvent {
-  final bool isCustomTheme;
+class AppUpdateWrapperCurtainMode extends AppBlocEvent {
+  final bool isTopCurtainEnabled;
+  final bool isBottomCurtainEnabled;
+  final bool isCurtainOpacityEnabled;
 
-  AppUpdateTheme({required this.isCustomTheme}) : super([isCustomTheme]);
-}
-
-class AppUpdateDebugMode extends AppBlocEvent {
-  final bool isDebugEnabled;
-
-  AppUpdateDebugMode({required this.isDebugEnabled}) : super([isDebugEnabled]);
+  AppUpdateWrapperCurtainMode({
+    required this.isTopCurtainEnabled,
+    required this.isBottomCurtainEnabled,
+    required this.isCurtainOpacityEnabled,
+  }) : super([
+          isTopCurtainEnabled,
+          isBottomCurtainEnabled,
+          isCurtainOpacityEnabled,
+        ]);
 }
 
 class AppUpdateNetworkConnectionMode extends AppBlocEvent {
   final bool isNetworkEnabled;
 
-  AppUpdateNetworkConnectionMode({required this.isNetworkEnabled}) : super([isNetworkEnabled]);
-}
-
-class AppUpdateSplashMode extends AppBlocEvent {
-  final bool isSplashPlayed;
-
-  AppUpdateSplashMode({required this.isSplashPlayed}) : super([isSplashPlayed]);
+  AppUpdateNetworkConnectionMode({required this.isNetworkEnabled})
+      : super([isNetworkEnabled]);
 }

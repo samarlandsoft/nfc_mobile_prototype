@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 
 class StyleConstants {
   static const kDefaultPadding = 10.0;
-  static const kBottomBarHeight = 56.0;
+  static const TextStyle kDefaultTextStyle = TextStyle(
+    fontSize: 18.0,
+    fontFamily: 'Montserrat',
+  );
 
   static const kBackgroundColor = Color(0xFF141414);
-  static const kPrimaryColor = Colors.orange;
-  static const kSelectedTextColor = Colors.pink;
-  static const kHyperlinkTextColor = Colors.blue;
-
-  static const kBTCColor = Color(0xFFF7931A);
-  static const kETHColor = Color(0xFF4CC9F0);
+  static const kHyperLinkColor = Colors.blueAccent;
+  static const kSelectedColor = Colors.pink;
+  static const kMarketColor = Colors.deepPurple;
+  static const kInactiveColor = Colors.grey;
 
   static Color kGetLightColor() {
     return Colors.grey[50]!;
@@ -18,9 +19,5 @@ class StyleConstants {
 
   static Color kGetDarkColor() {
     return Colors.grey[850]!;
-  }
-
-  static double kGetLogoHeight(BuildContext context) {
-    return MediaQuery.of(context).size.width * 0.2;
   }
 }
