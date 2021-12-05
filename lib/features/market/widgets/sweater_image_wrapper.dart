@@ -181,19 +181,28 @@ class _NetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      placeholder: (context, url) {
-        return SaltAnimatedLoader(
-          size: size,
-        );
-      },
-      errorWidget: (context, url, error) {
-        return Center(
-          child: Text('Error: ${error.runtimeType}'),
-        );
-      },
+    return SizedBox(
+      height: size,
+      width: size,
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.cover,
+        placeholder: (context, url) {
+          return DecoratedBox(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            child: SaltAnimatedLoader(
+              size: size - StyleConstants.kDefaultPadding * 3.0,
+            ),
+          );
+        },
+        errorWidget: (context, url, error) {
+          return Center(
+            child: Text('Error: ${error.runtimeType}'),
+          );
+        },
+      ),
     );
   }
 }

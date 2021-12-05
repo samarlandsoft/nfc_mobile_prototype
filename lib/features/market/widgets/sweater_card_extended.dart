@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
+import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater_ownership.dart';
 import 'package:nfc_mobile_prototype/features/market/widgets/sweater_counter.dart';
 import 'package:nfc_mobile_prototype/features/market/widgets/sweater_description.dart';
 import 'package:nfc_mobile_prototype/features/market/widgets/sweater_image_wrapper.dart';
+import 'package:nfc_mobile_prototype/locator.dart';
 
 class SweaterCardExtended extends StatefulWidget {
   final NFCSweater sweater;
@@ -167,7 +169,7 @@ class _SweaterPagePanelState extends State<_SweaterPagePanel> {
 
   void _onSwapPageHandler(int index) {
     if (index == 3) {
-      print('REDIRECT');
+      locator<WebViewService>().openInWebView('https://www.saltandsatoshi.com');
     } else {
       widget.controller.animateToPage(
         index,
@@ -254,12 +256,31 @@ class _SweaterOwnershipHistory extends StatelessWidget {
     required this.size,
   }) : super(key: key);
 
+  static const _initialAddress = '0x0000000000000000000000000000000000000000';
+  static const _senderAddress = '0xd362db73b59a824558ffebdfc83073f9e364dbc6';
+
+  Widget _buildHistoryText(NFCSweaterOwnership history) {
+    if (history.payer.toString() == _initialAddress) {
+      return const Text('TOKEN CREATED');
+    }
+
+    if (history.payer.toString() == _senderAddress) {
+      return const Text('NEW OWNER SATOSHI');
+    }
+
+    return const Text('NEW OWNER NONE');
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (ownership.isNotEmpty) {
+      ownership.sort((a, b) => a.blockNum.compareTo(b.blockNum));
+    }
+
     return SizedBox(
       height: size,
       child: ListView.separated(
-        itemCount: 14,
+        itemCount: ownership.length,
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(
             bottom: StyleConstants.kDefaultPadding * 2.0),
@@ -277,9 +298,9 @@ class _SweaterOwnershipHistory extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Text('TOKEN CREATED'),
+                _buildHistoryText(ownership[index]),
                 Text(
-                  '2344',
+                  ownership[index].blockNum.toString(),
                   style: const TextStyle(
                     color: StyleConstants.kInactiveColor,
                   ),

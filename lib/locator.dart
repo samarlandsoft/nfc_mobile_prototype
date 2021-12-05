@@ -11,12 +11,15 @@ import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/services/blockchain_service.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockchain_available_prices.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockchain_nfc_data.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockchain_ownership.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/init_market.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_active_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_mode.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_ownerships.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_sweaters.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/scanner_bloc.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/scanner_state.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/datasources/jwt_mock_database.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/jwt_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/read_nfc_chip.dart';
@@ -35,7 +38,6 @@ void _initCore() {
 
   /// Services
   locator.registerLazySingleton(() => LoggerService());
-
   locator.registerLazySingleton(() => LicenseService());
   locator.registerLazySingleton(() => FirebaseService());
   locator.registerLazySingleton(() => WebViewService(
@@ -58,20 +60,13 @@ void _initCore() {
 }
 
 void _initScanner() {
-  /// Blocs
-  locator.registerLazySingleton(() => ScannerBloc(const ScannerBlocState()));
-
   /// Services
   locator.registerLazySingleton(
       () => NFCService(jwtService: locator<JWTService>()));
   locator.registerLazySingleton(() => JWTService());
 
-  /// Datasources
-  locator.registerLazySingleton(() => JWTMockDatabaseTemp());
-
   /// Usecases
   locator.registerLazySingleton(() => ReadNFCChip(
-        bloc: locator<ScannerBloc>(),
         nfcService: locator<NFCService>(),
         jwtService: locator<JWTService>(),
       ));
@@ -82,9 +77,22 @@ void _initMarket() {
   locator.registerLazySingleton(() => MarketBloc(MarketBlocState.initial()));
 
   /// Services
+  locator.registerLazySingleton(() => BlockchainService());
 
   /// Usecases
+  locator.registerLazySingleton(() => InitMarket(
+        bloc: locator<MarketBloc>(),
+        networkService: locator<NetworkService>(),
+        getBlockchainPrices: locator<GetBlockchainAvailablePrices>(),
+        getBlockchainOwnership: locator<GetBlockchainOwnership>(),
+        updateMarketSweaters: locator<UpdateMarketSweaters>(),
+        updateMarketOwnerships: locator<UpdateMarketOwnerships>(),
+        updateMarketMode: locator<UpdateMarketMode>(),
+      ));
   locator.registerLazySingleton(() => UpdateMarketSweaters(
+        bloc: locator<MarketBloc>(),
+      ));
+  locator.registerLazySingleton(() => UpdateMarketOwnerships(
         bloc: locator<MarketBloc>(),
       ));
   locator.registerLazySingleton(() => UpdateMarketActiveSweater(
@@ -92,5 +100,19 @@ void _initMarket() {
       ));
   locator.registerLazySingleton(() => UpdateMarketMode(
         bloc: locator<MarketBloc>(),
+      ));
+  locator.registerLazySingleton(() => GetBlockchainAvailablePrices(
+        blockchainService: locator<BlockchainService>(),
+        networkService: locator<NetworkService>(),
+      ));
+  locator.registerLazySingleton(() => GetBlockchainNFCData(
+        bloc: locator<MarketBloc>(),
+        blockchainService: locator<BlockchainService>(),
+        networkService: locator<NetworkService>(),
+        updateMarketActiveSweater: locator<UpdateMarketActiveSweater>(),
+      ));
+  locator.registerLazySingleton(() => GetBlockchainOwnership(
+        blockchainService: locator<BlockchainService>(),
+        networkService: locator<NetworkService>(),
       ));
 }

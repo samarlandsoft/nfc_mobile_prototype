@@ -1,4 +1,5 @@
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater_ownership.dart';
 
 abstract class MarketBlocEvent {
   const MarketBlocEvent([List props = const []]) : super();
@@ -10,10 +11,17 @@ class MarketUpdateSweaters extends MarketBlocEvent {
   MarketUpdateSweaters({required this.sweaters}) : super([sweaters]);
 }
 
-class MarketUpdateActiveSweater extends MarketBlocEvent {
-  final NFCSweater activeSweater;
+class MarketUpdateOwnerships extends MarketBlocEvent {
+  final Map<CryptoCurrency, List<NFCSweaterOwnership>> ownerships;
 
-  MarketUpdateActiveSweater({required this.activeSweater}) : super([activeSweater]);
+  MarketUpdateOwnerships({required this.ownerships}) : super([ownerships]);
+}
+
+class MarketUpdateActiveSweater extends MarketBlocEvent {
+  final NFCSweater? activeSweater;
+
+  MarketUpdateActiveSweater({required this.activeSweater})
+      : super([activeSweater]);
 }
 
 class MarketUpdateMode extends MarketBlocEvent {

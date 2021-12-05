@@ -2,20 +2,15 @@ import 'dart:typed_data';
 
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/scanner_bloc.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/scanner_evets.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/models/nfc_response_data.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/models/nfc_token.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/jwt_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 
 class ReadNFCChip implements Usecase<NFCResponseData, NoParams> {
-  final ScannerBloc bloc;
   final NFCService nfcService;
   final JWTService jwtService;
 
   const ReadNFCChip({
-    required this.bloc,
     required this.nfcService,
     required this.jwtService,
   });
@@ -48,12 +43,6 @@ class ReadNFCChip implements Usecase<NFCResponseData, NoParams> {
           data.fold(
             (failure) {
               errorMessage = failure.error;
-              bloc.add(ScannerReadChipEvent(
-                token: NFCToken(
-                  tokenID: chipID,
-                  ndef: token,
-                ),
-              ));
             },
             (result) {
               isSuccess = true;

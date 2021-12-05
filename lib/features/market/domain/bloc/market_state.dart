@@ -1,12 +1,15 @@
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater_ownership.dart';
 
 class MarketBlocState {
   final List<NFCSweater> sweaters;
+  final Map<CryptoCurrency, List<NFCSweaterOwnership>> ownerships;
   final NFCSweater? activeSweater;
   final bool isMarketInit;
 
   const MarketBlocState({
     required this.sweaters,
+    this.ownerships = const {},
     this.activeSweater,
     this.isMarketInit = false,
   });
@@ -22,11 +25,7 @@ class MarketBlocState {
               'NFC-enabled Apparel + Artwork NFT + Digital Wearable + \$SALTY',
           currency: CryptoCurrency.btc,
           imageSrc: 'assets/images/bitcoin_sweater.gif',
-          chipSrc: 'assets/images/bitcoin_chip.gif',
           qrSrc: 'assets/images/qr_code.png',
-          price: 6.05,
-          amount: 20,
-          sold: 17,
         ),
         NFCSweater(
           tokenID: 0,
@@ -36,11 +35,7 @@ class MarketBlocState {
               'NFC-enabled Apparel + Artwork NFT + Digital Wearable + \$SALTY',
           currency: CryptoCurrency.eth,
           imageSrc: 'assets/images/ethereum_sweater.gif',
-          chipSrc: 'assets/images/ethereum_chip.gif',
           qrSrc: 'assets/images/qr_code.png',
-          price: 6.05,
-          amount: 20,
-          sold: 17,
         ),
       ],
       isMarketInit: false,
@@ -49,11 +44,13 @@ class MarketBlocState {
 
   MarketBlocState update({
     List<NFCSweater>? sweaters,
+    Map<CryptoCurrency, List<NFCSweaterOwnership>>? ownerships,
     NFCSweater? activeSweater,
     bool? isMarketInit,
   }) {
     return MarketBlocState(
       sweaters: sweaters ?? this.sweaters,
+      ownerships: ownerships ?? this.ownerships,
       activeSweater: activeSweater ?? this.activeSweater,
       isMarketInit: isMarketInit ?? this.isMarketInit,
     );

@@ -7,8 +7,7 @@ class MarketBloc extends Bloc<MarketBlocEvent, MarketBlocState> {
   MarketBloc(MarketBlocState initialState) : super(initialState);
 
   @override
-  Stream<MarketBlocState> mapEventToState(
-      MarketBlocEvent event) async* {
+  Stream<MarketBlocState> mapEventToState(MarketBlocEvent event) async* {
     logDebug('MarketBloc -> mapEventToState(${event.runtimeType})');
 
     switch (event.runtimeType) {
@@ -16,6 +15,13 @@ class MarketBloc extends Bloc<MarketBlocEvent, MarketBlocState> {
         {
           var snapshot = event as MarketUpdateSweaters;
           yield state.update(sweaters: snapshot.sweaters);
+          break;
+        }
+
+      case MarketUpdateOwnerships:
+        {
+          var snapshot = event as MarketUpdateOwnerships;
+          yield state.update(ownerships: snapshot.ownerships);
           break;
         }
 

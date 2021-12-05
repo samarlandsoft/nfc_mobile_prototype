@@ -30,7 +30,7 @@ class NFCSweater {
     this.sold,
   });
 
-  NFCSweater update({
+  NFCSweater copyWith({
     int? tokenID,
     String? title,
     String? edition,

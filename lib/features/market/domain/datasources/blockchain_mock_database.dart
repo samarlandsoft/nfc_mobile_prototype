@@ -1,4 +1,4 @@
-class JWTMockDatabaseTemp {
+class BlockchainMockDatabase {
   static const Map<String, String> sweaterTokenURLs = {
     '23': 'https://ayfljnr4u6mracm65yupl2pjk2to3z54nyeycolu3zg7hrob7otq.arweave.net/Bgq0tjynmRAJnu4o9enpVqbt57xuCYE5dN5N88XB-6c',
     '24': 'https://arweave.net/fg2pLrDroJ8x5rrGMAV7IkqTjpGFXssOqVOiDAsbN1o',
@@ -88,7 +88,7 @@ class JWTMockDatabaseTemp {
     20: 'https://arweave.net/O68pp4_LZMtfpFVRwcEvz82IbNpbISpPXBdnutg2eN0',
   };
 
-  int? getAmountSoldSweaters(String chipUrl, bool isBTC) {
+  static int? getAmountSoldSweaters(String chipUrl, bool isBTC) {
     int? index;
 
     if (isBTC) {

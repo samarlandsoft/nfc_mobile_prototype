@@ -15,9 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^2.1.0
   carousel_slider: ^4.0.0
-  flutter_switch: ^0.3.2
   cached_network_image: ^3.1.0+1
-  simple_ripple_animation: ^0.0.3
   flutter_circular_text: ^0.3.1
 
   flutter_bloc: ^7.3.1

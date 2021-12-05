@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/salt_animated_loader.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 import 'package:nfc_mobile_prototype/features/home/widgets/salt_circular_text.dart';
 import 'package:nfc_mobile_prototype/features/home/widgets/salt_logo.dart';
@@ -46,47 +50,58 @@ class HomeScreen extends StatelessWidget {
         ScaffoldWrapper.getLabelSize(context);
     final gestureSize = mq.size.width * 0.75;
 
-    return ContentWrapper(
-      widget: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Positioned(
-            top: screenCenter -
-                wrapperVerticalPadding -
-                SaltLogo.getLogoSize(context) * 0.5,
-            child: const SaltLogo(),
-          ),
-          Positioned(
-            top: screenCenter -
-                wrapperVerticalPadding -
-                SaltCircularText.getTextRadius(context),
-            child: const SaltCircularText(),
-          ),
-          Positioned(
-            top: screenCenter -
-                wrapperVerticalPadding -
-                SaltCircularText.getTextRadius(context),
-            child: const SaltCircularText(),
-          ),
-          Positioned(
-            top: screenCenter - wrapperVerticalPadding - gestureSize * 0.5,
-            child: SizedBox(
-              height: gestureSize,
-              width: gestureSize,
-              child: GestureDetector(
-                onTap: _onScanTappedHandler,
+    return BlocBuilder<MarketBloc, MarketBlocState>(
+      buildWhen: (prev, current) {
+        return prev.isMarketInit != current.isMarketInit;
+      },
+      builder: (context, state) {
+        return ContentWrapper(
+          widget: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              Positioned(
+                top: screenCenter -
+                    wrapperVerticalPadding -
+                    SaltLogo.getLogoSize(context) * 0.5,
+                child: const SaltLogo(),
               ),
-            ),
+              Positioned(
+                top: screenCenter -
+                    wrapperVerticalPadding -
+                    SaltCircularText.getTextRadius(context),
+                child: const SaltCircularText(),
+              ),
+              Positioned(
+                top: screenCenter -
+                    wrapperVerticalPadding -
+                    SaltCircularText.getTextRadius(context),
+                child: const SaltCircularText(),
+              ),
+              Positioned(
+                top: screenCenter - wrapperVerticalPadding - gestureSize * 0.5,
+                child: SizedBox(
+                  height: gestureSize,
+                  width: gestureSize,
+                  child: GestureDetector(
+                    onTap: _onScanTappedHandler,
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: StyleConstants.kDefaultPadding * 2.0,
+                child: AbsorbPointer(
+                  absorbing: !state.isMarketInit,
+                  child: SaltTextButton(
+                    label: 'VIEW COLLECTION',
+                    callback: _onMarketTappedHandler,
+                    isLoading: !state.isMarketInit,
+                  ),
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            bottom: StyleConstants.kDefaultPadding * 2.0,
-            child: SaltTextButton(
-              label: 'VIEW COLLECTION',
-              callback: _onMarketTappedHandler,
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

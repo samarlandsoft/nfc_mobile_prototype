@@ -30,10 +30,10 @@ class JWTService {
       final jwt = JWT.verify(token, SecretKey(_salt));
 
       if (jwt.payload != null && jwt.payload?['chipID'] == chipID) {
-        logDebug('Token verified, payload: ${jwt.payload}');
+        logDebug('Token [$chipID] verified, payload: ${jwt.payload}');
         return Right(jwt.payload);
       } else {
-        logDebug('Token verified, payload: ${jwt.payload}');
+        logDebug('Token [$chipID] has not been verified');
         return Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.notValidChip]!));
       }
     } on JWTExpiredError {

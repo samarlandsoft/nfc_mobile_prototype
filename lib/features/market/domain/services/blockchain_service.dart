@@ -72,8 +72,8 @@ class BlockchainService {
     return formattedPrice;
   }
 
-  Future<List<NFCSweaterOwnership>> getHistory(CryptoCurrency currency) async {
-    logDebug('BlockchainService -> getHistory($currency)');
+  Future<List<NFCSweaterOwnership>> getOwnershipHistory(CryptoCurrency currency) async {
+    logDebug('BlockchainService -> getOwnershipHistory($currency)');
 
     final web3 = Web3Client(_infuraRpcUrl, _httpClient);
     final sellerContractAddress =

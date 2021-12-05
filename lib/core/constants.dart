@@ -6,6 +6,7 @@ class StyleConstants {
     fontSize: 18.0,
     fontFamily: 'Montserrat',
   );
+  static const kDefaultButtonSize = 60.0;
 
   static const kBackgroundColor = Color(0xFF141414);
   static const kHyperLinkColor = Colors.blueAccent;

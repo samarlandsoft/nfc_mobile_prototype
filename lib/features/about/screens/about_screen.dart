@@ -44,13 +44,13 @@ class AboutScreen extends StatelessWidget {
                   SaltLinkIcon(
                     label: 'DISCORD',
                     iconSrc: 'assets/images/discord.png',
-                    url: '',
+                    url: 'https://discord.com/invite/Zj7PnT5EEw',
                     width: constraints.maxWidth * 0.47,
                   ),
                   SaltLinkIcon(
                     label: 'SNAPSHOT',
                     iconSrc: 'assets/images/storm.png',
-                    url: '',
+                    url: 'https://snapshot.org/#/saltdao.eth',
                     width: constraints.maxWidth * 0.47,
                   ),
                 ],

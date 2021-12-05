@@ -8,6 +8,7 @@ import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_combined_button.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_icon_button.dart';
+import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_active_sweater.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
 import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
@@ -38,13 +39,17 @@ class ScaffoldWrapper extends StatelessWidget {
     return (mq.size.height - mq.viewPadding.top) * 0.12;
   }
 
-  void _onHomeTappedHandler() {
+  void _onHomeTappedHandler({bool fromMarketDetails = false}) {
     locator<UpdateScreenIndex>().call(HomeScreen.screenIndex);
     locator<UpdateWrapperCurtainMode>().call(
       NoParams(),
       isTopCurtainEnabled: false,
       isBottomCurtainEnabled: false,
     );
+
+    if (fromMarketDetails) {
+      locator<UpdateMarketActiveSweater>().call(null);
+    }
   }
 
   void _onAboutTappedHandler() {
@@ -93,7 +98,7 @@ class ScaffoldWrapper extends StatelessWidget {
           return SaltCombinedButton(
             label: 'CLOSE',
             iconSrc: 'assets/icons/close.png',
-            callback: _onHomeTappedHandler,
+            callback: () => _onHomeTappedHandler(fromMarketDetails: true),
             width: width,
           );
         }
