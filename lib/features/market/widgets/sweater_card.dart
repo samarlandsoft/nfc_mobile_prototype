@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
@@ -22,12 +20,7 @@ class SweaterCard extends StatelessWidget {
 
   void _onDetailsTappedHandler() {
     locator<UpdateMarketActiveSweater>().call(sweater);
-    locator<UpdateScreenIndex>().call(MarketDetailsScreen.screenIndex);
-    locator<UpdateWrapperCurtainMode>().call(
-      NoParams(),
-      isTopCurtainEnabled: true,
-      isBottomCurtainEnabled: true,
-    );
+    locator<PushNextScreen>().call(MarketDetailsScreen.screenIndex);
   }
 
   @override

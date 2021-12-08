@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 
 class ContentWrapper extends StatelessWidget {
@@ -19,26 +16,17 @@ class ContentWrapper extends StatelessWidget {
     final mq = MediaQuery.of(context);
     final horizontalPadding = mq.size.width * 0.03;
 
-    return BlocBuilder<AppBloc, AppBlocState>(
-      buildWhen: (prev, current) {
-        return prev.isCurtainOpacityEnabled != current.isCurtainOpacityEnabled;
-      },
-      builder: (context, state) {
-        return Padding(
-          padding: padding ??
-              EdgeInsets.fromLTRB(
-                StyleConstants.kDefaultPadding + horizontalPadding,
-                state.isCurtainOpacityEnabled
-                    ? 0.0
-                    : StyleConstants.kGetScreenRatio(context)
-                        ? StyleConstants.kDefaultPadding * 2.0
-                        : StyleConstants.kDefaultPadding,
-                StyleConstants.kDefaultPadding + horizontalPadding,
-                0.0,
-              ),
-          child: widget,
-        );
-      },
+    return Padding(
+      padding: padding ??
+          EdgeInsets.fromLTRB(
+            StyleConstants.kDefaultPadding + horizontalPadding,
+            StyleConstants.kGetScreenRatio(context)
+                ? StyleConstants.kDefaultPadding * 2.0
+                : StyleConstants.kDefaultPadding,
+            StyleConstants.kDefaultPadding + horizontalPadding,
+            0.0,
+          ),
+      child: widget,
     );
   }
 }

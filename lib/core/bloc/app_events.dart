@@ -2,26 +2,14 @@ abstract class AppBlocEvent {
   const AppBlocEvent([List props = const []]) : super();
 }
 
-class AppUpdateScreenIndex extends AppBlocEvent {
-  final int screenIndex;
-
-  AppUpdateScreenIndex({required this.screenIndex}) : super([screenIndex]);
-}
-
 class AppUpdateWrapperCurtainMode extends AppBlocEvent {
   final bool isTopCurtainEnabled;
   final bool isBottomCurtainEnabled;
-  final bool isCurtainOpacityEnabled;
 
   AppUpdateWrapperCurtainMode({
     required this.isTopCurtainEnabled,
     required this.isBottomCurtainEnabled,
-    required this.isCurtainOpacityEnabled,
-  }) : super([
-          isTopCurtainEnabled,
-          isBottomCurtainEnabled,
-          isCurtainOpacityEnabled,
-        ]);
+  }) : super([isTopCurtainEnabled, isBottomCurtainEnabled]);
 }
 
 class AppUpdateNetworkConnectionMode extends AppBlocEvent {
@@ -29,4 +17,14 @@ class AppUpdateNetworkConnectionMode extends AppBlocEvent {
 
   AppUpdateNetworkConnectionMode({required this.isNetworkEnabled})
       : super([isNetworkEnabled]);
+}
+
+class AppPushScreen extends AppBlocEvent {
+  final int screenIndex;
+
+  AppPushScreen({required this.screenIndex}) : super([screenIndex]);
+}
+
+class AppPopScreen extends AppBlocEvent {
+  AppPopScreen() : super([]);
 }

@@ -11,13 +11,8 @@ import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
 import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
-import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
-import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/init_market.dart';
-import 'package:nfc_mobile_prototype/features/market/screens/market_details_screen.dart';
-import 'package:nfc_mobile_prototype/features/market/screens/market_screen.dart';
-import 'package:nfc_mobile_prototype/features/scanner/screens/scanner_screen.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
 void main() async {
@@ -66,15 +61,6 @@ class ScreenNavigator extends StatefulWidget {
 }
 
 class _ScreenNavigatorState extends State<ScreenNavigator> {
-  final PageStorageBucket _bucket = PageStorageBucket();
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    AboutScreen(),
-    ScannerScreen(),
-    MarketScreen(),
-    MarketDetailsScreen(),
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -85,19 +71,14 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
-        return (prev.currentScreenIndex != current.currentScreenIndex);
+        return (prev.routes.last != current.routes.last);
       },
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           body: DefaultTextStyle(
             style: StyleConstants.kGetDefaultTextStyle(context),
-            child: ScaffoldWrapper(
-              widget: PageStorage(
-                bucket: _bucket,
-                child: _screens[state.currentScreenIndex],
-              ),
-            ),
+            child: const ScaffoldWrapper(),
           ),
         );
       },

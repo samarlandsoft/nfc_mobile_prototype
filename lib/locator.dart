@@ -6,8 +6,9 @@ import 'package:nfc_mobile_prototype/core/services/license_service.dart';
 import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
+import 'package:nfc_mobile_prototype/core/usecases/pop_current_screen.dart';
+import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_network_connection_mode.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
@@ -48,14 +49,19 @@ void _initCore() {
       ));
 
   /// Usecases
-  locator.registerLazySingleton(() => UpdateScreenIndex(
-        bloc: locator<AppBloc>(),
-      ));
   locator.registerLazySingleton(() => UpdateWrapperCurtainMode(
         bloc: locator<AppBloc>(),
       ));
   locator.registerLazySingleton(() => UpdateNetworkConnectionMode(
         bloc: locator<AppBloc>(),
+      ));
+  locator.registerLazySingleton(() => PushNextScreen(
+        bloc: locator<AppBloc>(),
+        updateWrapperCurtainMode: locator<UpdateWrapperCurtainMode>(),
+      ));
+  locator.registerLazySingleton(() => PopCurrentScreen(
+        bloc: locator<AppBloc>(),
+        updateWrapperCurtainMode: locator<UpdateWrapperCurtainMode>(),
       ));
 }
 

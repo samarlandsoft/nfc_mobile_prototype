@@ -9,7 +9,7 @@ import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.da
 import 'package:nfc_mobile_prototype/features/market/widgets/sweater_card_extended.dart';
 
 class MarketDetailsScreen extends StatelessWidget {
-  static const screenIndex = 4;
+  static const screenIndex = 3;
 
   const MarketDetailsScreen({Key? key}) : super(key: key);
 

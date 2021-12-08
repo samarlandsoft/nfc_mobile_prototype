@@ -15,13 +15,16 @@ class UpdateWrapperCurtainMode implements Usecase<void, NoParams> {
     NoParams params, {
     bool isTopCurtainEnabled = false,
     bool isBottomCurtainEnabled = false,
-    bool isCurtainOpacityEnabled = false,
   }) async {
     logDebug('UpdateWrapperCurtainMode usecase -> call($isTopCurtainEnabled, $isBottomCurtainEnabled)');
+    if (bloc.state.isTopCurtainEnabled == isTopCurtainEnabled &&
+        bloc.state.isBottomCurtainEnabled == isBottomCurtainEnabled) {
+      return;
+    }
+
     bloc.add(AppUpdateWrapperCurtainMode(
       isTopCurtainEnabled: isTopCurtainEnabled,
       isBottomCurtainEnabled: isBottomCurtainEnabled,
-      isCurtainOpacityEnabled: isCurtainOpacityEnabled,
     ));
   }
 }

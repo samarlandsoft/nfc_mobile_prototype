@@ -4,7 +4,7 @@ import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/about/widgets/salt_link_icon.dart';
 
 class AboutScreen extends StatelessWidget {
-  static const screenIndex = 1;
+  static const screenIndex = 4;
 
   const AboutScreen({Key? key}) : super(key: key);
 

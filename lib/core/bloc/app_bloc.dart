@@ -8,23 +8,15 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
 
   @override
   Stream<AppBlocState> mapEventToState(AppBlocEvent event) async* {
-    logDebug('AppBlocTemp -> mapEventToState(${event.runtimeType})');
+    logDebug('AppBloc -> mapEventToState(${event.runtimeType})');
 
     switch (event.runtimeType) {
-      case AppUpdateScreenIndex:
-        {
-          var snapshot = event as AppUpdateScreenIndex;
-          yield state.update(currentScreenIndex: snapshot.screenIndex);
-          break;
-        }
-
       case AppUpdateWrapperCurtainMode:
         {
           var snapshot = event as AppUpdateWrapperCurtainMode;
           yield state.update(
             isTopCurtainEnabled: snapshot.isTopCurtainEnabled,
             isBottomCurtainEnabled: snapshot.isBottomCurtainEnabled,
-            isCurtainOpacityEnabled: snapshot.isCurtainOpacityEnabled,
           );
           break;
         }
@@ -33,6 +25,32 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
         {
           var snapshot = event as AppUpdateNetworkConnectionMode;
           yield state.update(isNetworkEnabled: snapshot.isNetworkEnabled);
+          break;
+        }
+
+      case AppPushScreen:
+        {
+          var snapshot = event as AppPushScreen;
+          final List<int> updatedRoutes = [...state.routes];
+
+          if (!updatedRoutes.contains(snapshot.screenIndex)) {
+            updatedRoutes.add(snapshot.screenIndex);
+          }
+
+          yield state.update(routes: updatedRoutes);
+          break;
+        }
+
+      case AppPopScreen:
+        {
+          var snapshot = event as AppPopScreen;
+          final List<int> updatedRoutes = [...state.routes];
+
+          if (updatedRoutes.length != 1) {
+            updatedRoutes.removeLast();
+          }
+
+          yield state.update(routes: updatedRoutes);
           break;
         }
     }

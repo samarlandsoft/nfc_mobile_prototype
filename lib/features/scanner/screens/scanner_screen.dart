@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockchain_nfc_data.dart';
@@ -15,7 +14,7 @@ import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/read_nfc_c
 import 'package:nfc_mobile_prototype/features/scanner/widgets/salt_pulse_animation.dart';
 
 class ScannerScreen extends StatefulWidget {
-  static const screenIndex = 2;
+  static const screenIndex = 1;
 
   const ScannerScreen({Key? key}) : super(key: key);
 
@@ -62,12 +61,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
       final jwt = JWTPayloadModel.fromJson(tokenData.data);
       locator<GetBlockchainNFCData>().call(int.parse(jwt.tokenID));
-      locator<UpdateScreenIndex>().call(MarketDetailsScreen.screenIndex);
-      locator<UpdateWrapperCurtainMode>().call(
-        NoParams(),
-        isTopCurtainEnabled: true,
-        isBottomCurtainEnabled: true,
-      );
+      locator<PushNextScreen>().call(MarketDetailsScreen.screenIndex);
     }
   }
 

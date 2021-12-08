@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
-import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
 
@@ -22,13 +19,8 @@ class ScrollableWrapper extends StatelessWidget {
     this.withVerticalPadding = true,
   }) : super(key: key);
 
-  List<Widget> _buildMultipleChild(
-      BuildContext context, bool isCurtainOpacityEnabled) {
+  List<Widget> _buildMultipleChild(BuildContext context) {
     return [
-      if (isCurtainOpacityEnabled)
-        SizedBox(
-          height: ScaffoldWrapper.getLabelSize(context),
-        ),
       ...widgets,
       SizedBox(
         height: ScaffoldWrapper.getBottomCurtainSize(context) +
@@ -42,21 +34,11 @@ class ScrollableWrapper extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: direction,
       physics: const BouncingScrollPhysics(),
-      child: BlocBuilder<AppBloc, AppBlocState>(
-        buildWhen: (prev, current) {
-          return prev.isCurtainOpacityEnabled !=
-              current.isCurtainOpacityEnabled;
-        },
-        builder: (context, state) {
-          return Flex(
-            direction: direction,
-            mainAxisAlignment: mainAxisAlignment,
-            crossAxisAlignment: crossAxisAlignment,
-            children: withVerticalPadding
-                ? _buildMultipleChild(context, state.isCurtainOpacityEnabled)
-                : widgets,
-          );
-        },
+      child: Flex(
+        direction: direction,
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: crossAxisAlignment,
+        children: withVerticalPadding ? _buildMultipleChild(context) : widgets,
       ),
     );
   }

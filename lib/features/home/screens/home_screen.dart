@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
-import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
+import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
@@ -21,22 +19,11 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   void _onScanTappedHandler() {
-    locator<UpdateScreenIndex>().call(ScannerScreen.screenIndex);
-    locator<UpdateWrapperCurtainMode>().call(
-      NoParams(),
-      isTopCurtainEnabled: true,
-      isBottomCurtainEnabled: true,
-    );
+    locator<PushNextScreen>().call(ScannerScreen.screenIndex);
   }
 
   void _onMarketTappedHandler() {
-    locator<UpdateScreenIndex>().call(MarketScreen.screenIndex);
-    locator<UpdateWrapperCurtainMode>().call(
-      NoParams(),
-      isTopCurtainEnabled: false,
-      isBottomCurtainEnabled: true,
-      isCurtainOpacityEnabled: true,
-    );
+    locator<PushNextScreen>().call(MarketScreen.screenIndex);
   }
 
   @override
