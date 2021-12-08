@@ -22,7 +22,14 @@ class SaltTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final iconSize = StyleConstants.kDefaultButtonSize * 0.8;
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+    final double buttonSize = isLargeScreen
+        ? StyleConstants.kDefaultButtonSize
+        : StyleConstants.kDefaultButtonSize * 0.8;
+    final double iconSize = isLargeScreen
+        ? StyleConstants.kDefaultButtonSize * 0.8
+        : StyleConstants.kDefaultButtonSize * 0.6;
+
     final textSize = TextPainter(
       text: TextSpan(
         text: label,
@@ -44,8 +51,8 @@ class SaltTextButton extends StatelessWidget {
           shape: const ContinuousRectangleBorder(),
           padding: EdgeInsets.symmetric(
             vertical: isLoading
-                ? (StyleConstants.kDefaultButtonSize - iconSize) * 0.5
-                : (StyleConstants.kDefaultButtonSize - textSize.height) * 0.5,
+                ? (buttonSize - iconSize) * 0.5
+                : (buttonSize - textSize.height) * 0.5,
             horizontal: 10.0,
           ),
         ),

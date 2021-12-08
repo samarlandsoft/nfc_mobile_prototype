@@ -10,8 +10,27 @@ class SweaterCounter extends StatelessWidget {
     required this.amount,
   }) : super(key: key);
 
+  static double getCounterSize(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+    final textSize = TextPainter(
+      text: TextSpan(
+        text: 'none',
+        style: TextStyle(
+          fontSize: isLargeScreen ? 18.0 : 16.0,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: mq.size.width);
+
+    return textSize.height + (StyleConstants.kDefaultPadding * 0.4) * 2.0;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
     return Container(
       decoration: const BoxDecoration(
         color: StyleConstants.kSelectedColor,
@@ -24,12 +43,23 @@ class SweaterCounter extends StatelessWidget {
         children: <Widget>[
           Text(
             sold.toString(),
-            style: const TextStyle(
+            style: TextStyle(
+              fontSize: isLargeScreen ? 18.0 : 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const Text(' / '),
-          Text(amount.toString()),
+          Text(
+            ' / ',
+            style: TextStyle(
+              fontSize: isLargeScreen ? 18.0 : 16.0,
+            ),
+          ),
+          Text(
+            amount.toString(),
+            style: TextStyle(
+              fontSize: isLargeScreen ? 18.0 : 16.0,
+            ),
+          ),
         ],
       ),
     );

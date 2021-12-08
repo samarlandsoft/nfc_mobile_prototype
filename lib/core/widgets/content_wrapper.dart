@@ -30,7 +30,9 @@ class ContentWrapper extends StatelessWidget {
                 StyleConstants.kDefaultPadding + horizontalPadding,
                 state.isCurtainOpacityEnabled
                     ? 0.0
-                    : StyleConstants.kDefaultPadding * 3.0,
+                    : StyleConstants.kGetScreenRatio(context)
+                        ? StyleConstants.kDefaultPadding * 2.0
+                        : StyleConstants.kDefaultPadding,
                 StyleConstants.kDefaultPadding + horizontalPadding,
                 0.0,
               ),

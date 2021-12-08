@@ -24,12 +24,15 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
   final _controller = PageController();
   var _activePage = 0;
 
-  List<Widget> _getSweaterPage(double size) {
+  List<Widget> _getSweaterPage(double size, bool isLargeScreen) {
     return [
       SweaterImageWrapper(
         size: size,
         imageSrc: widget.sweater.imageSrc,
         chipSrc: widget.sweater.chipSrc,
+        padding: isLargeScreen
+            ? StyleConstants.kDefaultPadding
+            : StyleConstants.kDefaultPadding * 0.5,
       ),
       _SweaterOwnershipHistory(
         ownership: widget.sweater.ownership,
@@ -50,71 +53,90 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                widget.sweater.edition,
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
+    return Column(
+      children: <Widget>[
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            widget.sweater.edition,
+            style: TextStyle(
+              fontSize: StyleConstants.kGetLargeTextSize(context),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: StyleConstants.kDefaultPadding * 0.5,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: <Widget>[
+              SweaterCounter(
+                sold: widget.sweater.sold!,
+                amount: widget.sweater.amount!,
+              ),
+              SizedBox(
+                width: isLargeScreen
+                    ? StyleConstants.kDefaultPadding * 1.5
+                    : StyleConstants.kDefaultPadding * 1.0,
+              ),
+              Text(
+                widget.sweater.title,
                 style: const TextStyle(
-                  fontSize: 28.0,
+                  fontSize: 14.0,
                 ),
               ),
-            ),
-            const SizedBox(
-              height: StyleConstants.kDefaultPadding * 0.5,
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: <Widget>[
-                  SweaterCounter(
-                    sold: widget.sweater.sold!,
-                    amount: widget.sweater.amount!,
-                  ),
-                  const SizedBox(
-                    width: StyleConstants.kDefaultPadding * 1.5,
-                  ),
-                  Text(
-                    widget.sweater.title,
-                    style: const TextStyle(
-                      fontSize: 14.0,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              height: StyleConstants.kDefaultPadding,
-            ),
-            SizedBox(
-              height: constraints.maxWidth,
-              child: PageView(
+            ],
+          ),
+        ),
+        SizedBox(
+          height: isLargeScreen
+              ? StyleConstants.kDefaultPadding
+              : StyleConstants.kDefaultPadding * 0.5,
+        ),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return PageView(
                 controller: _controller,
                 onPageChanged: _onPageChanged,
-                children: _getSweaterPage(constraints.maxWidth),
-              ),
-            ),
-            const SizedBox(
-              height: StyleConstants.kDefaultPadding,
-            ),
-            SweaterDescription(
+                children:
+                _getSweaterPage(constraints.maxHeight, isLargeScreen),
+              );
+            },
+          ),
+        ),
+        SizedBox(
+          height: isLargeScreen
+              ? StyleConstants.kDefaultPadding
+              : StyleConstants.kDefaultPadding * 0.5,
+        ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return SweaterDescription(
               description: widget.sweater.description,
               price: widget.sweater.price,
               size: constraints.maxWidth,
-            ),
-            const SizedBox(
-              height: StyleConstants.kDefaultPadding * 2.0,
-            ),
-            _SweaterPagePanel(
-              controller: _controller,
-              activePage: _activePage,
-            ),
-          ],
-        );
-      },
+            );
+          },
+        ),
+        SizedBox(
+          height: isLargeScreen
+              ? StyleConstants.kDefaultPadding * 2.0
+              : StyleConstants.kDefaultPadding,
+        ),
+        _SweaterPagePanel(
+          controller: _controller,
+          activePage: _activePage,
+        ),
+        SizedBox(
+          height: isLargeScreen
+              ? StyleConstants.kDefaultPadding
+              : StyleConstants.kDefaultPadding * 0.5,
+        ),
+      ],
     );
   }
 }
@@ -128,6 +150,12 @@ class _SweaterPagePanel extends StatefulWidget {
     required this.controller,
     this.activePage = 0,
   }) : super(key: key);
+
+  static double getPanelSize(BuildContext context) {
+    return StyleConstants.kGetScreenRatio(context)
+        ? StyleConstants.kDefaultButtonSize
+        : StyleConstants.kDefaultButtonSize * 0.75;
+  }
 
   @override
   State<_SweaterPagePanel> createState() => _SweaterPagePanelState();
@@ -186,7 +214,7 @@ class _SweaterPagePanelState extends State<_SweaterPagePanel> {
         return Row(
           children: _buttons().map((button) {
             return SizedBox(
-              height: 60.0,
+              height: _SweaterPagePanel.getPanelSize(context),
               width: constraints.maxWidth / _buttons().length,
               child: button,
             );
@@ -215,28 +243,29 @@ class _SweaterPanelButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
     return GestureDetector(
       onTap: () => callback(index),
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color:
-              isActive ? StyleConstants.kSelectedColor : Colors.transparent,
+          color: isActive ? StyleConstants.kSelectedColor : Colors.transparent,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset(
               iconSrc,
-              height: 30.0,
-              width: 30.0,
+              height: isLargeScreen ? 30.0 : 20.0,
+              width: isLargeScreen ? 30.0 : 20.0,
             ),
             const SizedBox(
               height: StyleConstants.kDefaultPadding * 0.2,
             ),
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 12.0,
+              style: TextStyle(
+                fontSize: isLargeScreen ? 12.0 : 11.0,
               ),
             ),
           ],
@@ -259,20 +288,37 @@ class _SweaterOwnershipHistory extends StatelessWidget {
   static const _initialAddress = '0x0000000000000000000000000000000000000000';
   static const _senderAddress = '0xd362db73b59a824558ffebdfc83073f9e364dbc6';
 
-  Widget _buildHistoryText(NFCSweaterOwnership history) {
+  Widget _buildHistoryText(NFCSweaterOwnership history, bool isLargeScreen) {
     if (history.payer.toString() == _initialAddress) {
-      return const Text('TOKEN CREATED');
+      return Text(
+        'TOKEN CREATED',
+        style: TextStyle(
+          fontSize: isLargeScreen ? 18.0 : 15.0,
+        ),
+      );
     }
 
     if (history.payer.toString() == _senderAddress) {
-      return const Text('NEW OWNER SATOSHI');
+      return Text(
+        'NEW OWNER SATOSHI',
+        style: TextStyle(
+          fontSize: isLargeScreen ? 18.0 : 15.0,
+        ),
+      );
     }
 
-    return const Text('NEW OWNER NONE');
+    return Text(
+      'NEW OWNER NONE',
+      style: TextStyle(
+        fontSize: isLargeScreen ? 18.0 : 15.0,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
     if (ownership.isNotEmpty) {
       ownership.sort((a, b) => a.blockNum.compareTo(b.blockNum));
     }
@@ -282,26 +328,30 @@ class _SweaterOwnershipHistory extends StatelessWidget {
       child: ListView.separated(
         itemCount: ownership.length,
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(
-            bottom: StyleConstants.kDefaultPadding * 2.0),
+        padding: EdgeInsets.only(
+          bottom: isLargeScreen
+              ? StyleConstants.kDefaultPadding * 2.0
+              : StyleConstants.kDefaultPadding,
+        ),
         separatorBuilder: (context, index) {
           return const Divider(
-            height: 8.0,
+            height: 10.0,
             thickness: 1.0,
             color: StyleConstants.kInactiveColor,
           );
         },
         itemBuilder: (context, index) {
           return SizedBox(
-            height: 40.0,
+            height: isLargeScreen ? 40.0 : 28.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                _buildHistoryText(ownership[index]),
+                _buildHistoryText(ownership[index], isLargeScreen),
                 Text(
                   ownership[index].blockNum.toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
+                    fontSize: isLargeScreen ? 18.0 : 15.0,
                     color: StyleConstants.kInactiveColor,
                   ),
                 ),
@@ -329,7 +379,7 @@ class _SweaterQRCode extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      padding: EdgeInsets.all(size * 0.2),
+      padding: EdgeInsets.all(size * 0.1),
       child: Image.asset(qrSrc),
     );
   }

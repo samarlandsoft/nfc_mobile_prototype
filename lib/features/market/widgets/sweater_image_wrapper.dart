@@ -23,7 +23,7 @@ class SweaterImageWrapper extends StatelessWidget {
     if (imageSrc != null && chipSrc != null) {
       return _ImageSlider(
         imagesSrc: [imageSrc!, chipSrc!],
-        size: size - (padding * 2),
+        size: size,
       );
     }
 
@@ -31,6 +31,8 @@ class SweaterImageWrapper extends StatelessWidget {
       return Image.asset(
         imageSrc!,
         fit: BoxFit.cover,
+        height: size,
+        width: size,
       );
     }
 
@@ -39,6 +41,8 @@ class SweaterImageWrapper extends StatelessWidget {
           ? Image.asset(
               chipSrc!,
               fit: BoxFit.cover,
+              height: size,
+              width: size,
             )
           : _NetworkImage(
               imageUrl: chipSrc!,
@@ -51,11 +55,9 @@ class SweaterImageWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: size,
-      width: size,
-      child: Padding(
-        padding: EdgeInsets.all(padding),
+    return Padding(
+      padding: EdgeInsets.all(padding),
+      child: Center(
         child: _buildImageContainer(),
       ),
     );
@@ -96,7 +98,7 @@ class _ImageSliderState extends State<_ImageSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final imageSize = widget.size - StyleConstants.kDefaultPadding;
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -115,19 +117,19 @@ class _ImageSliderState extends State<_ImageSlider> {
                 ? Image.asset(
                     image,
                     fit: BoxFit.cover,
-                    height: imageSize,
-                    width: imageSize,
+                    height: widget.size,
+                    width: widget.size,
                   )
                 : _NetworkImage(
                     imageUrl: image,
-                    size: imageSize,
+                    size: widget.size,
                   );
           }).toList(),
         ),
         Positioned(
           left: 0.0,
           child: _NavigationButton(
-            size: widget.size * 0.15,
+            size: isLargeScreen ? widget.size * 0.16 : widget.size * 0.2,
             isLeft: true,
             callback: _onChangeImageHandler,
           ),
@@ -135,7 +137,7 @@ class _ImageSliderState extends State<_ImageSlider> {
         Positioned(
           right: 0.0,
           child: _NavigationButton(
-            size: widget.size * 0.15,
+            size: isLargeScreen ? widget.size * 0.16 : widget.size * 0.2,
             isLeft: false,
             callback: _onChangeImageHandler,
           ),

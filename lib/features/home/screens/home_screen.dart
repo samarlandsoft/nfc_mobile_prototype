@@ -5,7 +5,6 @@ import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_screen_index.dart';
 import 'package:nfc_mobile_prototype/core/usecases/update_wrapper_curtain_mode.dart';
 import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/core/widgets/salt_animated_loader.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';

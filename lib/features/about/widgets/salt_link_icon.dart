@@ -23,28 +23,33 @@ class SaltLinkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
     return GestureDetector(
       onTap: _onOpenLinkHandler,
       child: Column(
         children: <Widget>[
-          Container(
-            height: width * 1.4,
-            width: width,
-            color: Colors.white,
-            child: Center(
-              child: Image.asset(
-                iconSrc,
-                width: width * 0.75,
+          Expanded(
+            child: Container(
+              width: width,
+              color: Colors.white,
+              child: Center(
+                child: Image.asset(
+                  iconSrc,
+                  width: width * 0.75,
+                ),
               ),
             ),
           ),
-          const SizedBox(
-            height: StyleConstants.kDefaultPadding,
+          SizedBox(
+            height: isLargeScreen
+                ? StyleConstants.kDefaultPadding
+                : StyleConstants.kDefaultPadding * 0.5,
           ),
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 20.0,
+            style: TextStyle(
+              fontSize: isLargeScreen ? 20.0 : 16.0,
             ),
           ),
         ],

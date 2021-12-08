@@ -32,6 +32,8 @@ class SweaterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+
     return GestureDetector(
       onTap: _onDetailsTappedHandler,
       child: DecoratedBox(
@@ -40,23 +42,31 @@ class SweaterCard extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final double imageSize = isLargeScreen
+                ? constraints.maxWidth
+                : constraints.maxWidth - StyleConstants.kDefaultPadding * 3.0;
+
             return Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: StyleConstants.kDefaultPadding),
-                  child: Text(
-                    sweater.edition,
-                    style: const TextStyle(
-                      fontSize: 28.0,
-                    ),
+                const SizedBox(
+                  height: StyleConstants.kDefaultPadding,
+                ),
+                Text(
+                  sweater.edition,
+                  style: TextStyle(
+                    fontSize: StyleConstants.kGetLargeTextSize(context),
                   ),
+                ),
+                SizedBox(
+                  height: isLargeScreen
+                      ? StyleConstants.kDefaultPadding
+                      : StyleConstants.kDefaultPadding * 0.5,
                 ),
                 Stack(
                   alignment: Alignment.center,
                   children: <Widget>[
                     SweaterImageWrapper(
-                      size: constraints.maxWidth,
+                      size: imageSize,
                       imageSrc: sweater.imageSrc,
                     ),
                     Positioned(

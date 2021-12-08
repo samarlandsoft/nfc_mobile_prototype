@@ -115,12 +115,12 @@ class _ScannerScreenState extends State<ScannerScreen> {
         StyleConstants.kDefaultPadding +
         ScaffoldWrapper.getLabelSize(context);
     final scannerTextWidth = SaltPulseAnimation.getLogoSize(context) * 0.65;
-    final bannerHeight = StyleConstants.kDefaultButtonSize * 1.2;
+    const bannerHeight = StyleConstants.kDefaultButtonSize * 1.2;
 
     final scannerTextSize = TextPainter(
-      text: const TextSpan(
+      text: TextSpan(
         text: 'CLOSE TO NFC TAG',
-        style: StyleConstants.kDefaultTextStyle,
+        style: StyleConstants.kGetDefaultTextStyle(context),
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_text/circular_text.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
 
 class SaltCircularText extends StatelessWidget {
   const SaltCircularText({Key? key}) : super(key: key);
@@ -11,6 +12,10 @@ class SaltCircularText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      fontSize: StyleConstants.kGetScreenRatio(context) ? 20.0 : 18.0,
+    );
+
     return CircularText(
       radius: getTextRadius(context),
       children: [
@@ -18,68 +23,68 @@ class SaltCircularText extends StatelessWidget {
           startAngle: -45,
           space: 6.5,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             'TAP TO SCAN',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: 0,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             '+',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: 45,
           space: 6.5,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             'TAP TO SCAN',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: 90,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             '+',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: 135,
           space: 6.5,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             'TAP TO SCAN',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: -90,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             '+',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: -135,
           space: 6.5,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             'TAP TO SCAN',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
         TextItem(
           startAngle: 180,
           startAngleAlignment: StartAngleAlignment.center,
-          text: const Text(
+          text: Text(
             '+',
-            style: TextStyle(fontSize: 20.0),
+            style: textStyle,
           ),
         ),
       ],

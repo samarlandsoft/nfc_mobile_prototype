@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile_prototype/core/constants.dart';
 
 class SaltCombinedButton extends StatelessWidget {
   final String label;
@@ -28,7 +29,10 @@ class SaltCombinedButton extends StatelessWidget {
         style: TextButton.styleFrom(
           backgroundColor: buttonColor,
           shape: const ContinuousRectangleBorder(),
-          padding: const EdgeInsets.all(14.0),
+          padding: EdgeInsets.symmetric(
+            horizontal: 14.0,
+            vertical: StyleConstants.kGetScreenRatio(context) ? 14.0 : 8.0,
+          ),
         ),
         icon: Image.asset(iconSrc),
         label: Text(

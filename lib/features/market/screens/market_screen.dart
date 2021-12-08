@@ -5,7 +5,6 @@ import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/core/widgets/scrollable_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
-import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/widgets/sweater_card.dart';
 
 class MarketScreen extends StatelessWidget {
@@ -28,8 +27,10 @@ class MarketScreen extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: state.sweaters.length,
                   separatorBuilder: (context, index) {
-                    return const SizedBox(
-                      height: StyleConstants.kDefaultPadding * 3.0,
+                    return SizedBox(
+                      height: StyleConstants.kGetScreenRatio(context)
+                          ? StyleConstants.kDefaultPadding * 3.0
+                          : StyleConstants.kDefaultPadding * 1.5,
                     );
                   },
                   itemBuilder: (context, index) {

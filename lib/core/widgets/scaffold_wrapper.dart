@@ -24,17 +24,23 @@ class ScaffoldWrapper extends StatelessWidget {
     required this.widget,
   }) : super(key: key);
 
-  static getLabelSize(BuildContext context) {
+  static double getLabelSize(BuildContext context) {
     final mq = MediaQuery.of(context);
-    return mq.size.width * 0.2;
+    return StyleConstants.kGetScreenRatio(context)
+        ? mq.size.width * 0.2
+        : mq.size.width * 0.14;
   }
 
-  static getVerticalPadding(BuildContext context) {
+  static double getVerticalPadding(BuildContext context) {
     final mq = MediaQuery.of(context);
-    return mq.viewPadding.top + StyleConstants.kDefaultPadding;
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+    return mq.viewPadding.top +
+        (isLargeScreen
+            ? StyleConstants.kDefaultPadding
+            : StyleConstants.kDefaultPadding * 0.25);
   }
 
-  static getBottomCurtainSize(BuildContext context) {
+  static double getBottomCurtainSize(BuildContext context) {
     final mq = MediaQuery.of(context);
     return (mq.size.height - mq.viewPadding.top) * 0.12;
   }
@@ -160,7 +166,11 @@ class ScaffoldWrapper extends StatelessWidget {
               top: state.isCurtainOpacityEnabled
                   ? mq.viewPadding.top
                   : mq.viewPadding.top + getLabelSize(context),
-              bottom: 0.0,
+              bottom: (state.currentScreenIndex == AboutScreen.screenIndex ||
+                      state.currentScreenIndex ==
+                          MarketDetailsScreen.screenIndex)
+                  ? getBottomCurtainSize(context) + 2.0
+                  : 0.0,
               left: 0.0,
               right: 0.0,
               child: widget,
@@ -235,6 +245,7 @@ class _SaltLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
@@ -256,13 +267,14 @@ class _SaltLabel extends StatelessWidget {
                     child: SaltIconButton(
                       iconSrc: 'assets/icons/info.png',
                       callback: callback,
+                      size: isLargeScreen ? 30.0 : 20.0,
                     ),
                   ),
                 ),
               Center(
                 child: Image.asset(
                   'assets/icons/logo.png',
-                  height: height * 0.8,
+                  height: isLargeScreen ? height * 0.8 : height * 0.9,
                 ),
               ),
             ],

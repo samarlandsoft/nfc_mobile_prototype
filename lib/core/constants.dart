@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 
 class StyleConstants {
   static const kDefaultPadding = 10.0;
-  static const TextStyle kDefaultTextStyle = TextStyle(
-    fontSize: 18.0,
-    fontFamily: 'Montserrat',
-  );
   static const kDefaultButtonSize = 60.0;
+
+  static TextStyle kGetDefaultTextStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: kGetScreenRatio(context) ? 18.0 : 14.0,
+      fontFamily: 'Montserrat',
+    );
+  }
+
+  static double kGetLargeTextSize(BuildContext context) {
+    return kGetScreenRatio(context) ? 28.0 : 24.0;
+  }
+
+  static bool kGetScreenRatio(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    const smallScreenSizeRatio = 1.8;
+    return (mq.size.height / mq.size.width) > smallScreenSizeRatio;
+  }
 
   static const kBackgroundColor = Color(0xFF141414);
   static const kHyperLinkColor = Colors.blueAccent;

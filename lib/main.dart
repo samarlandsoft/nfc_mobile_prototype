@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.dark,
-          fontFamily: StyleConstants.kDefaultTextStyle.fontFamily,
+          fontFamily: 'Montserrat',
           scaffoldBackgroundColor: StyleConstants.kBackgroundColor,
         ),
         home: const ScreenNavigator(),
@@ -91,7 +91,7 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           body: DefaultTextStyle(
-            style: StyleConstants.kDefaultTextStyle,
+            style: StyleConstants.kGetDefaultTextStyle(context),
             child: ScaffoldWrapper(
               widget: PageStorage(
                 bucket: _bucket,
