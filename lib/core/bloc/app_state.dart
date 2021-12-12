@@ -6,12 +6,14 @@ class AppBlocState {
   final bool isNetworkEnabled;
 
   final List<int> routes;
+  final int? routeToRemove;
 
   const AppBlocState({
     required this.isTopCurtainEnabled,
     required this.isBottomCurtainEnabled,
     required this.isNetworkEnabled,
     required this.routes,
+    this.routeToRemove,
   });
 
   factory AppBlocState.initial() {
@@ -28,12 +30,14 @@ class AppBlocState {
     bool? isBottomCurtainEnabled,
     bool? isNetworkEnabled,
     List<int>? routes,
+    int? routeToRemove,
   }) {
     return AppBlocState(
       isTopCurtainEnabled: isTopCurtainEnabled ?? this.isTopCurtainEnabled,
       isBottomCurtainEnabled: isBottomCurtainEnabled ?? this.isBottomCurtainEnabled,
       isNetworkEnabled: isNetworkEnabled ?? this.isNetworkEnabled,
       routes: routes ?? this.routes,
+      routeToRemove: routeToRemove,
     );
   }
 }

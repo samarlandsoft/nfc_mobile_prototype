@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 
 /// Wrap [ScrollableWrapper] into Expanded widget
 class ScrollableWrapper extends StatelessWidget {
   final List<Widget> widgets;
   final Axis direction;
+  final ScrollPhysics physics;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
   final bool withVerticalPadding;
@@ -14,6 +15,7 @@ class ScrollableWrapper extends StatelessWidget {
     Key? key,
     required this.widgets,
     this.direction = Axis.vertical,
+    this.physics = const BouncingScrollPhysics(),
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.withVerticalPadding = true,
@@ -23,7 +25,7 @@ class ScrollableWrapper extends StatelessWidget {
     return [
       ...widgets,
       SizedBox(
-        height: ScaffoldWrapper.getBottomCurtainSize(context) +
+        height: NavigationCore.getBottomCurtainSize(context) +
             StyleConstants.kDefaultPadding * 2.0,
       ),
     ];
@@ -33,7 +35,7 @@ class ScrollableWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: direction,
-      physics: const BouncingScrollPhysics(),
+      physics: physics,
       child: Flex(
         direction: direction,
         mainAxisAlignment: mainAxisAlignment,

@@ -53,6 +53,13 @@ class AppBloc extends Bloc<AppBlocEvent, AppBlocState> {
           yield state.update(routes: updatedRoutes);
           break;
         }
+
+      case AppUpdateRouteToRemove:
+        {
+          var snapshot = event as AppUpdateRouteToRemove;
+          yield state.update(routeToRemove: snapshot.screenIndex);
+          break;
+        }
     }
   }
 }

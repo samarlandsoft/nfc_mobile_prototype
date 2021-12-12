@@ -28,3 +28,9 @@ class AppPushScreen extends AppBlocEvent {
 class AppPopScreen extends AppBlocEvent {
   AppPopScreen() : super([]);
 }
+
+class AppUpdateRouteToRemove extends AppBlocEvent {
+  final int? screenIndex;
+
+  AppUpdateRouteToRemove({required this.screenIndex}) : super([screenIndex]);
+}

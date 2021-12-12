@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
-import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
-import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/wrappers/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/buttons/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
@@ -30,10 +29,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final screenCenter = (mq.size.height - mq.viewPadding.top) * 0.5;
-
-    final wrapperVerticalPadding = mq.viewPadding.top +
-        StyleConstants.kDefaultPadding +
-        ScaffoldWrapper.getLabelSize(context);
     final gestureSize = mq.size.width * 0.75;
 
     return BlocBuilder<MarketBloc, MarketBlocState>(
@@ -46,25 +41,19 @@ class HomeScreen extends StatelessWidget {
             alignment: Alignment.center,
             children: <Widget>[
               Positioned(
-                top: screenCenter -
-                    wrapperVerticalPadding -
-                    SaltLogo.getLogoSize(context) * 0.5,
+                bottom: screenCenter - SaltLogo.getLogoSize(context) * 0.5,
                 child: const SaltLogo(),
               ),
               Positioned(
-                top: screenCenter -
-                    wrapperVerticalPadding -
-                    SaltCircularText.getTextRadius(context),
+                bottom: screenCenter - SaltCircularText.getTextRadius(context),
                 child: const SaltCircularText(),
               ),
               Positioned(
-                top: screenCenter -
-                    wrapperVerticalPadding -
-                    SaltCircularText.getTextRadius(context),
+                bottom: screenCenter - SaltCircularText.getTextRadius(context),
                 child: const SaltCircularText(),
               ),
               Positioned(
-                top: screenCenter - wrapperVerticalPadding - gestureSize * 0.5,
+                bottom: screenCenter - gestureSize * 0.5,
                 child: SizedBox(
                   height: gestureSize,
                   width: gestureSize,

@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
-import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
-import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/animations/animation_fade_transition.dart';
+import 'package:nfc_mobile_prototype/core/widgets/animations/animation_position_transition.dart';
+import 'package:nfc_mobile_prototype/core/widgets/animations/animation_scale_transition.dart';
+import 'package:nfc_mobile_prototype/core/widgets/wrappers/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockchain_nfc_data.dart';
 import 'package:nfc_mobile_prototype/features/scanner/widgets/nfc_response_banner.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
@@ -24,7 +29,6 @@ class ScannerScreen extends StatefulWidget {
 
 class _ScannerScreenState extends State<ScannerScreen> {
   bool _isInit = false;
-  bool _isNFCAvailable = false;
   bool _isScannerBannerActive = false;
   bool _isNFCError = false;
 
@@ -35,7 +39,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
       locator<NFCService>().checkNFCAvailable().then((isAvailable) {
         setState(() {
           _isInit = true;
-          _isNFCAvailable = isAvailable;
         });
 
         if (isAvailable) {
@@ -104,13 +107,70 @@ class _ScannerScreenState extends State<ScannerScreen> {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final screenCenter = (mq.size.height - mq.viewPadding.top) * 0.5;
-
-    final wrapperVerticalPadding = mq.viewPadding.top +
-        StyleConstants.kDefaultPadding +
-        ScaffoldWrapper.getLabelSize(context);
-    final scannerTextWidth = SaltPulseAnimation.getLogoSize(context) * 0.65;
     const bannerHeight = StyleConstants.kDefaultButtonSize * 1.2;
 
+    return BlocBuilder<AppBloc, AppBlocState>(
+      buildWhen: (prev, current) {
+        return prev.isTopCurtainEnabled != current.isTopCurtainEnabled;
+      },
+      builder: (context, state) {
+        return AnimationFadeTransition(
+          opacity: 1.0,
+          isActive: state.isTopCurtainEnabled,
+          child: AnimationScaleTransition(
+            scale: 1.0,
+            isActive: state.isTopCurtainEnabled,
+            child: ContentWrapper(
+              widget: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Positioned(
+                        top: screenCenter -
+                            SaltPulseAnimation.getLogoSize(context) * 0.5,
+                        child: const SaltPulseAnimation(),
+                      ),
+                      _ScannerPulseLabel(
+                        isInit: _isInit && state.isTopCurtainEnabled,
+                        center: screenCenter,
+                      ),
+                      if (_isScannerBannerActive)
+                        Positioned(
+                          top: screenCenter - (bannerHeight * 0.5),
+                          child: NFCResponseBanner(
+                            height: bannerHeight,
+                            width: constraints.maxWidth,
+                            isError: _isNFCError,
+                            callback: _onCloseBannerHandler,
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ScannerPulseLabel extends StatelessWidget {
+  final bool isInit;
+  final double center;
+
+  const _ScannerPulseLabel({
+    Key? key,
+    required this.isInit,
+    required this.center,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final scannerTextWidth = SaltPulseAnimation.getLogoSize(context) * 0.65;
     final scannerTextSize = TextPainter(
       text: TextSpan(
         text: 'CLOSE TO NFC TAG',
@@ -120,88 +180,28 @@ class _ScannerScreenState extends State<ScannerScreen> {
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: mq.size.width);
 
-    return ContentWrapper(
-      widget: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              Positioned(
-                top: screenCenter -
-                    wrapperVerticalPadding -
-                    SaltPulseAnimation.getLogoSize(context) * 0.5,
-                child: const SaltPulseAnimation(),
-              ),
-              Positioned(
-                top: screenCenter -
-                    wrapperVerticalPadding -
-                    scannerTextSize.height,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      width: scannerTextWidth,
-                      child: const Text(
-                        'PULL YOUR PHONE',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    SizedBox(
-                      width: scannerTextWidth,
-                      child: const Text(
-                        'CLOSE TO NFC TAG',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: ScaffoldWrapper.getBottomCurtainSize(context) +
-                    StyleConstants.kDefaultPadding * 1.5,
-                right: 0.0,
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30.0,
-                      width: 30.0,
-                      child: Image.asset(
-                        'assets/icons/nfc.png',
-                        fit: BoxFit.fill,
-                        color: _isNFCAvailable
-                            ? StyleConstants.kHyperLinkColor
-                            : StyleConstants.kInactiveColor,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: StyleConstants.kDefaultPadding * 0.4,
-                    ),
-                    Text(
-                      _isNFCAvailable ? 'NFC ONSITE' : 'NFC UNABLE',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: _isNFCAvailable
-                            ? StyleConstants.kHyperLinkColor
-                            : StyleConstants.kInactiveColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (_isScannerBannerActive)
-                Positioned(
-                  top: screenCenter -
-                      wrapperVerticalPadding -
-                      (bannerHeight * 0.5),
-                  child: NFCResponseBanner(
-                    height: bannerHeight,
-                    width: constraints.maxWidth,
-                    isError: _isNFCError,
-                    callback: _onCloseBannerHandler,
-                  ),
-                ),
-            ],
-          );
-        },
+    return AnimationPositionTransition(
+      key: const ValueKey('_ScannerPulseLabel'),
+      upperBoundValue: isInit
+          ? center - scannerTextSize.height
+          : center - SaltPulseAnimation.getLogoSize(context) * 0.3,
+      child: Column(
+        children: <Widget>[
+          SizedBox(
+            width: scannerTextWidth,
+            child: const Text(
+              'PULL YOUR PHONE',
+              textAlign: TextAlign.center,
+            ),
+          ),
+          SizedBox(
+            width: scannerTextWidth,
+            child: const Text(
+              'CLOSE TO NFC TAG',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       ),
     );
   }

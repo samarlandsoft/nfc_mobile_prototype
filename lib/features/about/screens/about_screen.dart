@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/widgets/content_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/wrappers/content_wrapper.dart';
 import 'package:nfc_mobile_prototype/features/about/widgets/salt_link_icon.dart';
 
 class AboutScreen extends StatelessWidget {
@@ -53,13 +53,13 @@ class AboutScreen extends StatelessWidget {
                       label: 'DISCORD',
                       iconSrc: 'assets/images/discord.png',
                       url: 'https://discord.com/invite/Zj7PnT5EEw',
-                      width: constraints.maxWidth * 0.47,
+                      width: constraints.maxWidth * 0.46,
                     ),
                     SaltLinkIcon(
                       label: 'SNAPSHOT',
                       iconSrc: 'assets/images/storm.png',
                       url: 'https://snapshot.org/#/saltdao.eth',
-                      width: constraints.maxWidth * 0.47,
+                      width: constraints.maxWidth * 0.46,
                     ),
                   ],
                 );
@@ -68,8 +68,8 @@ class AboutScreen extends StatelessWidget {
           ),
           SizedBox(
             height: isLargeScreen
-                ? StyleConstants.kDefaultPadding
-                : StyleConstants.kDefaultPadding * 0.5,
+                ? StyleConstants.kDefaultPadding * 2.0
+                : StyleConstants.kDefaultPadding,
           ),
         ],
       ),

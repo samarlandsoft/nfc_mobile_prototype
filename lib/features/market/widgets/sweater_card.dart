@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
-import 'package:nfc_mobile_prototype/core/widgets/salt_text_button.dart';
+import 'package:nfc_mobile_prototype/core/widgets/buttons/salt_text_button.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_active_sweater.dart';

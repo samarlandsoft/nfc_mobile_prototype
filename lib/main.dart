@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +8,7 @@ import 'package:nfc_mobile_prototype/core/models/usecase.dart';
 import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
 import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
-import 'package:nfc_mobile_prototype/core/widgets/scaffold_wrapper.dart';
+import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/init_market.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
@@ -78,7 +76,7 @@ class _ScreenNavigatorState extends State<ScreenNavigator> {
           resizeToAvoidBottomInset: false,
           body: DefaultTextStyle(
             style: StyleConstants.kGetDefaultTextStyle(context),
-            child: const ScaffoldWrapper(),
+            child: const NavigationCore(),
           ),
         );
       },

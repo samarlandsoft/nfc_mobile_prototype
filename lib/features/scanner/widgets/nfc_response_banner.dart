@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
-import 'package:nfc_mobile_prototype/core/widgets/salt_icon_button.dart';
+import 'package:nfc_mobile_prototype/core/widgets/buttons/salt_icon_button.dart';
 
 class NFCResponseBanner extends StatelessWidget {
   final double height, width;
