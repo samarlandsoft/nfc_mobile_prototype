@@ -45,12 +45,8 @@ class HomeScreen extends StatelessWidget {
                 child: const SaltLogo(),
               ),
               Positioned(
-                bottom: screenCenter - SaltCircularText.getTextRadius(context),
-                child: const SaltCircularText(),
-              ),
-              Positioned(
-                bottom: screenCenter - SaltCircularText.getTextRadius(context),
-                child: const SaltCircularText(),
+                bottom: screenCenter - SaltAnimatedCircularText.getTextRadius(context),
+                child: const SaltAnimatedCircularText(),
               ),
               Positioned(
                 bottom: screenCenter - gestureSize * 0.5,

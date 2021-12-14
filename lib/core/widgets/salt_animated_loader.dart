@@ -15,7 +15,7 @@ class SaltAnimatedLoader extends StatefulWidget {
 
 class _SaltAnimatedLoaderState extends State<SaltAnimatedLoader>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late final AnimationController _controller;
 
   @override
   void initState() {

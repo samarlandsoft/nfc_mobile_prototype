@@ -55,6 +55,9 @@ class MarketScreen extends StatelessWidget {
               },
             ),
           ),
+          const SizedBox(
+            height: StyleConstants.kDefaultPadding * 5.0,
+          ),
         ],
       ),
     );

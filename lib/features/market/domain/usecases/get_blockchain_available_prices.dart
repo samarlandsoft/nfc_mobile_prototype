@@ -16,8 +16,8 @@ class GetBlockchainAvailablePrices implements Usecase<BlockchainNFCResponse?, Cr
   });
 
   @override
-  Future<BlockchainNFCResponse?> call(CryptoCurrency currency) async {
-    logDebug('GetBlockchainPrices usecase -> call($currency)');
+  Future<BlockchainNFCResponse?> call(CryptoCurrency currency, {bool isMarketInit = false}) async {
+    logDebug('GetBlockchainPrices usecase -> call($currency, $isMarketInit)');
     if (!await networkService.checkNetworkConnection()) {
       return null;
     }
@@ -25,18 +25,19 @@ class GetBlockchainAvailablePrices implements Usecase<BlockchainNFCResponse?, Cr
     final currentPrice = await blockchainService.getCurrentPrice(currency);
     final amountSoldSweaters =
         blockchainService.getAmountSoldSweaters(currentPrice);
-    final tokenID = amountSoldSweaters;
+    final tokenID = isMarketInit ? amountSoldSweaters + 1 : amountSoldSweaters;
     final chipSrc = currency == CryptoCurrency.btc
         ? BlockchainMockDatabase.btcIDSweaterURLs[tokenID]
         : BlockchainMockDatabase.ethIDSweaterURLs[tokenID];
+    final bool isEnableToBuy = tokenID < 20;
 
     return BlockchainNFCResponse(
-      tokenID: tokenID,
+      tokenID: isEnableToBuy ? tokenID : null,
       currency: currency,
-      chipSrc: chipSrc!,
-      price: double.parse(currentPrice.toStringAsFixed(2)),
+      chipSrc: chipSrc,
+      price: isEnableToBuy ? double.parse(currentPrice.toStringAsFixed(2)) : null,
       amount: 20,
-      sold: amountSoldSweaters,
+      sold: isMarketInit ? tokenID : amountSoldSweaters,
     );
   }
 }

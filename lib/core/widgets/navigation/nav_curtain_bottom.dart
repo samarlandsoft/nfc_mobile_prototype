@@ -9,6 +9,7 @@ import 'package:nfc_mobile_prototype/core/widgets/animations/animation_position_
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_scale_transition.dart';
 import 'package:nfc_mobile_prototype/core/widgets/buttons/salt_combined_button.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
+import 'package:nfc_mobile_prototype/features/home/screens/home_screen.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_active_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/screens/market_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/market/screens/market_screen.dart';
@@ -56,7 +57,7 @@ class NavCurtainBottom extends StatelessWidget {
   }
 }
 
-class _BottomNavigationButton extends StatelessWidget {
+class _BottomNavigationButton extends StatefulWidget {
   final Curve curve;
   final double upperBoundValue;
   final double lowerBoundValue;
@@ -68,6 +69,14 @@ class _BottomNavigationButton extends StatelessWidget {
     required this.lowerBoundValue,
   }) : super(key: key);
 
+  @override
+  State<_BottomNavigationButton> createState() =>
+      _BottomNavigationButtonState();
+}
+
+class _BottomNavigationButtonState extends State<_BottomNavigationButton> {
+  int _prevuisScreen = 0;
+
   void _onPopTappedHandler({bool fromMarketDetails = false}) {
     locator<PopCurrentScreen>().call(NoParams());
     if (fromMarketDetails) {
@@ -75,11 +84,17 @@ class _BottomNavigationButton extends StatelessWidget {
     }
   }
 
-  Widget _getBottomButtonText(int screen, double width) {
-    switch (screen) {
+  Widget _getBottomButtonText(int screen, double width,
+      {bool withUpdate = true}) {
+    if (withUpdate) {
+      _prevuisScreen = screen;
+    }
+
+    switch (_prevuisScreen) {
       case ScannerScreen.screenIndex:
         {
           return SaltCombinedButton(
+            key: const ValueKey('_getBottomButtonText_ScannerScreen'),
             label: 'STOP',
             iconSrc: 'assets/icons/close.png',
             callback: _onPopTappedHandler,
@@ -90,6 +105,7 @@ class _BottomNavigationButton extends StatelessWidget {
       case MarketScreen.screenIndex:
         {
           return SaltCombinedButton(
+            key: const ValueKey('_getBottomButtonText_MarketScreen'),
             label: 'BACK',
             iconSrc: 'assets/icons/back.png',
             callback: _onPopTappedHandler,
@@ -100,6 +116,7 @@ class _BottomNavigationButton extends StatelessWidget {
       case MarketDetailsScreen.screenIndex:
         {
           return SaltCombinedButton(
+            key: const ValueKey('_getBottomButtonText_MarketDetailsScreen'),
             label: 'CLOSE',
             iconSrc: 'assets/icons/close.png',
             callback: () => _onPopTappedHandler(fromMarketDetails: true),
@@ -110,6 +127,7 @@ class _BottomNavigationButton extends StatelessWidget {
       case AboutScreen.screenIndex:
         {
           return SaltCombinedButton(
+            key: const ValueKey('_getBottomButtonText_AboutScreen'),
             label: 'CLOSE',
             iconSrc: 'assets/icons/close.png',
             callback: _onPopTappedHandler,
@@ -120,6 +138,7 @@ class _BottomNavigationButton extends StatelessWidget {
       default:
         {
           return SaltCombinedButton(
+            key: const ValueKey('_getBottomButtonText_Default'),
             label: 'BACK',
             iconSrc: 'assets/icons/back.png',
             callback: _onPopTappedHandler,
@@ -136,17 +155,33 @@ class _BottomNavigationButton extends StatelessWidget {
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
         return prev.isBottomCurtainEnabled != current.isBottomCurtainEnabled ||
-            prev.routes.last != current.routes.last;
+            prev.routes.last != current.routes.last ||
+            prev.routeToRemove != current.routeToRemove;
       },
       builder: (context, state) {
+        final int previousScreen = state.routes.length != 1
+            ? state.routes[state.routes.indexOf(state.routes.last) - 1]
+            : state.routes.last;
+        final int screenToShow =
+            state.routeToRemove == null ? state.routes.last : previousScreen;
+
         return AnimationScaleTransition(
-          curve: curve,
+          curve: widget.curve,
           scale: 1.0,
           isActive: state.isBottomCurtainEnabled,
           child: Center(
-            child: _getBottomButtonText(
-              state.routes.last,
-              mq.size.width * 0.6,
+            child: AnimatedSwitcher(
+              duration: Duration(
+                  milliseconds:
+                      (StyleConstants.kDefaultTransitionDuration * 0.5)
+                          .toInt()),
+              switchOutCurve: Curves.ease,
+              switchInCurve: Curves.ease,
+              child: _getBottomButtonText(
+                screenToShow,
+                mq.size.width * 0.6,
+                withUpdate: screenToShow != HomeScreen.screenIndex,
+              ),
             ),
           ),
         );

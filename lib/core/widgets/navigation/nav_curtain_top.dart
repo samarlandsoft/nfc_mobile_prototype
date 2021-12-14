@@ -36,7 +36,7 @@ class NavCurtainTop extends StatelessWidget {
       upperBoundValue: topBound,
       lowerBoundValue: bottomBound,
       child: AnimationFadeTransition(
-        curve: curve,
+        curve: StyleConstants.kEaseInOutCubicCustom,
         opacity: 1.0,
         isActive: state.isTopCurtainEnabled,
         child: const AboutScreen(),

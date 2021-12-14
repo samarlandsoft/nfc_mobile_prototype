@@ -6,6 +6,7 @@ class StyleConstants {
   static const kDefaultTransitionDuration = 1200;
 
   static const Cubic kEaseInOutBackCustom = Cubic(0.68, -0.4, 0.265, 1.4);
+  static const Cubic kEaseInOutCubicCustom = Curves.easeInOutCubic;
 
   static TextStyle kGetDefaultTextStyle(BuildContext context) {
     return TextStyle(

@@ -43,7 +43,7 @@ class InitMarket implements Usecase<void, NoParams> {
 
     for (var currency in CryptoCurrency.values
         .where((currency) => currency != CryptoCurrency.none)) {
-      final data = await getBlockchainPrices.call(currency);
+      final data = await getBlockchainPrices.call(currency, isMarketInit: true);
       final ownershipHistory = await getBlockchainOwnership.call(currency);
 
       if (data == null && ownershipHistory == null) {

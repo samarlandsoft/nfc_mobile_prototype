@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
@@ -57,12 +59,7 @@ class NavigationCore extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: <Widget>[
-        Positioned.fill(
-          child: Image.asset(
-            'assets/images/background.png',
-            fit: BoxFit.cover,
-          ),
-        ),
+        const _NavAnimatedBackground(),
         const _NavHomeScreen(),
         const _NavMarketScreen(),
         NavCurtainTop(
@@ -80,6 +77,54 @@ class NavigationCore extends StatelessWidget {
           lowerBoundValue: mq.size.height,
         ),
       ],
+    );
+  }
+}
+
+class _NavAnimatedBackground extends StatefulWidget {
+  const _NavAnimatedBackground({Key? key}) : super(key: key);
+
+  @override
+  _NavAnimatedBackgroundState createState() => _NavAnimatedBackgroundState();
+}
+
+class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    );
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+
+    return Positioned(
+      top: -(mq.size.height * 0.1),
+      bottom: -(mq.size.height * 0.1),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          return Transform.rotate(
+            angle: _controller.value * math.pi * 0.3,
+            child: AnimatedScale(
+              duration: const Duration(seconds: 10),
+              scale: 1.0 + (_controller.value * 0.5),
+              child: Image.asset(
+                'assets/images/background.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          );
+        },
+      )
     );
   }
 }
@@ -113,7 +158,7 @@ class _NavHomeScreen extends StatelessWidget {
           lowerBoundValue: 0.0,
           height: contentHeight,
           child: AnimationFadeTransition(
-            curve: Curves.easeInOutCubic,
+            curve: StyleConstants.kEaseInOutCubicCustom,
             opacity: 1.0,
             isActive: state.routes.last == HomeScreen.screenIndex ||
                 state.routeToRemove == ScannerScreen.screenIndex,
@@ -155,7 +200,7 @@ class _NavMarketScreen extends StatelessWidget {
                     state.routes.last == MarketDetailsScreen.screenIndex ||
                     state.routes.last == AboutScreen.screenIndex ||
                     state.routeToRemove == MarketDetailsScreen.screenIndex
-                ? 0.0
+                ? -(StyleConstants.kDefaultPadding * 5.0)
                 : -mq.size.height;
 
         return AnimationPositionTransition(

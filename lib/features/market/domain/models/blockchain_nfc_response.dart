@@ -1,10 +1,10 @@
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
 
 class BlockchainNFCResponse {
-  final int tokenID;
+  final int? tokenID;
   final CryptoCurrency currency;
-  final String chipSrc;
-  final double price;
+  final String? chipSrc;
+  final double? price;
   final int amount, sold;
 
   const BlockchainNFCResponse({

@@ -66,14 +66,13 @@ class SweaterDescription extends StatelessWidget {
               ),
             ),
           ),
-          if (price != null)
-            Text(
-              'Ξ ${price.toString()}',
-              style: TextStyle(
-                fontSize: isLargeScreen ? 30.0 : 26.0,
-                fontWeight: FontWeight.w600,
-              ),
+          Text(
+            'Ξ ${price ?? 'N/A'}',
+            style: TextStyle(
+              fontSize: isLargeScreen ? 30.0 : 26.0,
+              fontWeight: FontWeight.w600,
             ),
+          ),
         ],
       ),
     );

@@ -41,25 +41,35 @@ class SweaterCounter extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Text(
-            sold.toString(),
-            style: TextStyle(
-              fontSize: isLargeScreen ? 18.0 : 16.0,
-              fontWeight: FontWeight.bold,
+          if (sold < amount) ...[
+            Text(
+              sold.toString(),
+              style: TextStyle(
+                fontSize: isLargeScreen ? 18.0 : 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          Text(
-            ' / ',
-            style: TextStyle(
-              fontSize: isLargeScreen ? 18.0 : 16.0,
+            Text(
+              ' / ',
+              style: TextStyle(
+                fontSize: isLargeScreen ? 18.0 : 16.0,
+              ),
             ),
-          ),
-          Text(
-            amount.toString(),
-            style: TextStyle(
-              fontSize: isLargeScreen ? 18.0 : 16.0,
+            Text(
+              amount.toString(),
+              style: TextStyle(
+                fontSize: isLargeScreen ? 18.0 : 16.0,
+              ),
             ),
-          ),
+          ],
+          if (sold >= amount)
+            Text(
+              'OUT',
+              style: TextStyle(
+                fontSize: isLargeScreen ? 18.0 : 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
         ],
       ),
     );

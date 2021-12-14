@@ -54,6 +54,7 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
   @override
   Widget build(BuildContext context) {
     final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+    final bool isEnableToBuy = widget.sweater.sold! < widget.sweater.amount!;
 
     return Column(
       children: <Widget>[
@@ -101,9 +102,9 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
             builder: (context, constraints) {
               return PageView(
                 controller: _controller,
+                physics: isEnableToBuy ? null : const NeverScrollableScrollPhysics(),
                 onPageChanged: _onPageChanged,
-                children:
-                _getSweaterPage(constraints.maxHeight, isLargeScreen),
+                children: _getSweaterPage(constraints.maxHeight, isLargeScreen),
               );
             },
           ),
@@ -130,6 +131,7 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
         _SweaterPagePanel(
           controller: _controller,
           activePage: _activePage,
+          isEnableToBuy: isEnableToBuy,
         ),
         SizedBox(
           height: isLargeScreen
@@ -144,11 +146,13 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
 class _SweaterPagePanel extends StatefulWidget {
   final PageController controller;
   final int activePage;
+  final bool isEnableToBuy;
 
   const _SweaterPagePanel({
     Key? key,
     required this.controller,
     this.activePage = 0,
+    this.isEnableToBuy = true,
   }) : super(key: key);
 
   static double getPanelSize(BuildContext context) {
@@ -213,10 +217,19 @@ class _SweaterPagePanelState extends State<_SweaterPagePanel> {
       builder: (context, constraints) {
         return Row(
           children: _buttons().map((button) {
+            final bool isDisabled = !widget.isEnableToBuy &&
+                (button.index == 1 || button.index == 2);
+
             return SizedBox(
               height: _SweaterPagePanel.getPanelSize(context),
               width: constraints.maxWidth / _buttons().length,
-              child: button,
+              child: AbsorbPointer(
+                absorbing: isDisabled,
+                child: Opacity(
+                  opacity: isDisabled ? 0.5 : 1.0,
+                  child: button,
+                ),
+              ),
             );
           }).toList(),
         );
@@ -288,6 +301,11 @@ class _SweaterOwnershipHistory extends StatelessWidget {
   static const _initialAddress = '0x0000000000000000000000000000000000000000';
   static const _senderAddress = '0xd362db73b59a824558ffebdfc83073f9e364dbc6';
 
+  void _onEtherscanOpenHandler(String address) {
+    final url = 'https://etherscan.io/address/$address';
+    locator<WebViewService>().openInWebView(url);
+  }
+
   Widget _buildHistoryText(NFCSweaterOwnership history, bool isLargeScreen) {
     if (history.payer.toString() == _initialAddress) {
       return Text(
@@ -299,19 +317,47 @@ class _SweaterOwnershipHistory extends StatelessWidget {
     }
 
     if (history.payer.toString() == _senderAddress) {
-      return Text(
-        'NEW OWNER SATOSHI',
-        style: TextStyle(
-          fontSize: isLargeScreen ? 18.0 : 15.0,
-        ),
+      return Row(
+        children: <Widget>[
+          Text(
+            'NEW OWNER ',
+            style: TextStyle(
+              fontSize: isLargeScreen ? 18.0 : 15.0,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _onEtherscanOpenHandler(history.payer.toString()),
+            child: Text(
+              'SATOSHI',
+              style: TextStyle(
+                color: Colors.blueAccent,
+                fontSize: isLargeScreen ? 18.0 : 15.0,
+              ),
+            ),
+          ),
+        ],
       );
     }
 
-    return Text(
-      'NEW OWNER NONE',
-      style: TextStyle(
-        fontSize: isLargeScreen ? 18.0 : 15.0,
-      ),
+    return Row(
+      children: <Widget>[
+        Text(
+          'NEW OWNER ',
+          style: TextStyle(
+            fontSize: isLargeScreen ? 18.0 : 15.0,
+          ),
+        ),
+        GestureDetector(
+          onTap: () => _onEtherscanOpenHandler(history.payer.toString()),
+          child: Text(
+            history.payer.toString().substring(0, 6),
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: isLargeScreen ? 18.0 : 15.0,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
