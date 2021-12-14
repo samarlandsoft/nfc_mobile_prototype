@@ -124,7 +124,7 @@ class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
             ),
           );
         },
-      )
+      ),
     );
   }
 }
@@ -148,7 +148,7 @@ class _NavHomeScreen extends StatelessWidget {
         final double contentHeight =
             state.routes.last == HomeScreen.screenIndex ||
                     state.routes.last == MarketScreen.screenIndex ||
-                    state.routeToRemove != null
+                    state.routeToRemove == ScannerScreen.screenIndex
                 ? NavigationCore.getContentSize(context)
                 : 0.0;
 

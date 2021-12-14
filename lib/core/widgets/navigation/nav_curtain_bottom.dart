@@ -75,22 +75,29 @@ class _BottomNavigationButton extends StatefulWidget {
 }
 
 class _BottomNavigationButtonState extends State<_BottomNavigationButton> {
-  int _prevuisScreen = 0;
+  int _previousScreen = 0;
 
-  void _onPopTappedHandler({bool fromMarketDetails = false}) {
+  void _onPopTappedHandler({
+    bool fromMarketDetails = false,
+    bool fromScannerScreen = false,
+  }) {
     locator<PopCurrentScreen>().call(NoParams());
     if (fromMarketDetails) {
       locator<UpdateMarketActiveSweater>().call(null);
     }
   }
 
-  Widget _getBottomButtonText(int screen, double width,
-      {bool withUpdate = true}) {
+  Widget _getBottomButtonText(
+    int screen,
+    double width, {
+    bool withUpdate = true,
+    bool fromScannerScreen = false,
+  }) {
     if (withUpdate) {
-      _prevuisScreen = screen;
+      _previousScreen = screen;
     }
 
-    switch (_prevuisScreen) {
+    switch (_previousScreen) {
       case ScannerScreen.screenIndex:
         {
           return SaltCombinedButton(
@@ -119,7 +126,10 @@ class _BottomNavigationButtonState extends State<_BottomNavigationButton> {
             key: const ValueKey('_getBottomButtonText_MarketDetailsScreen'),
             label: 'CLOSE',
             iconSrc: 'assets/icons/close.png',
-            callback: () => _onPopTappedHandler(fromMarketDetails: true),
+            callback: () => _onPopTappedHandler(
+              fromMarketDetails: true,
+              fromScannerScreen: fromScannerScreen,
+            ),
             width: width,
           );
         }

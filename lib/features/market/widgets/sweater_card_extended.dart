@@ -330,7 +330,7 @@ class _SweaterOwnershipHistory extends StatelessWidget {
             child: Text(
               'SATOSHI',
               style: TextStyle(
-                color: Colors.blueAccent,
+                color: StyleConstants.kHyperLinkColor,
                 fontSize: isLargeScreen ? 18.0 : 15.0,
               ),
             ),
@@ -352,7 +352,7 @@ class _SweaterOwnershipHistory extends StatelessWidget {
           child: Text(
             history.payer.toString().substring(0, 6),
             style: TextStyle(
-              color: Colors.blueAccent,
+              color: StyleConstants.kHyperLinkColor,
               fontSize: isLargeScreen ? 18.0 : 15.0,
             ),
           ),

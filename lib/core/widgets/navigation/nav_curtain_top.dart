@@ -10,7 +10,7 @@ import 'package:nfc_mobile_prototype/features/market/screens/market_details_scre
 import 'package:nfc_mobile_prototype/features/market/screens/market_screen.dart';
 import 'package:nfc_mobile_prototype/features/scanner/screens/scanner_screen.dart';
 
-class NavCurtainTop extends StatelessWidget {
+class NavCurtainTop extends StatefulWidget {
   final Curve curve;
   final double lowerBoundValue;
   final double upperBoundValue;
@@ -22,17 +22,29 @@ class NavCurtainTop extends StatelessWidget {
     required this.upperBoundValue,
   }) : super(key: key);
 
+  static double getCurtainOverflowSize(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    return mq.size.height * 0.05;
+  }
+
+  @override
+  State<NavCurtainTop> createState() => _NavCurtainTopState();
+}
+
+class _NavCurtainTopState extends State<NavCurtainTop> {
   Widget _buildAboutBranch(AppBlocState state, double size) {
     final double topBound = state.isTopCurtainEnabled
-        ? (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0)
+        ? (widget.lowerBoundValue +
+            NavCurtainTop.getCurtainOverflowSize(context))
         : -size;
     final double bottomBound = state.isTopCurtainEnabled
         ? 0.0
-        : (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0);
+        : (widget.lowerBoundValue +
+            NavCurtainTop.getCurtainOverflowSize(context));
 
     return AnimationPositionTransition(
       key: const ValueKey('_NavCurtainTop_buildAboutBranch'),
-      curve: curve,
+      curve: widget.curve,
       upperBoundValue: topBound,
       lowerBoundValue: bottomBound,
       child: AnimationFadeTransition(
@@ -45,45 +57,62 @@ class NavCurtainTop extends StatelessWidget {
   }
 
   Widget _buildScannerBranch(AppBlocState state, double size) {
-    final double topPadding =
-        (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0);
+    Widget _switchCurrentScreen(int screen) {
+      final double topPadding = (widget.lowerBoundValue +
+          NavCurtainTop.getCurtainOverflowSize(context));
+
+      if (screen == ScannerScreen.screenIndex) {
+        return const ScannerScreen();
+      }
+
+      if (screen == MarketDetailsScreen.screenIndex) {
+        return Padding(
+          key: const ValueKey('_buildScannerBranch_MarketDetailsScreen'),
+          padding: EdgeInsets.only(top: topPadding),
+          child: const MarketDetailsScreen(),
+        );
+      }
+
+      return Padding(
+        key: const ValueKey('_buildScannerBranch_AboutScreen'),
+        padding: EdgeInsets.only(top: topPadding),
+        child: const AboutScreen(),
+      );
+    }
 
     return AnimationPositionTransition(
       key: const ValueKey('_NavCurtainTop_buildScannerBranch'),
-      curve: curve,
+      curve: widget.curve,
       upperBoundValue: 0.0,
-      height: state.isTopCurtainEnabled ? (size + lowerBoundValue) : 0.0,
+      height: state.isTopCurtainEnabled ? (size + widget.lowerBoundValue) : 0.0,
       child: AnimatedSwitcher(
         duration: Duration(
             milliseconds:
                 (StyleConstants.kDefaultTransitionDuration * 0.5).toInt()),
         switchOutCurve: Curves.ease,
         switchInCurve: Curves.ease,
-        child: state.routes.last == ScannerScreen.screenIndex
-            ? const ScannerScreen()
-            : Padding(
-                padding: EdgeInsets.only(top: topPadding),
-                child: const AboutScreen(),
-              ),
+        child: _switchCurrentScreen(state.routes.last),
       ),
     );
   }
 
   Widget _buildMarketBranch(AppBlocState state, double size) {
     final double topBound = state.isTopCurtainEnabled
-        ? (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0)
+        ? (widget.lowerBoundValue +
+            NavCurtainTop.getCurtainOverflowSize(context))
         : -size;
     final double bottomBound = state.isTopCurtainEnabled
         ? 0.0
-        : (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0);
+        : (widget.lowerBoundValue +
+            NavCurtainTop.getCurtainOverflowSize(context));
 
     return AnimationPositionTransition(
       key: const ValueKey('_NavCurtainTop_buildAboutBranch'),
-      curve: curve,
+      curve: widget.curve,
       upperBoundValue: topBound,
       lowerBoundValue: bottomBound,
       child: AnimationFadeTransition(
-        curve: curve,
+        curve: widget.curve,
         opacity: 1.0,
         isActive: state.isTopCurtainEnabled,
         child: _buildMarketDetailsBranch(state, size),
@@ -96,10 +125,10 @@ class NavCurtainTop extends StatelessWidget {
         ? state.routes[state.routes.indexOf(state.routes.last) - 1]
         : state.routes.last;
     final double topPadding =
-        (lowerBoundValue + StyleConstants.kDefaultPadding * 2.0);
+        (widget.lowerBoundValue + StyleConstants.kDefaultPadding * 2.0);
 
     return AnimationFadeTransition(
-      curve: curve,
+      curve: widget.curve,
       opacity: 1.0,
       isActive: state.isTopCurtainEnabled,
       child: AnimatedSwitcher(
@@ -136,7 +165,9 @@ class NavCurtainTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double contentHeight = upperBoundValue - lowerBoundValue;
+    final mq = MediaQuery.of(context);
+    final double contentHeight =
+        widget.upperBoundValue - widget.lowerBoundValue + mq.viewPadding.top;
 
     return BlocBuilder<AppBloc, AppBlocState>(
       buildWhen: (prev, current) {
@@ -147,10 +178,11 @@ class NavCurtainTop extends StatelessWidget {
       builder: (context, state) {
         return AnimationPositionTransition(
           key: const ValueKey('_NavCurtainTop'),
-          curve: curve,
+          curve: widget.curve,
           upperBoundValue: 0.0,
-          lowerBoundValue:
-              state.isTopCurtainEnabled ? lowerBoundValue : upperBoundValue,
+          lowerBoundValue: state.isTopCurtainEnabled
+              ? widget.lowerBoundValue
+              : widget.upperBoundValue,
           child: Stack(
             children: <Widget>[
               Positioned.fill(

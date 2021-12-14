@@ -23,12 +23,12 @@ class PopCurrentScreen implements Usecase<void, NoParams> {
     logDebug('PopCurrentScreen usecase -> call()');
 
     final int lastIndex = bloc.state.routes.indexOf(bloc.state.routes.last);
-    final int previousIndex = bloc.state.routes[lastIndex - 1];
+    final int lastScreenIndex = bloc.state.routes[lastIndex];
+    final int previousScreenIndex = bloc.state.routes[lastIndex - 1];
 
-    final int previousScreenIndex = bloc.state.routes[lastIndex];
-    final withDelay = previousScreenIndex == ScannerScreen.screenIndex || previousScreenIndex == MarketDetailsScreen.screenIndex;
+    final withDelay = (lastScreenIndex == MarketDetailsScreen.screenIndex && previousScreenIndex == MarketScreen.screenIndex) || (lastScreenIndex == ScannerScreen.screenIndex);
 
-    switch (previousIndex) {
+    switch (previousScreenIndex) {
       case HomeScreen.screenIndex:
         {
           updateWrapperCurtainMode.call(
@@ -73,7 +73,7 @@ class PopCurrentScreen implements Usecase<void, NoParams> {
     if (withDelay) {
       var delay = StyleConstants.kDefaultTransitionDuration + 50;
 
-      bloc.add(AppUpdateRouteToRemove(screenIndex: previousScreenIndex));
+      bloc.add(AppUpdateRouteToRemove(screenIndex: bloc.state.routes[lastIndex]));
       await Future.delayed(Duration(milliseconds: delay)).then((_) {
         bloc.add(AppPopScreen());
         bloc.add(AppUpdateRouteToRemove(screenIndex: null));
