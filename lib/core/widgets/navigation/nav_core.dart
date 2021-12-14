@@ -50,6 +50,11 @@ class NavigationCore extends StatelessWidget {
             (withBottomPadding ? getBottomCurtainSize(context) + 2.0 : 0.0));
   }
 
+  static double getCurtainOverflowSize(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    return mq.size.height * 0.05;
+  }
+
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -91,32 +96,40 @@ class _NavAnimatedBackground extends StatefulWidget {
 class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  late final Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(milliseconds: StyleConstants.kBackgroundRotateDuration),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: StyleConstants.kEaseInOutCustom,
     );
     _controller.repeat(reverse: true);
   }
 
   @override
-  Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Positioned(
-      top: -(mq.size.height * 0.1),
-      bottom: -(mq.size.height * 0.1),
+      top: -NavigationCore.getCurtainOverflowSize(context),
+      bottom: -NavigationCore.getCurtainOverflowSize(context),
       child: AnimatedBuilder(
-        animation: _controller,
+        animation: _animation,
         builder: (context, _) {
           return Transform.rotate(
-            angle: _controller.value * math.pi * 0.3,
-            child: AnimatedScale(
-              duration: const Duration(seconds: 10),
-              scale: 1.0 + (_controller.value * 0.5),
+            angle: _animation.value * math.pi * 0.3,
+            child: Transform.scale(
+              scale: 0.9 + (_animation.value * 0.3),
               child: Image.asset(
                 'assets/images/background.png',
                 fit: BoxFit.cover,

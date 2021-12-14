@@ -20,13 +20,18 @@ class SaltAnimatedCircularText extends StatefulWidget {
 class _SaltAnimatedCircularTextState extends State<SaltAnimatedCircularText>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+  late final Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 10),
+      duration: const Duration(milliseconds: StyleConstants.kBackgroundRotateDuration),
+    );
+    _animation = CurvedAnimation(
+      parent: _controller,
+      curve: StyleConstants.kEaseInOutCustom,
     );
     _controller.repeat(reverse: true);
   }
@@ -44,10 +49,10 @@ class _SaltAnimatedCircularTextState extends State<SaltAnimatedCircularText>
     );
 
     return AnimatedBuilder(
-      animation: _controller,
+      animation: _animation,
       builder: (context, _) {
         return Transform.rotate(
-          angle: _controller.value * math.pi,
+          angle: _animation.value * math.pi,
           child: _SaltCircularText(
             radius: SaltAnimatedCircularText.getTextRadius(context),
             style: textStyle,

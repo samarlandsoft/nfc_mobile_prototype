@@ -5,6 +5,7 @@ import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_fade_transition.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_position_transition.dart';
+import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 import 'package:nfc_mobile_prototype/features/about/screens/about_screen.dart';
 import 'package:nfc_mobile_prototype/features/market/screens/market_details_screen.dart';
 import 'package:nfc_mobile_prototype/features/market/screens/market_screen.dart';
@@ -22,11 +23,6 @@ class NavCurtainTop extends StatefulWidget {
     required this.upperBoundValue,
   }) : super(key: key);
 
-  static double getCurtainOverflowSize(BuildContext context) {
-    final mq = MediaQuery.of(context);
-    return mq.size.height * 0.05;
-  }
-
   @override
   State<NavCurtainTop> createState() => _NavCurtainTopState();
 }
@@ -35,12 +31,12 @@ class _NavCurtainTopState extends State<NavCurtainTop> {
   Widget _buildAboutBranch(AppBlocState state, double size) {
     final double topBound = state.isTopCurtainEnabled
         ? (widget.lowerBoundValue +
-            NavCurtainTop.getCurtainOverflowSize(context))
+            NavigationCore.getCurtainOverflowSize(context))
         : -size;
     final double bottomBound = state.isTopCurtainEnabled
         ? 0.0
         : (widget.lowerBoundValue +
-            NavCurtainTop.getCurtainOverflowSize(context));
+            NavigationCore.getCurtainOverflowSize(context));
 
     return AnimationPositionTransition(
       key: const ValueKey('_NavCurtainTop_buildAboutBranch'),
@@ -59,7 +55,7 @@ class _NavCurtainTopState extends State<NavCurtainTop> {
   Widget _buildScannerBranch(AppBlocState state, double size) {
     Widget _switchCurrentScreen(int screen) {
       final double topPadding = (widget.lowerBoundValue +
-          NavCurtainTop.getCurtainOverflowSize(context));
+          NavigationCore.getCurtainOverflowSize(context));
 
       if (screen == ScannerScreen.screenIndex) {
         return const ScannerScreen();
@@ -99,12 +95,12 @@ class _NavCurtainTopState extends State<NavCurtainTop> {
   Widget _buildMarketBranch(AppBlocState state, double size) {
     final double topBound = state.isTopCurtainEnabled
         ? (widget.lowerBoundValue +
-            NavCurtainTop.getCurtainOverflowSize(context))
+            NavigationCore.getCurtainOverflowSize(context))
         : -size;
     final double bottomBound = state.isTopCurtainEnabled
         ? 0.0
         : (widget.lowerBoundValue +
-            NavCurtainTop.getCurtainOverflowSize(context));
+            NavigationCore.getCurtainOverflowSize(context));
 
     return AnimationPositionTransition(
       key: const ValueKey('_NavCurtainTop_buildAboutBranch'),

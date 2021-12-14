@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 class StyleConstants {
   static const kDefaultPadding = 10.0;
   static const kDefaultButtonSize = 60.0;
+
   static const kDefaultTransitionDuration = 1200;
+  static const kBackgroundRotateDuration = 10000;
 
   static const Cubic kEaseInOutBackCustom = Cubic(0.68, -0.4, 0.265, 1.4);
   static const Cubic kEaseInOutCubicCustom = Curves.easeInOutCubic;
+  static const Cubic kEaseInOutCustom = Curves.easeInOut;
 
   static TextStyle kGetDefaultTextStyle(BuildContext context) {
     return TextStyle(
