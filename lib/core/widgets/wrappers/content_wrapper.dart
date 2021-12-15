@@ -11,12 +11,6 @@ class ContentWrapper extends StatelessWidget {
     this.withViewTopPadding = false,
   }) : super(key: key);
 
-  static double getTopPadding(BuildContext context) {
-    return StyleConstants.kGetScreenRatio(context)
-        ? StyleConstants.kDefaultPadding * 2.0
-        : StyleConstants.kDefaultPadding;
-  }
-
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
@@ -25,7 +19,7 @@ class ContentWrapper extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(
         StyleConstants.kDefaultPadding + horizontalPadding,
-        withViewTopPadding ? mq.viewPadding.top : getTopPadding(context),
+        withViewTopPadding ? mq.viewPadding.top : 0.0,
         StyleConstants.kDefaultPadding + horizontalPadding,
         0.0,
       ),

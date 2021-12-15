@@ -120,16 +120,22 @@ class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
 
   @override
   Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final double verticalCurtainOverflow = NavigationCore.getCurtainOverflowSize(context);
+    final double horizontalCurtainOverflow = (mq.size.height - mq.size.width) * 0.5;
+
     return Positioned(
-      top: -NavigationCore.getCurtainOverflowSize(context),
-      bottom: -NavigationCore.getCurtainOverflowSize(context),
+      top: -verticalCurtainOverflow,
+      bottom: -verticalCurtainOverflow,
+      left: -(horizontalCurtainOverflow + verticalCurtainOverflow),
+      right: -(horizontalCurtainOverflow + verticalCurtainOverflow),
       child: AnimatedBuilder(
         animation: _animation,
         builder: (context, _) {
           return Transform.rotate(
             angle: _animation.value * math.pi * 0.3,
             child: Transform.scale(
-              scale: 0.9 + (_animation.value * 0.3),
+              scale: 1.0 + (_animation.value * 0.25),
               child: Image.asset(
                 'assets/images/background.png',
                 fit: BoxFit.cover,

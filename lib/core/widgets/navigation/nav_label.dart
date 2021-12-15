@@ -27,6 +27,8 @@ class NavLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
+    final double labelHeight = isLargeScreen ? height * 0.8 : height * 0.9;
+    final double iconHeight = labelHeight * 0.45 > 20.0 ? labelHeight * 0.45 : 20.0;
 
     return Positioned(
       top: upperBoundValue,
@@ -62,7 +64,7 @@ class NavLabel extends StatelessWidget {
                         child: SaltIconButton(
                           iconSrc: 'assets/icons/info.png',
                           callback: _onAboutTappedHandler,
-                          size: isLargeScreen ? 30.0 : 20.0,
+                          size: iconHeight,
                         ),
                       ),
                     ),
@@ -71,7 +73,7 @@ class NavLabel extends StatelessWidget {
                 Center(
                   child: Image.asset(
                     'assets/icons/logo.png',
-                    height: isLargeScreen ? height * 0.8 : height * 0.9,
+                    height: labelHeight,
                   ),
                 ),
               ],

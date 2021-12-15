@@ -21,7 +21,7 @@ class SweaterDescription extends StatelessWidget {
     final descriptionSize = TextPainter(
       text: TextSpan(
         text: description,
-        style: const TextStyle(
+        style: StyleConstants.kGetDefaultTextStyle(context).copyWith(
           fontSize: 12.0,
         ),
       ),
@@ -32,9 +32,9 @@ class SweaterDescription extends StatelessWidget {
     final priceSize = TextPainter(
       text: TextSpan(
         text: 'Ξ ${price.toString()}',
-        style: TextStyle(
+        style: StyleConstants.kGetDefaultTextStyle(context).copyWith(
           fontSize: isLargeScreen ? 30.0 : 26.0,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
       ),
       maxLines: 1,
@@ -51,8 +51,11 @@ class SweaterDescription extends StatelessWidget {
     final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: StyleConstants.kDefaultPadding),
+      padding: EdgeInsets.symmetric(
+        horizontal: isLargeScreen
+            ? StyleConstants.kDefaultPadding * 1.5
+            : StyleConstants.kDefaultPadding,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +73,7 @@ class SweaterDescription extends StatelessWidget {
             'Ξ ${price ?? 'N/A'}',
             style: TextStyle(
               fontSize: isLargeScreen ? 30.0 : 26.0,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

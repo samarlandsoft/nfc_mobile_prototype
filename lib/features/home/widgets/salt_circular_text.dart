@@ -27,7 +27,8 @@ class _SaltAnimatedCircularTextState extends State<SaltAnimatedCircularText>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: StyleConstants.kBackgroundRotateDuration),
+      duration: const Duration(
+          milliseconds: StyleConstants.kBackgroundRotateDuration),
     );
     _animation = CurvedAnimation(
       parent: _controller,
@@ -44,7 +45,7 @@ class _SaltAnimatedCircularTextState extends State<SaltAnimatedCircularText>
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = TextStyle(
+    final textStyle = StyleConstants.kGetBoldTextStyle(context).copyWith(
       fontSize: StyleConstants.kGetScreenRatio(context) ? 20.0 : 18.0,
     );
 

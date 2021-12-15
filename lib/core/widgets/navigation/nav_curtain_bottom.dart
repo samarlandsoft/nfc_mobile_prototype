@@ -41,14 +41,19 @@ class NavCurtainBottom extends StatelessWidget {
           upperBoundValue:
               state.isBottomCurtainEnabled ? upperBoundValue : lowerBoundValue,
           lowerBoundValue: 0.0,
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.8),
-            ),
-            child: _BottomNavigationButton(
-              curve: curve,
-              upperBoundValue: 0.0,
-              lowerBoundValue: 0.0,
+          child: ClipRect(
+            child: BackdropFilter(
+              filter: StyleConstants.kDefaultBlur,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.8),
+                ),
+                child: _BottomNavigationButton(
+                  curve: curve,
+                  upperBoundValue: 0.0,
+                  lowerBoundValue: 0.0,
+                ),
+              ),
             ),
           ),
         );

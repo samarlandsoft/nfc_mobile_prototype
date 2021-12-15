@@ -16,7 +16,7 @@ class SweaterCounter extends StatelessWidget {
     final textSize = TextPainter(
       text: TextSpan(
         text: 'none',
-        style: TextStyle(
+        style: StyleConstants.kGetDefaultTextStyle(context).copyWith(
           fontSize: isLargeScreen ? 18.0 : 16.0,
         ),
       ),

@@ -117,9 +117,16 @@ class NFCService {
 
   String getChipID(Uint8List bytes) {
     logDebug('NFCService -> getChipID()');
-    return bytes.fold<String>('', (previousValue, element) {
-      return previousValue += element.toRadixString(16);
+    var chipID = bytes.fold<String>('', (previousValue, element) {
+      var converted = element.toRadixString(16);
+      if (converted.length == 1) {
+        converted = '0' + converted;
+      }
+
+      return previousValue += ':' + converted.toUpperCase();
     });
+
+    return chipID.substring(1);
   }
 
   Future<void> cancelScanning() async {

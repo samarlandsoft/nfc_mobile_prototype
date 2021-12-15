@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -230,13 +228,12 @@ class _NavigationButton extends StatelessWidget {
         width: size,
         color: Colors.grey.shade800.withOpacity(0.5),
         child: Center(
-          child: Transform.rotate(
-            angle: ((isLeft ? 180.0 : 0.0) + 180.0) * math.pi / 180.0,
-            child: Image.asset(
-              'assets/icons/back.png',
-              height: size * 0.8,
-              width: size * 0.8,
-            ),
+          child: Image.asset(
+            isLeft
+                ? 'assets/icons/slider_left.png'
+                : 'assets/icons/slider_right.png',
+            height: size * 0.5,
+            width: size * 0.5,
           ),
         ),
       ),

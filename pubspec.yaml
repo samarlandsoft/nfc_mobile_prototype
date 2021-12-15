@@ -58,9 +58,10 @@ flutter:
     - assets/fonts/
 
   fonts:
-    - family: Montserrat
+    - family: Roboto
       fonts:
-        - asset: assets/fonts/Montserrat-Medium.ttf
+        - asset: assets/fonts/Roboto-Light.ttf
+        - asset: assets/fonts/Roboto-Regular.ttf
 
 flutter_icons:
   android: true

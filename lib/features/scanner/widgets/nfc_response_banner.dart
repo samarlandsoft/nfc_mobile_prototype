@@ -42,12 +42,18 @@ class NFCResponseBanner extends StatelessWidget {
             thickness: 2.0,
             color: StyleConstants.kBackgroundColor.withOpacity(0.5),
           ),
-          SaltIconButton(
-            iconSrc: isError
-                ? 'assets/icons/close.png'
-                : 'assets/icons/redirect.png',
-            callback: callback,
-            size: height,
+          SizedBox(
+            height: height,
+            width: height,
+            child: Center(
+              child: SaltIconButton(
+                iconSrc: isError
+                    ? 'assets/icons/close.png'
+                    : 'assets/icons/redirect.png',
+                callback: callback,
+                size: height * 0.45,
+              ),
+            ),
           ),
         ],
       ),

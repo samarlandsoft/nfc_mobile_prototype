@@ -182,9 +182,14 @@ class _NavCurtainTopState extends State<NavCurtainTop> {
           child: Stack(
             children: <Widget>[
               Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.8),
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: StyleConstants.kDefaultBlur,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.8),
+                      ),
+                    ),
                   ),
                 ),
               ),

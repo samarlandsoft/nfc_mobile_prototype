@@ -21,6 +21,17 @@ class SaltCombinedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
+    final textSize = TextPainter(
+      text: TextSpan(
+        text: 'none',
+        style: StyleConstants.kGetDefaultTextStyle(context).copyWith(
+          fontSize: StyleConstants.kGetScreenRatio(context) ? 22.0 : 18.0,
+          color: textButton,
+        ),
+      ),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: mq.size.width);
 
     return SizedBox(
       width: width ?? mq.size.width * 0.8,
@@ -34,11 +45,15 @@ class SaltCombinedButton extends StatelessWidget {
             vertical: StyleConstants.kGetScreenRatio(context) ? 14.0 : 8.0,
           ),
         ),
-        icon: Image.asset(iconSrc),
+        icon: Image.asset(
+          iconSrc,
+          height: textSize.height,
+          width: textSize.height,
+        ),
         label: Text(
           label,
-          style: TextStyle(
-            fontSize: 18.0,
+          style: StyleConstants.kGetDefaultTextStyle(context).copyWith(
+            fontSize: StyleConstants.kGetScreenRatio(context) ? 22.0 : 18.0,
             color: textButton,
           ),
         ),

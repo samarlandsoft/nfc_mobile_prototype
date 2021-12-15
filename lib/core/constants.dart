@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 class StyleConstants {
@@ -14,7 +16,16 @@ class StyleConstants {
   static TextStyle kGetDefaultTextStyle(BuildContext context) {
     return TextStyle(
       fontSize: kGetScreenRatio(context) ? 18.0 : 14.0,
-      fontFamily: 'Montserrat',
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w300,
+    );
+  }
+
+  static TextStyle kGetBoldTextStyle(BuildContext context) {
+    return TextStyle(
+      fontSize: kGetScreenRatio(context) ? 18.0 : 14.0,
+      fontFamily: 'Roboto',
+      fontWeight: FontWeight.w400,
     );
   }
 
@@ -27,6 +38,8 @@ class StyleConstants {
     const smallScreenSizeRatio = 1.8;
     return (mq.size.height / mq.size.width) > smallScreenSizeRatio;
   }
+
+  static ui.ImageFilter kDefaultBlur = ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0);
 
   static const kBackgroundColor = Color(0xFF141414);
   static const kHyperLinkColor = Colors.blueAccent;

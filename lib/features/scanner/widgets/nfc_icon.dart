@@ -47,7 +47,7 @@ class _NFCIconState extends State<NFCIcon> {
         ),
         Text(
           _isNFCAvailable ? 'NFC ONSITE' : 'NFC UNABLE',
-          style: TextStyle(
+          style: StyleConstants.kGetBoldTextStyle(context).copyWith(
             fontSize: 12.0,
             color: _isNFCAvailable
                 ? StyleConstants.kHyperLinkColor

@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.dark,
-          fontFamily: 'Montserrat',
+          fontFamily: 'Roboto',
           scaffoldBackgroundColor: StyleConstants.kBackgroundColor,
         ),
         home: const ScreenNavigator(),

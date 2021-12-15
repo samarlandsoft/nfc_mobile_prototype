@@ -135,9 +135,14 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         isInit: _isInit && state.isTopCurtainEnabled,
                         center: screenCenter,
                       ),
-                      if (_isScannerBannerActive)
-                        Positioned(
-                          top: screenCenter - (bannerHeight * 0.5),
+                      AnimationPositionTransition(
+                        key: const ValueKey('ScannerScreen_Banner'),
+                        upperBoundValue: _isScannerBannerActive
+                            ? screenCenter - (bannerHeight * 0.5)
+                            : screenCenter - (bannerHeight * 1.5),
+                        child: AnimationFadeTransition(
+                          opacity: 1.0,
+                          isActive: _isScannerBannerActive,
                           child: NFCResponseBanner(
                             height: bannerHeight,
                             width: constraints.maxWidth,
@@ -145,6 +150,16 @@ class _ScannerScreenState extends State<ScannerScreen> {
                             callback: _onCloseBannerHandler,
                           ),
                         ),
+                      ),
+                      // Positioned(
+                      //   top: screenCenter - (bannerHeight * 0.5),
+                      //   child: NFCResponseBanner(
+                      //     height: bannerHeight,
+                      //     width: constraints.maxWidth,
+                      //     isError: _isNFCError,
+                      //     callback: _onCloseBannerHandler,
+                      //   ),
+                      // ),
                     ],
                   );
                 },
