@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
+import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/usecases/push_next_screen.dart';
 import 'package:nfc_mobile_prototype/core/widgets/wrappers/content_wrapper.dart';
@@ -35,7 +37,7 @@ class HomeScreen extends StatelessWidget {
       buildWhen: (prev, current) {
         return prev.isMarketInit != current.isMarketInit;
       },
-      builder: (context, state) {
+      builder: (context, marketState) {
         return ContentWrapper(
           widget: Stack(
             alignment: Alignment.center,
@@ -45,7 +47,8 @@ class HomeScreen extends StatelessWidget {
                 child: const SaltLogo(),
               ),
               Positioned(
-                bottom: screenCenter - SaltAnimatedCircularText.getTextRadius(context),
+                bottom: screenCenter -
+                    SaltAnimatedCircularText.getTextRadius(context),
                 child: const SaltAnimatedCircularText(),
               ),
               Positioned(
@@ -60,13 +63,21 @@ class HomeScreen extends StatelessWidget {
               ),
               Positioned(
                 bottom: StyleConstants.kDefaultPadding * 2.0,
-                child: AbsorbPointer(
-                  absorbing: !state.isMarketInit,
-                  child: SaltTextButton(
-                    label: 'VIEW COLLECTION',
-                    callback: _onMarketTappedHandler,
-                    isLoading: !state.isMarketInit,
-                  ),
+                child: BlocBuilder<AppBloc, AppBlocState>(
+                  buildWhen: (prev, current) {
+                    return prev.routeToRemove != current.routeToRemove;
+                  },
+                  builder: (context, appState) {
+                    return AbsorbPointer(
+                      absorbing: !marketState.isMarketInit ||
+                          appState.routeToRemove == ScannerScreen.screenIndex,
+                      child: SaltTextButton(
+                        label: 'VIEW COLLECTION',
+                        callback: _onMarketTappedHandler,
+                        isLoading: !marketState.isMarketInit,
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

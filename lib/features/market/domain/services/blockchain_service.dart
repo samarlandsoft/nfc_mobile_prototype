@@ -142,6 +142,12 @@ class BlockchainService {
     return histories;
   }
 
+  double getSweaterPrice(int sweaterNumber) {
+    logDebug('BlockchainService -> getSweaterPrice($sweaterNumber)');
+    final double price = _initialPrice + (priceStep * sweaterNumber);
+    return double.parse(price.toStringAsFixed(2));
+  }
+
   int getAmountSoldSweaters(double currentPrice) {
     logDebug('BlockchainService -> getAmountSoldSweaters($currentPrice)');
     return (currentPrice - _initialPrice) ~/ priceStep;

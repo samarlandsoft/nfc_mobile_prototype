@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.samarlandsoft.nfc_mobile_prototype"
+        applicationId "com.saltandsatoshi.genesis"
         minSdkVersion 21
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()

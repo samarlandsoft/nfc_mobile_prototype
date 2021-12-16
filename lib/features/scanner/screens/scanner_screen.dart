@@ -13,7 +13,6 @@ import 'package:nfc_mobile_prototype/features/market/domain/usecases/get_blockch
 import 'package:nfc_mobile_prototype/features/scanner/widgets/nfc_response_banner.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 import 'package:nfc_mobile_prototype/features/market/screens/market_details_screen.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/models/jwt_payload.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/read_nfc_chip.dart';
 import 'package:nfc_mobile_prototype/features/scanner/widgets/salt_pulse_animation.dart';
@@ -61,9 +60,8 @@ class _ScannerScreenState extends State<ScannerScreen> {
       _showOnErrorBanner();
     } else if (tokenData.data != null) {
       await _showOnSuccessBanner();
-
-      final jwt = JWTPayloadModel.fromJson(tokenData.data);
-      locator<GetBlockchainNFCData>().call(int.parse(jwt.tokenID));
+      locator<GetBlockchainNFCData>()
+          .call(tokenData.data as Map<String, dynamic>);
       locator<PushNextScreen>().call(MarketDetailsScreen.screenIndex);
     }
   }
@@ -143,23 +141,17 @@ class _ScannerScreenState extends State<ScannerScreen> {
                         child: AnimationFadeTransition(
                           opacity: 1.0,
                           isActive: _isScannerBannerActive,
-                          child: NFCResponseBanner(
-                            height: bannerHeight,
-                            width: constraints.maxWidth,
-                            isError: _isNFCError,
-                            callback: _onCloseBannerHandler,
+                          child: AbsorbPointer(
+                            absorbing: !_isScannerBannerActive,
+                            child: NFCResponseBanner(
+                              height: bannerHeight,
+                              width: constraints.maxWidth,
+                              isError: _isNFCError,
+                              callback: _onCloseBannerHandler,
+                            ),
                           ),
                         ),
                       ),
-                      // Positioned(
-                      //   top: screenCenter - (bannerHeight * 0.5),
-                      //   child: NFCResponseBanner(
-                      //     height: bannerHeight,
-                      //     width: constraints.maxWidth,
-                      //     isError: _isNFCError,
-                      //     callback: _onCloseBannerHandler,
-                      //   ),
-                      // ),
                     ],
                   );
                 },

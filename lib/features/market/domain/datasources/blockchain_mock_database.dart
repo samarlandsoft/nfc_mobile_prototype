@@ -88,8 +88,8 @@ class BlockchainMockDatabase {
     20: 'https://arweave.net/O68pp4_LZMtfpFVRwcEvz82IbNpbISpPXBdnutg2eN0',
   };
 
-  static int? getAmountSoldSweaters(String chipUrl, bool isBTC) {
-    int? index;
+  static int getAmountSoldSweaters(String chipUrl, bool isBTC) {
+    late int index;
 
     if (isBTC) {
       btcIDSweaterURLs.forEach((id, url) {

@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:434462767833:android:716af44c040280e3fb9cc8",
+        "mobilesdk_app_id": "1:434462767833:android:096d49c944c92adffb9cc8",
         "android_client_info": {
-          "package_name": "com.samarlandsoft.nfc_mobile_prototype"
+          "package_name": "com.saltandsatoshi.genesis"
         }
       },
       "oauth_client": [

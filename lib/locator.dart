@@ -1,9 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
-import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
 import 'package:nfc_mobile_prototype/core/services/license_service.dart';
-import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/services/web_view_service.dart';
 import 'package:nfc_mobile_prototype/core/usecases/pop_current_screen.dart';
@@ -38,9 +36,7 @@ void _initCore() {
   locator.registerLazySingleton(() => AppBloc(AppBlocState.initial()));
 
   /// Services
-  locator.registerLazySingleton(() => LoggerService());
   locator.registerLazySingleton(() => LicenseService());
-  locator.registerLazySingleton(() => FirebaseService());
   locator.registerLazySingleton(() => WebViewService(
         networkService: locator<NetworkService>(),
       ));

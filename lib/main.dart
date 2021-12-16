@@ -5,8 +5,6 @@ import 'package:nfc_mobile_prototype/core/bloc/app_bloc.dart';
 import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/models/usecase.dart';
-import 'package:nfc_mobile_prototype/core/services/firebase_service.dart';
-import 'package:nfc_mobile_prototype/core/services/logger_service.dart';
 import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
@@ -21,10 +19,7 @@ void main() async {
   ));
 
   initLocator();
-  await locator<LoggerService>().init();
   locator<NetworkService>().listenNetworkChanges();
-  locator<FirebaseService>().init();
-
   runApp(const MyApp());
 }
 

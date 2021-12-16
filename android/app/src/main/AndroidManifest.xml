@@ -17,7 +17,7 @@
         android:required="true" />
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="Salt &amp; Satoshi NFC">
+        android:label="Salt&amp;Satoshi Genesis">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
