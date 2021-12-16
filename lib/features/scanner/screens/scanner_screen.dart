@@ -28,6 +28,7 @@ class ScannerScreen extends StatefulWidget {
 
 class _ScannerScreenState extends State<ScannerScreen> {
   bool _isInit = false;
+  bool _isNFCAvailable = false;
   bool _isScannerBannerActive = false;
   bool _isNFCError = false;
 
@@ -38,6 +39,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
       locator<NFCService>().checkNFCAvailable().then((isAvailable) {
         setState(() {
           _isInit = true;
+          _isNFCAvailable = isAvailable;
         });
 
         if (isAvailable) {
@@ -49,7 +51,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
   @override
   void dispose() {
-    locator<NFCService>().cancelScanning();
+    if (_isNFCAvailable) {
+      locator<NFCService>().cancelScanning();
+    }
     super.dispose();
   }
 

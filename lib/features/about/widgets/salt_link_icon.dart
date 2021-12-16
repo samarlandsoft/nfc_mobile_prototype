@@ -7,14 +7,13 @@ class SaltLinkIcon extends StatelessWidget {
   final String label;
   final String iconSrc;
   final String url;
-  final double height, width;
+  final double width;
 
   const SaltLinkIcon({
     Key? key,
     required this.label,
     required this.iconSrc,
     required this.url,
-    required this.height,
     required this.width,
   }) : super(key: key);
 
@@ -28,35 +27,32 @@ class SaltLinkIcon extends StatelessWidget {
 
     return GestureDetector(
       onTap: _onOpenLinkHandler,
-      child: SizedBox(
-        height: height,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                width: width,
-                color: Colors.white,
-                child: Center(
-                  child: Image.asset(
-                    iconSrc,
-                    width: width * 0.75,
-                  ),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              width: width,
+              color: Colors.white,
+              child: Center(
+                child: Image.asset(
+                  iconSrc,
+                  width: width * 0.75,
                 ),
               ),
             ),
-            SizedBox(
-              height: isLargeScreen
-                  ? StyleConstants.kDefaultPadding
-                  : StyleConstants.kDefaultPadding * 0.5,
+          ),
+          SizedBox(
+            height: isLargeScreen
+                ? StyleConstants.kDefaultPadding
+                : StyleConstants.kDefaultPadding * 0.5,
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isLargeScreen ? 20.0 : 16.0,
             ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: isLargeScreen ? 20.0 : 16.0,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

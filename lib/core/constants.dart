@@ -35,11 +35,12 @@ class StyleConstants {
 
   static bool kGetScreenRatio(BuildContext context) {
     final mq = MediaQuery.of(context);
-    const smallScreenSizeRatio = 1.8;
+    const smallScreenSizeRatio = 1.75;
     return (mq.size.height / mq.size.width) > smallScreenSizeRatio;
   }
 
-  static ui.ImageFilter kDefaultBlur = ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0);
+  static ui.ImageFilter kDefaultBlur =
+      ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0);
 
   static const kBackgroundColor = Color(0xFF141414);
   static const kHyperLinkColor = Colors.blueAccent;

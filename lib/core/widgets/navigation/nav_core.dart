@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class NavigationCore extends StatelessWidget {
     return mq.viewPadding.top +
         (isLargeScreen
             ? StyleConstants.kDefaultPadding
-            : StyleConstants.kDefaultPadding * 0.25);
+            : StyleConstants.kDefaultPadding * 0.5);
   }
 
   static double getBottomCurtainSize(BuildContext context) {
@@ -52,7 +53,7 @@ class NavigationCore extends StatelessWidget {
 
   static double getCurtainOverflowSize(BuildContext context) {
     final mq = MediaQuery.of(context);
-    return mq.size.height * 0.05;
+    return Platform.isAndroid ? mq.size.height * 0.05 : mq.size.height * 0.025;
   }
 
   @override
@@ -103,7 +104,8 @@ class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: StyleConstants.kBackgroundRotateDuration),
+      duration: const Duration(
+          milliseconds: StyleConstants.kBackgroundRotateDuration),
     );
     _animation = CurvedAnimation(
       parent: _controller,
@@ -121,8 +123,10 @@ class _NavAnimatedBackgroundState extends State<_NavAnimatedBackground>
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final double verticalCurtainOverflow = NavigationCore.getCurtainOverflowSize(context);
-    final double horizontalCurtainOverflow = (mq.size.height - mq.size.width) * 0.5;
+    final double verticalCurtainOverflow =
+        NavigationCore.getCurtainOverflowSize(context);
+    final double horizontalCurtainOverflow =
+        (mq.size.height - mq.size.width) * 0.5;
 
     return Positioned(
       top: -verticalCurtainOverflow,

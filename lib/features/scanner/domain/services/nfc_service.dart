@@ -19,7 +19,8 @@ class NFCService {
     logDebug('NFCService -> readTag()');
 
     if (await _checkAvailabilityNfcManager()) {
-      return Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
+      return Left(CommonFailure(
+          NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
     }
 
     Ndef? ndef;
@@ -36,14 +37,18 @@ class NFCService {
     }
 
     _isBusy = false;
-    return ndef != null ? Right(ndef!) : Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.notValidNDEF]!));
+    return ndef != null
+        ? Right(ndef!)
+        : Left(CommonFailure(
+            NFCFailures.failuresMessages[NFCFailureType.notValidNDEF]!));
   }
 
   Future<Either<Failure, bool>> writeTag(String tokenID) async {
     logDebug('NFCService -> writeTag($tokenID)');
 
     if (await _checkAvailabilityNfcManager()) {
-      return Left(CommonFailure(NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
+      return Left(CommonFailure(
+          NFCFailures.failuresMessages[NFCFailureType.serviceBusy]!));
     }
 
     var hasException = false;
@@ -108,11 +113,16 @@ class NFCService {
   }
 
   Future<bool> checkNFCAvailable() async {
-    var isAvailable = await _nfcManager.isAvailable();
-    if (!isAvailable) {
-      logDebug('Error: NFCService isn\'t available');
+    try {
+      var isAvailable = await _nfcManager.isAvailable();
+      if (!isAvailable) {
+        logDebug('Error: NFCService isn\'t available');
+      }
+      return isAvailable;
+    } on Exception catch (e) {
+      logDebug('Exception: NFCService isn\'t available');
+      return false;
     }
-    return isAvailable;
   }
 
   String getChipID(Uint8List bytes) {

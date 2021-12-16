@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
@@ -15,10 +17,9 @@ class MarketScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
     final double viewTopPadding = NavigationCore.getLabelSize(context) +
-        NavigationCore.getVerticalPadding(context) -
-        mq.viewPadding.top;
+        NavigationCore.getVerticalPadding(context) +
+        (Platform.isAndroid ? 0.0 : StyleConstants.kDefaultPadding);
 
     return ContentWrapper(
       withViewTopPadding: true,
