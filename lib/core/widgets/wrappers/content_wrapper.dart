@@ -17,12 +17,7 @@ class ContentWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        getWrapperPadding(context),
-        0.0,
-        getWrapperPadding(context),
-        0.0,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: getWrapperPadding(context)),
       child: widget,
     );
   }

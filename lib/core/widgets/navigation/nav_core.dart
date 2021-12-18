@@ -227,7 +227,7 @@ class _NavMarketScreen extends StatelessWidget {
                     state.routes.last == MarketDetailsScreen.screenIndex ||
                     state.routes.last == AboutScreen.screenIndex ||
                     state.routeToRemove == MarketDetailsScreen.screenIndex
-                ? -(StyleConstants.kDefaultPadding * 5.0)
+                ? 0.0
                 : -mq.size.height;
 
         return AnimationPositionTransition(
