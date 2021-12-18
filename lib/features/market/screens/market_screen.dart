@@ -19,8 +19,7 @@ class MarketScreen extends StatelessWidget {
         NavigationCore.getVerticalPadding(context, withTopView: false) +
         ContentWrapper.getWrapperPadding(context);
     final double viewBottomPadding =
-        StyleConstants.kGetSystemNavigationBarSize(context) +
-            NavigationCore.getBottomCurtainSize(context) +
+        NavigationCore.getBottomCurtainSize(context) +
             ContentWrapper.getWrapperPadding(context);
 
     return SafeArea(

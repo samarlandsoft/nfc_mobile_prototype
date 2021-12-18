@@ -40,12 +40,6 @@ class StyleConstants {
     return (mq.size.height / mq.size.width) > smallScreenSizeRatio;
   }
 
-  static double kGetSystemNavigationBarSize(BuildContext context) {
-    final mq = MediaQuery.of(context);
-    const systemBarDPI = 48.0;
-    return Platform.isAndroid ? mq.textScaleFactor * systemBarDPI : 0.0;
-  }
-
   static ui.ImageFilter kDefaultBlur =
       ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0);
 
