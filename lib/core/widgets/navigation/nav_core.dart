@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -25,13 +24,16 @@ class NavigationCore extends StatelessWidget {
     final mq = MediaQuery.of(context);
     return StyleConstants.kGetScreenRatio(context)
         ? mq.size.width * 0.2
-        : mq.size.width * 0.14;
+        : mq.size.width * 0.15;
   }
 
-  static double getVerticalPadding(BuildContext context) {
+  static double getVerticalPadding(
+    BuildContext context, {
+    bool withTopView = true,
+  }) {
     final mq = MediaQuery.of(context);
     final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
-    return mq.viewPadding.top +
+    return (withTopView ? mq.viewPadding.top : 0.0) +
         (isLargeScreen
             ? StyleConstants.kDefaultPadding
             : StyleConstants.kDefaultPadding * 0.5);
@@ -42,8 +44,10 @@ class NavigationCore extends StatelessWidget {
     return (mq.size.height - mq.viewPadding.top) * 0.12;
   }
 
-  static double getContentSize(BuildContext context,
-      {bool withBottomPadding = false}) {
+  static double getContentSize(
+    BuildContext context, {
+    bool withBottomPadding = false,
+  }) {
     final mq = MediaQuery.of(context);
     return mq.size.height -
         (getVerticalPadding(context) +
@@ -53,14 +57,14 @@ class NavigationCore extends StatelessWidget {
 
   static double getCurtainOverflowSize(BuildContext context) {
     final mq = MediaQuery.of(context);
-    return Platform.isAndroid ? mq.size.height * 0.05 : mq.size.height * 0.025;
+    return mq.size.height * 0.05;
   }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-    final labelHeight = NavigationCore.getLabelSize(context);
-    final topPadding = NavigationCore.getVerticalPadding(context);
+    final double labelHeight = NavigationCore.getLabelSize(context);
+    final double topPadding = NavigationCore.getVerticalPadding(context);
 
     return Stack(
       alignment: Alignment.center,

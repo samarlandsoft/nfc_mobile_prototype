@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -37,6 +38,12 @@ class StyleConstants {
     final mq = MediaQuery.of(context);
     const smallScreenSizeRatio = 1.75;
     return (mq.size.height / mq.size.width) > smallScreenSizeRatio;
+  }
+
+  static double kGetSystemNavigationBarSize(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    const systemBarDPI = 48.0;
+    return Platform.isAndroid ? mq.textScaleFactor * systemBarDPI : 0.0;
   }
 
   static ui.ImageFilter kDefaultBlur =

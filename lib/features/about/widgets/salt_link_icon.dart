@@ -7,13 +7,14 @@ class SaltLinkIcon extends StatelessWidget {
   final String label;
   final String iconSrc;
   final String url;
-  final double width;
+  final double height, width;
 
   const SaltLinkIcon({
     Key? key,
     required this.label,
     required this.iconSrc,
     required this.url,
+    required this.height,
     required this.width,
   }) : super(key: key);
 
@@ -29,16 +30,23 @@ class SaltLinkIcon extends StatelessWidget {
       onTap: _onOpenLinkHandler,
       child: Column(
         children: <Widget>[
-          Expanded(
-            child: Container(
-              width: width,
-              color: Colors.white,
-              child: Center(
-                child: Image.asset(
-                  iconSrc,
-                  width: width * 0.75,
-                ),
-              ),
+          Flexible(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Container(
+                  height: height / width < 1.5
+                      ? constraints.maxHeight
+                      : width * 1.5,
+                  width: width,
+                  color: Colors.white,
+                  child: Center(
+                    child: Image.asset(
+                      iconSrc,
+                      width: width * 0.75,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
           SizedBox(

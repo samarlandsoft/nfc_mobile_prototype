@@ -54,12 +54,14 @@ class AboutScreen extends StatelessWidget {
                       label: 'DISCORD',
                       iconSrc: 'assets/images/discord.png',
                       url: 'https://discord.com/invite/Zj7PnT5EEw',
+                      height: constraints.maxHeight,
                       width: constraints.maxWidth * 0.46,
                     ),
                     SaltLinkIcon(
                       label: 'SNAPSHOT',
                       iconSrc: 'assets/images/storm.png',
                       url: 'https://snapshot.org/#/saltdao.eth',
+                      height: constraints.maxHeight,
                       width: constraints.maxWidth * 0.46,
                     ),
                   ],
@@ -69,7 +71,7 @@ class AboutScreen extends StatelessWidget {
           ),
           SizedBox(
             height: isLargeScreen
-                ? StyleConstants.kDefaultPadding * 3.0
+                ? StyleConstants.kDefaultPadding * 2.0
                 : StyleConstants.kDefaultPadding,
           ),
         ],

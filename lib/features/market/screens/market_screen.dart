@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
@@ -18,48 +16,54 @@ class MarketScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double viewTopPadding = NavigationCore.getLabelSize(context) +
-        NavigationCore.getVerticalPadding(context) +
-        (Platform.isAndroid ? 0.0 : StyleConstants.kDefaultPadding);
+        NavigationCore.getVerticalPadding(context, withTopView: false) +
+        ContentWrapper.getWrapperPadding(context);
+    final double viewBottomPadding =
+        StyleConstants.kGetSystemNavigationBarSize(context) +
+            NavigationCore.getBottomCurtainSize(context) +
+            ContentWrapper.getWrapperPadding(context);
 
-    return ContentWrapper(
-      withViewTopPadding: true,
-      widget: ScrollableWrapper(
-        widgets: <Widget>[
-          SizedBox(
-            height: viewTopPadding,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: StyleConstants.kDefaultPadding,
+    return SafeArea(
+      child: ContentWrapper(
+        widget: ScrollableWrapper(
+          widgets: <Widget>[
+            SizedBox(
+              height: viewTopPadding,
             ),
-            child: BlocBuilder<MarketBloc, MarketBlocState>(
-              builder: (context, state) {
-                if (!state.isMarketInit) {
-                  return Container();
-                }
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: StyleConstants.kDefaultPadding,
+              ),
+              child: BlocBuilder<MarketBloc, MarketBlocState>(
+                builder: (context, state) {
+                  if (!state.isMarketInit) {
+                    return Container();
+                  }
 
-                return ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.sweaters.length,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(
-                      height: StyleConstants.kGetScreenRatio(context)
-                          ? StyleConstants.kDefaultPadding * 3.0
-                          : StyleConstants.kDefaultPadding * 1.5,
-                    );
-                  },
-                  itemBuilder: (context, index) {
-                    return SweaterCard(sweater: state.sweaters[index]);
-                  },
-                );
-              },
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.sweaters.length,
+                    padding: EdgeInsets.zero,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: StyleConstants.kGetScreenRatio(context)
+                            ? StyleConstants.kDefaultPadding * 3.0
+                            : StyleConstants.kDefaultPadding * 1.5,
+                      );
+                    },
+                    itemBuilder: (context, index) {
+                      return SweaterCard(sweater: state.sweaters[index]);
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-          const SizedBox(
-            height: StyleConstants.kDefaultPadding * 5.0,
-          ),
-        ],
+            SizedBox(
+              height: viewBottomPadding,
+            ),
+          ],
+        ),
       ),
     );
   }
