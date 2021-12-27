@@ -19,7 +19,7 @@ import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_mark
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_mode.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_ownerships.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_sweaters.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/services/jwt_service.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/services/encryptor_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/read_nfc_chip.dart';
 
@@ -63,14 +63,13 @@ void _initCore() {
 
 void _initScanner() {
   /// Services
-  locator.registerLazySingleton(
-      () => NFCService(jwtService: locator<JWTService>()));
-  locator.registerLazySingleton(() => JWTService());
+  locator.registerLazySingleton(() => NFCService());
+  locator.registerLazySingleton(() => EncryptorService());
 
   /// Usecases
   locator.registerLazySingleton(() => ReadNFCChip(
         nfcService: locator<NFCService>(),
-        jwtService: locator<JWTService>(),
+        encryptorService: locator<EncryptorService>(),
       ));
 }
 

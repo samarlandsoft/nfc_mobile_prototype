@@ -1,11 +1,11 @@
 class NFCResponseData {
   final bool isSuccess;
-  final dynamic data;
+  final int? tokenID;
   final String? error;
 
-  NFCResponseData({
+  const NFCResponseData({
     required this.isSuccess,
-    this.data,
+    this.tokenID,
     this.error,
   });
 }

@@ -11,12 +11,16 @@ import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dar
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/init_market.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
     statusBarColor: Colors.transparent,
     systemNavigationBarColor: Colors.black,
   ));
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   initLocator();
   locator<NetworkService>().listenNetworkChanges();

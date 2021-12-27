@@ -6,9 +6,8 @@ import 'package:nfc_mobile_prototype/features/market/domain/datasources/blockcha
 import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/services/blockchain_service.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_active_sweater.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/models/jwt_payload.dart';
 
-class GetBlockchainNFCData implements Usecase<void, Map<String, dynamic>> {
+class GetBlockchainNFCData implements Usecase<void, int> {
   final MarketBloc bloc;
   final BlockchainService blockchainService;
   final NetworkService networkService;
@@ -22,14 +21,12 @@ class GetBlockchainNFCData implements Usecase<void, Map<String, dynamic>> {
   });
 
   @override
-  Future<void> call(Map<String, dynamic> tokenData) async {
+  Future<void> call(int tokenID) async {
     logDebug('GetBlockchainNFCData usecase -> call()');
     if (!await networkService.checkNetworkConnection()) {
       return;
     }
 
-    final jwt = JWTPayloadModel.fromJson(tokenData);
-    final tokenID = int.parse(jwt.tokenID);
     final currency = tokenID > 22 ? CryptoCurrency.btc : CryptoCurrency.eth;
     final chipUrl = BlockchainMockDatabase.sweaterTokenURLs[tokenID.toString()];
     final amountSoldSweaters = BlockchainMockDatabase.getAmountSoldSweaters(

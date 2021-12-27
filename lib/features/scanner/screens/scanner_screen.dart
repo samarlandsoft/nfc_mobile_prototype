@@ -62,10 +62,9 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
     if (tokenData.error != null) {
       _showOnErrorBanner();
-    } else if (tokenData.data != null) {
+    } else if (tokenData.tokenID != null) {
       await _showOnSuccessBanner();
-      locator<GetBlockchainNFCData>()
-          .call(tokenData.data as Map<String, dynamic>);
+      locator<GetBlockchainNFCData>().call(tokenData.tokenID!);
       locator<PushNextScreen>().call(MarketDetailsScreen.screenIndex);
     }
   }

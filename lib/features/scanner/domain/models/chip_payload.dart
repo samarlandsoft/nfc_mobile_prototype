@@ -1,14 +1,14 @@
-class JWTPayloadModel {
+class ChipPayload {
   final String tokenID;
   final String chipID;
 
-  const JWTPayloadModel({
+  const ChipPayload({
     required this.tokenID,
     required this.chipID,
   });
 
-  static JWTPayloadModel fromJson(Map<String, dynamic> json) {
-    return JWTPayloadModel(
+  static ChipPayload fromJson(Map<String, dynamic> json) {
+    return ChipPayload(
       tokenID: json['tokenID'] ?? 'null',
       chipID: json['chipID'] ?? 'null',
     );
@@ -19,5 +19,10 @@ class JWTPayloadModel {
       'tokenID': tokenID,
       'chipID': chipID,
     };
+  }
+
+  @override
+  String toString() {
+    return tokenID + chipID;
   }
 }
