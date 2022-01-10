@@ -40,13 +40,20 @@ class InitMarket implements Usecase<void, NoParams> {
 
     final List<NFCSweater> sweaters = [];
     final Map<CryptoCurrency, List<NFCSweaterOwnership>> ownerships = {};
+    final ownershipHistory =
+        await getBlockchainOwnership.call(CryptoCurrency.btc);
+
+    if (ownershipHistory == null) {
+      logDebug('InitMarket usecase -> ownership history is empty');
+      return;
+    }
 
     for (var currency in CryptoCurrency.values
         .where((currency) => currency != CryptoCurrency.none)) {
       final data = await getBlockchainPrices.call(currency, isMarketInit: true);
-      final ownershipHistory = await getBlockchainOwnership.call(currency);
 
-      if (data == null && ownershipHistory == null) {
+      if (data == null) {
+        logDebug('InitMarket usecase -> blockchain prices is empty');
         return;
       }
 
@@ -56,12 +63,12 @@ class InitMarket implements Usecase<void, NoParams> {
       });
 
       sweaters.add(updatedSweater.copyWith(
-        tokenID: data!.tokenID,
+        tokenID: data.tokenID,
+        number: data.number,
         chipSrc: data.chipSrc,
         price: data.price,
         amount: data.amount,
-        sold: data.sold,
-        ownership: ownershipHistory!
+        ownership: ownershipHistory
             .where((history) => history.tokenID.toInt() == data.tokenID)
             .toList(),
       ));

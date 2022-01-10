@@ -65,7 +65,7 @@ class SweaterCard extends StatelessWidget {
                     Positioned(
                       top: 0.0,
                       child: SweaterCounter(
-                        sold: sweater.sold!,
+                        number: sweater.number!,
                         amount: sweater.amount!,
                       ),
                     ),
@@ -80,7 +80,7 @@ class SweaterCard extends StatelessWidget {
                   height: StyleConstants.kDefaultPadding,
                 ),
                 SaltTextButton(
-                  label: sweater.sold! < sweater.amount! ? 'APE IN' : 'SHOW',
+                  label: sweater.number! < sweater.amount! ? 'APE IN' : 'SHOW',
                   callback: _onDetailsTappedHandler,
                   width: constraints.maxWidth,
                   buttonColor: StyleConstants.kMarketColor,

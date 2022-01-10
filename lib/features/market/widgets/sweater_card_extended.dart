@@ -54,7 +54,7 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
   @override
   Widget build(BuildContext context) {
     final bool isLargeScreen = StyleConstants.kGetScreenRatio(context);
-    final bool isEnableToBuy = widget.sweater.sold! < widget.sweater.amount!;
+    final bool isEnableToBuy = widget.sweater.number! < widget.sweater.amount!;
 
     return Column(
       children: <Widget>[
@@ -75,7 +75,7 @@ class _SweaterCardExtendedState extends State<SweaterCardExtended> {
           child: Row(
             children: <Widget>[
               SweaterCounter(
-                sold: widget.sweater.sold!,
+                number: widget.sweater.number!,
                 amount: widget.sweater.amount!,
               ),
               SizedBox(
@@ -316,29 +316,6 @@ class _SweaterOwnershipHistory extends StatelessWidget {
       );
     }
 
-    if (history.payer.toString() == _senderAddress) {
-      return Row(
-        children: <Widget>[
-          Text(
-            'NEW OWNER ',
-            style: TextStyle(
-              fontSize: isLargeScreen ? 18.0 : 15.0,
-            ),
-          ),
-          GestureDetector(
-            onTap: () => _onEtherscanOpenHandler(history.payer.toString()),
-            child: Text(
-              'SATOSHI',
-              style: TextStyle(
-                color: StyleConstants.kHyperLinkColor,
-                fontSize: isLargeScreen ? 18.0 : 15.0,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
     return Row(
       children: <Widget>[
         Text(
@@ -350,7 +327,7 @@ class _SweaterOwnershipHistory extends StatelessWidget {
         GestureDetector(
           onTap: () => _onEtherscanOpenHandler(history.payer.toString()),
           child: Text(
-            history.payer.toString().substring(0, 6),
+            history.payer.toString().substring(0, 7),
             style: TextStyle(
               color: StyleConstants.kHyperLinkColor,
               fontSize: isLargeScreen ? 18.0 : 15.0,

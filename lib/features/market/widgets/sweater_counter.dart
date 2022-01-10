@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 
 class SweaterCounter extends StatelessWidget {
-  final int sold, amount;
+  final int number, amount;
 
   const SweaterCounter({
     Key? key,
-    required this.sold,
+    required this.number,
     required this.amount,
   }) : super(key: key);
 
@@ -41,9 +41,9 @@ class SweaterCounter extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          if (sold < amount) ...[
+          if (number < amount) ...[
             Text(
-              sold.toString(),
+              number.toString(),
               style: TextStyle(
                 fontSize: isLargeScreen ? 18.0 : 16.0,
                 fontWeight: FontWeight.bold,
@@ -62,7 +62,7 @@ class SweaterCounter extends StatelessWidget {
               ),
             ),
           ],
-          if (sold >= amount)
+          if (number >= amount)
             Text(
               'OUT',
               style: TextStyle(

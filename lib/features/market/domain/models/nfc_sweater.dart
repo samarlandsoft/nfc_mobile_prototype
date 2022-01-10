@@ -7,16 +7,17 @@ enum CryptoCurrency {
 }
 
 class NFCSweater {
-  final int tokenID;
+  final int? tokenID, number;
   final String title, edition, description;
   final CryptoCurrency currency;
   final List<NFCSweaterOwnership> ownership;
   final String? imageSrc, chipSrc, qrSrc;
   final double? price;
-  final int? amount, sold;
+  final int? amount;
 
   const NFCSweater({
-    required this.tokenID,
+    this.tokenID,
+    this.number,
     required this.title,
     required this.edition,
     required this.description,
@@ -27,11 +28,11 @@ class NFCSweater {
     this.qrSrc,
     this.price,
     this.amount,
-    this.sold,
   });
 
   NFCSweater copyWith({
     int? tokenID,
+    int? number,
     String? title,
     String? edition,
     String? description,
@@ -42,10 +43,10 @@ class NFCSweater {
     String? qrSrc,
     double? price,
     int? amount,
-    int? sold,
   }) {
     return NFCSweater(
       tokenID: tokenID ?? this.tokenID,
+      number: number ?? this.number,
       title: title ?? this.title,
       edition: edition ?? this.edition,
       description: description ?? this.description,
@@ -56,7 +57,6 @@ class NFCSweater {
       qrSrc: qrSrc ?? this.qrSrc,
       price: price ?? this.price,
       amount: amount ?? this.amount,
-      sold: sold ?? this.sold,
     );
   }
 }

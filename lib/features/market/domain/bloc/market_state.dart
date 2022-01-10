@@ -18,7 +18,6 @@ class MarketBlocState {
     return const MarketBlocState(
       sweaters: [
         NFCSweater(
-          tokenID: 0,
           title: 'Season 1 Can\'t Be Stopped',
           edition: 'Bitcoin Edition',
           description:
@@ -28,7 +27,6 @@ class MarketBlocState {
           qrSrc: 'assets/images/qr_code.png',
         ),
         NFCSweater(
-          tokenID: 0,
           title: 'Season 1 Can\'t Be Stopped',
           edition: 'Ethereum Edition',
           description:

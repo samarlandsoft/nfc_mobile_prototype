@@ -2,17 +2,18 @@ import 'package:nfc_mobile_prototype/features/market/domain/models/nfc_sweater.d
 
 class BlockchainNFCResponse {
   final int? tokenID;
+  final int? number;
   final CryptoCurrency currency;
   final String? chipSrc;
   final double? price;
-  final int amount, sold;
+  final int amount;
 
   const BlockchainNFCResponse({
     required this.tokenID,
+    required this.number,
     required this.currency,
     required this.chipSrc,
     required this.price,
     required this.amount,
-    required this.sold,
   });
 }

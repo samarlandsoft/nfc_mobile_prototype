@@ -25,19 +25,20 @@ class GetBlockchainAvailablePrices implements Usecase<BlockchainNFCResponse?, Cr
     final currentPrice = await blockchainService.getCurrentPrice(currency);
     final amountSoldSweaters =
         blockchainService.getAmountSoldSweaters(currentPrice);
-    final tokenID = isMarketInit ? amountSoldSweaters + 1 : amountSoldSweaters;
-    final chipSrc = currency == CryptoCurrency.btc
-        ? BlockchainMockDatabase.btcIDSweaterURLs[tokenID]
-        : BlockchainMockDatabase.ethIDSweaterURLs[tokenID];
-    final bool isEnableToBuy = tokenID < 20;
+    final currentNumber = isMarketInit ? amountSoldSweaters + 1 : amountSoldSweaters;
+    final sweaterData = BlockchainMockDatabase.getSweaterByNumber(currentNumber, currency == CryptoCurrency.btc);
+
+    if (currentNumber > 20) {
+      return null;
+    }
 
     return BlockchainNFCResponse(
-      tokenID: isEnableToBuy ? tokenID : null,
+      tokenID: sweaterData.tokenID,
+      number: currentNumber,
       currency: currency,
-      chipSrc: chipSrc,
-      price: isEnableToBuy ? double.parse(currentPrice.toStringAsFixed(2)) : null,
+      chipSrc: sweaterData.chipUrl,
+      price: double.parse(currentPrice.toStringAsFixed(2)),
       amount: 20,
-      sold: isMarketInit ? tokenID : amountSoldSweaters,
     );
   }
 }

@@ -22,19 +22,18 @@ class GetBlockchainNFCData implements Usecase<void, int> {
 
   @override
   Future<void> call(int tokenID) async {
-    logDebug('GetBlockchainNFCData usecase -> call()');
+    logDebug('GetBlockchainNFCData usecase -> call($tokenID)');
     if (!await networkService.checkNetworkConnection()) {
       return;
     }
 
     final currency = tokenID > 22 ? CryptoCurrency.btc : CryptoCurrency.eth;
-    final chipUrl = BlockchainMockDatabase.sweaterTokenURLs[tokenID.toString()];
-    final amountSoldSweaters = BlockchainMockDatabase.getAmountSoldSweaters(
-        chipUrl!, currency == CryptoCurrency.btc);
-    final price = blockchainService.getSweaterPrice(amountSoldSweaters - 1);
+    final sweaterData = BlockchainMockDatabase.sweaterTokenURLs[tokenID];
+    final price = blockchainService.getSweaterPrice(sweaterData!.number);
 
     updateMarketActiveSweater.call(NFCSweater(
       tokenID: tokenID,
+      number: sweaterData.number,
       title: 'Season 1 Can\'t Be Stopped',
       edition: currency == CryptoCurrency.btc
           ? 'Bitcoin Edition'
@@ -47,11 +46,10 @@ class GetBlockchainNFCData implements Usecase<void, int> {
               .where((history) => history.tokenID.toInt() == tokenID)
               .toList()
           : [],
-      chipSrc: chipUrl,
+      chipSrc: sweaterData.chipUrl,
       qrSrc: 'assets/images/qr_code.png',
       price: price,
       amount: 20,
-      sold: amountSoldSweaters,
     ));
   }
 }
