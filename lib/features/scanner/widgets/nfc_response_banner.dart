@@ -30,7 +30,7 @@ class NFCResponseBanner extends StatelessWidget {
                   horizontal: StyleConstants.kDefaultPadding),
               child: Text(
                 isError
-                    ? 'WRONG NFC TAG. TRY AGAIN. TRY AGAIN.'
+                    ? 'WRONG NFC TAG. TRY AGAIN.'
                     : 'NFC TAG DETECTED! REDIRECTING...',
                 style: const TextStyle(fontSize: 16.0),
                 maxLines: 2,
