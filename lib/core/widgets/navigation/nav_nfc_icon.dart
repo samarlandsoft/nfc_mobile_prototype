@@ -5,8 +5,9 @@ import 'package:nfc_mobile_prototype/core/bloc/app_state.dart';
 import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_fade_transition.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/screens/scanner_screen.dart';
-import 'package:nfc_mobile_prototype/features/scanner/widgets/nfc_icon.dart';
+import 'package:nfc_mobile_prototype/locator.dart';
 
 class NavNFCIcon extends StatelessWidget {
   final Curve curve;
@@ -39,10 +40,66 @@ class NavNFCIcon extends StatelessWidget {
             curve: curve,
             opacity: 1.0,
             isActive: state.routeToRemove != ScannerScreen.screenIndex,
-            child: const NFCIcon(),
+            child: const _NFCIcon(),
           ),
         );
       },
+    );
+  }
+}
+
+class _NFCIcon extends StatefulWidget {
+  const _NFCIcon({Key? key}) : super(key: key);
+
+  @override
+  _NFCIconState createState() => _NFCIconState();
+}
+
+class _NFCIconState extends State<_NFCIcon> {
+  bool _isInit = false;
+  bool _isNFCAvailable = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInit) {
+      locator<NFCService>().checkNFCAvailable().then((isAvailable) {
+        setState(() {
+          _isInit = true;
+          _isNFCAvailable = isAvailable;
+        });
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 30.0,
+          width: 30.0,
+          child: Image.asset(
+            'assets/icons/nfc.png',
+            fit: BoxFit.fill,
+            color: _isNFCAvailable
+                ? StyleConstants.kHyperLinkColor
+                : StyleConstants.kInactiveColor,
+          ),
+        ),
+        const SizedBox(
+          height: StyleConstants.kDefaultPadding * 0.4,
+        ),
+        Text(
+          _isNFCAvailable ? 'NFC ONSITE' : 'NFC UNABLE',
+          style: StyleConstants.kGetBoldTextStyle(context).copyWith(
+            fontSize: 12.0,
+            color: _isNFCAvailable
+                ? StyleConstants.kHyperLinkColor
+                : StyleConstants.kInactiveColor,
+          ),
+        ),
+      ],
     );
   }
 }

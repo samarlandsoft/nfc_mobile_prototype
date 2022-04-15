@@ -8,6 +8,7 @@ import 'package:nfc_mobile_prototype/core/constants.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_fade_transition.dart';
 import 'package:nfc_mobile_prototype/core/widgets/animations/animation_position_transition.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_curtain_bottom.dart';
+import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_debug_icon.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_label.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_nfc_icon.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_curtain_top.dart';
@@ -81,6 +82,7 @@ class NavigationCore extends StatelessWidget {
           upperBoundValue: topPadding,
         ),
         const NavNFCIcon(),
+        const NavDebugIcon(),
         NavCurtainBottom(
           upperBoundValue: mq.size.height -
               (NavigationCore.getBottomCurtainSize(context) - 2.0),

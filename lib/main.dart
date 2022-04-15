@@ -9,6 +9,7 @@ import 'package:nfc_mobile_prototype/core/services/network_service.dart';
 import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_bloc.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/init_market.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_bloc.dart';
 import 'package:nfc_mobile_prototype/locator.dart';
 
 void main() {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider.value(value: locator<AppBloc>()),
         BlocProvider.value(value: locator<MarketBloc>()),
+        BlocProvider.value(value: locator<DebugBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

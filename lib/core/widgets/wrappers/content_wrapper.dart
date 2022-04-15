@@ -3,10 +3,12 @@ import 'package:nfc_mobile_prototype/core/constants.dart';
 
 class ContentWrapper extends StatelessWidget {
   final Widget widget;
+  final bool withVerticalPadding;
 
   const ContentWrapper({
     Key? key,
     required this.widget,
+    this.withVerticalPadding = false,
   }) : super(key: key);
 
   static double getWrapperPadding(BuildContext context) {
@@ -17,7 +19,12 @@ class ContentWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: getWrapperPadding(context)),
+      padding: EdgeInsets.only(
+        top: withVerticalPadding ? getWrapperPadding(context) : 0.0,
+        bottom: withVerticalPadding ? getWrapperPadding(context) : 0.0,
+        left: getWrapperPadding(context),
+        right: getWrapperPadding(context),
+      ),
       child: widget,
     );
   }

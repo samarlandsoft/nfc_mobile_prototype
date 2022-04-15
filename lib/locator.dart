@@ -19,8 +19,11 @@ import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_mark
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_mode.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_ownerships.dart';
 import 'package:nfc_mobile_prototype/features/market/domain/usecases/update_market_sweaters.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_bloc.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_state.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/encryptor_service.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
+import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/debug_nfc_chip.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/usecases/read_nfc_chip.dart';
 
 final locator = GetIt.instance;
@@ -62,6 +65,9 @@ void _initCore() {
 }
 
 void _initScanner() {
+  /// Blocs
+  locator.registerLazySingleton(() => DebugBloc(DebugBlocState.initial()));
+
   /// Services
   locator.registerLazySingleton(() => NFCService());
   locator.registerLazySingleton(() => EncryptorService());
@@ -69,6 +75,10 @@ void _initScanner() {
   /// Usecases
   locator.registerLazySingleton(() => ReadNFCChip(
         nfcService: locator<NFCService>(),
+        encryptorService: locator<EncryptorService>(),
+      ));
+  locator.registerLazySingleton(() => DebugNFCChip(
+        debugBloc: locator<DebugBloc>(),
         encryptorService: locator<EncryptorService>(),
       ));
 }

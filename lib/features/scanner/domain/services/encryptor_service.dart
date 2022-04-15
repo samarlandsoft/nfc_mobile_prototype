@@ -7,16 +7,10 @@ import 'package:nfc_mobile_prototype/features/scanner/domain/models/chip_payload
 class EncryptorService {
   static const _salt = '12345';
 
-  String _generateToken(ChipPayload payload) {
-    logDebug('EncryptorService -> generateToken()');
-    final token = md5.convert(utf8.encode(payload.toString() + _salt));
-    logDebug('Token: ${token.toString()}');
-    return token.toString();
-  }
-
   bool verifyToken(String record, ChipPayload payload) {
     logDebug('EncryptorService -> verifyToken($record)');
-    final token = _generateToken(payload);
+    final token = md5.convert(utf8.encode(payload.toString() + _salt));
+    logDebug('Token: ${token.toString()}');
     return record == '${payload.tokenID}.$token';
   }
 }
