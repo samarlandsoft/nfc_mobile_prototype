@@ -4,23 +4,19 @@ import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_events.d
 import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_state.dart';
 
 class DebugBloc extends Bloc<DebugBlocEvent, DebugBlocState> {
-  DebugBloc(DebugBlocState initialState) : super(initialState);
+  DebugBloc(DebugBlocState initialState) : super(initialState) {
+    on<DebugUpdateData>((event, emit) {
+      emit(state.update(
+        chipID: event.chipID,
+        tokenID: event.tokenID,
+        md5Hash: event.md5Hash,
+      ));
+    });
+  }
 
   @override
-  Stream<DebugBlocState> mapEventToState(DebugBlocEvent event) async* {
-    logDebug('DebugBloc -> mapEventToState(${event.runtimeType})');
-
-    switch (event.runtimeType) {
-      case DebugUpdateData:
-        {
-          var snapshot = event as DebugUpdateData;
-          yield state.update(
-            tagID: snapshot.chipID,
-            tokenID: snapshot.tokenID,
-            md5Hash: snapshot.md5Hash,
-          );
-          break;
-        }
-    }
+  void onEvent(DebugBlocEvent event) {
+    super.onEvent(event);
+    logDebug('DebugBloc -> onEvent(): ${event.runtimeType}');
   }
 }

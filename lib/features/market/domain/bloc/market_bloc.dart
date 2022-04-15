@@ -4,40 +4,31 @@ import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_events.d
 import 'package:nfc_mobile_prototype/features/market/domain/bloc/market_state.dart';
 
 class MarketBloc extends Bloc<MarketBlocEvent, MarketBlocState> {
-  MarketBloc(MarketBlocState initialState) : super(initialState);
+  MarketBloc(MarketBlocState initialState) : super(initialState) {
+    on<MarketUpdateSweaters>((event, emit) {
+      emit(state.update(
+        sweaters: event.sweaters,
+      ));
+    });
+
+    on<MarketUpdateOwnerships>((event, emit) {
+      emit(state.update(
+        ownerships: event.ownerships,
+      ));
+    });
+
+    on<MarketUpdateActiveSweater>((event, emit) {
+      emit(state.update(activeSweater: event.activeSweater));
+    });
+
+    on<MarketUpdateMode>((event, emit) {
+      emit(state.update(isMarketInit: event.isInit));
+    });
+  }
 
   @override
-  Stream<MarketBlocState> mapEventToState(MarketBlocEvent event) async* {
-    logDebug('MarketBloc -> mapEventToState(${event.runtimeType})');
-
-    switch (event.runtimeType) {
-      case MarketUpdateSweaters:
-        {
-          var snapshot = event as MarketUpdateSweaters;
-          yield state.update(sweaters: snapshot.sweaters);
-          break;
-        }
-
-      case MarketUpdateOwnerships:
-        {
-          var snapshot = event as MarketUpdateOwnerships;
-          yield state.update(ownerships: snapshot.ownerships);
-          break;
-        }
-
-      case MarketUpdateActiveSweater:
-        {
-          var snapshot = event as MarketUpdateActiveSweater;
-          yield state.update(activeSweater: snapshot.activeSweater);
-          break;
-        }
-
-      case MarketUpdateMode:
-        {
-          var snapshot = event as MarketUpdateMode;
-          yield state.update(isMarketInit: snapshot.isInit);
-          break;
-        }
-    }
+  void onEvent(MarketBlocEvent event) {
+    super.onEvent(event);
+    logDebug('MarketBloc -> onEvent(): ${event.runtimeType}');
   }
 }

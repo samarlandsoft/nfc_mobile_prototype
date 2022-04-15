@@ -7,7 +7,6 @@ import 'package:nfc_mobile_prototype/features/scanner/domain/models/chip_payload
 import 'package:nfc_mobile_prototype/features/scanner/domain/models/nfc_failures.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/models/nfc_response_data.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/services/encryptor_service.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/services/nfc_service.dart';
 
 class DebugNFCChip implements Usecase<NFCResponseData, DebugBlocState> {
   final DebugBloc debugBloc;

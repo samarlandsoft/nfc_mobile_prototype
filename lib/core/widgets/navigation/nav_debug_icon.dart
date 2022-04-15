@@ -8,7 +8,6 @@ import 'package:nfc_mobile_prototype/core/widgets/navigation/nav_core.dart';
 import 'package:nfc_mobile_prototype/core/widgets/salt_dialogs.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_bloc.dart';
 import 'package:nfc_mobile_prototype/features/scanner/domain/bloc/debug_state.dart';
-import 'package:nfc_mobile_prototype/features/scanner/domain/models/nfc_response_data.dart';
 import 'package:nfc_mobile_prototype/features/scanner/screens/debug_dialog.dart';
 import 'package:nfc_mobile_prototype/features/scanner/screens/scanner_screen.dart';
 

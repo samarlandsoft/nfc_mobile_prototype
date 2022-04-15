@@ -18,12 +18,12 @@ class DebugBlocState {
   }
 
   DebugBlocState update({
-    String? tagID,
+    String? chipID,
     String? tokenID,
     String? md5Hash,
   }) {
     return DebugBlocState(
-      chipID: tagID ?? this.chipID,
+      chipID: chipID ?? this.chipID,
       tokenID: tokenID ?? this.tokenID,
       md5Hash: md5Hash ?? this.md5Hash,
     );
