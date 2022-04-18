@@ -72,8 +72,7 @@ class BlockchainService {
     return formattedPrice;
   }
 
-  Future<List<NFCSweaterOwnership>> getOwnershipHistory(
-      CryptoCurrency currency) async {
+  Future<List<NFCSweaterOwnership>> getOwnershipHistory(CryptoCurrency currency) async {
     logDebug('BlockchainService -> getOwnershipHistory($currency)');
 
     final web3 = Web3Client(_infuraRpcUrl, _httpClient);
@@ -95,9 +94,10 @@ class BlockchainService {
     final tokenPurchaseEvent = sellerContract.event('TokenPurchase');
     final transferEvent = genesisNFTContract.event('Transfer');
 
-    final fromBlockNumber =
-        (await web3.getBlockNumber()) - 365 * _ethereumAvgBlocksPerDay;
-    final fromBlock = BlockNum.exact(fromBlockNumber);
+    // final fromBlockNumber =
+    //     (await web3.getBlockNumber()) - 365 * _ethereumAvgBlocksPerDay;
+    const fromBlockNumber = 11916900;
+    const fromBlock = BlockNum.exact(fromBlockNumber);
 
     final List<NFCSweaterOwnership> histories = [];
 
@@ -139,6 +139,7 @@ class BlockchainService {
       );
       histories.add(history);
     }
+
     return histories;
   }
 

@@ -82,7 +82,7 @@ class NavigationCore extends StatelessWidget {
           upperBoundValue: topPadding,
         ),
         const NavNFCIcon(),
-        const NavDebugIcon(),
+        // const NavDebugIcon(),
         NavCurtainBottom(
           upperBoundValue: mq.size.height -
               (NavigationCore.getBottomCurtainSize(context) - 2.0),
